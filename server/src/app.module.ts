@@ -1,14 +1,14 @@
-import { config } from 'dotenv';
-config()
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceOptions } from 'db/data-source';
+import { UsersModule } from './domains/users/users.module';
 
 @Module({
   controllers: [],
   providers: [],
   imports: [
-    TypeOrmModule.forRoot(dataSourceOptions)
+    TypeOrmModule.forRoot(dataSourceOptions),
+    UsersModule
   ],
 })
 export class AppModule { }
