@@ -12,7 +12,7 @@ export class User {
     password: string
 
     @Column()
-    phone: number
+    phone: string
 
     @Column()
     firstName: string

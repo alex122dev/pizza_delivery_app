@@ -25,6 +25,11 @@ export class UsersService {
     return user
   }
 
+  async getByEmail(email: string) {
+    const user = await this.usersRepository.findOneBy({ email })
+    return user
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.getById(id)
     return await this.usersRepository.save({ ...user, ...updateUserDto })
