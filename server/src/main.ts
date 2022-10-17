@@ -20,7 +20,7 @@ async function bootstrap() {
       console.log(`Server started on port ${PORT}`);
     });
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 bootstrap();

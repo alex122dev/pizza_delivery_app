@@ -3,10 +3,12 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from '../auth/auth.guard';
-import { UserPayload } from '../auth/dto/userPayload.dto';
+import { UserPayloadDto } from '../auth/dto/userPayload.dto';
 import { UserRequest } from './userRequest.decorator';
 import { AuthService } from '../auth/auth.service';
 import { User } from './entities/user.entity';
+import { UserDto } from './dto/user.dto';
+import { DeleteUserDto } from './dto/delete-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -15,53 +17,62 @@ export class UsersController {
 
   @UseGuards(AuthGuard)
   @Post()
-  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return await this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
+    const user = await this.usersService.create(createUserDto);
+    return new UserDto(user)
   }
 
   @UseGuards(AuthGuard)
   @Get('all')
-  async findAll(): Promise<User[]> {
-    return await this.usersService.getAll();
+  async findAll(): Promise<UserDto[]> {
+    const users = await this.usersService.getAll();
+    const userDtoArray = users.map((user: User) => new UserDto(user))
+    return userDtoArray
   }
 
   @UseGuards(AuthGuard)
   @Get(':id')
-  async findOneByAdmin(@Param('id') id: number): Promise<User> {
-    return await this.usersService.getById(id);
+  async getUserById(@Param('id') id: number): Promise<UserDto> {
+    const user = await this.usersService.getById(id);
+    return new UserDto(user)
   }
 
   @UseGuards(AuthGuard)
   @Get()
-  async findOneByUser(@UserRequest() user: UserPayload): Promise<User> {
-    return await this.usersService.getById(user.id);
+  async getCurrentUser(@UserRequest() user: UserPayloadDto): Promise<UserDto> {
+    const userData = await this.usersService.getById(user.id);
+    return new UserDto(userData)
   }
 
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Put(':id')
-  async updateByAdmin(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto): Promise<User> {
-    return await this.usersService.update(id, updateUserDto);
+  async updateUserById(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto): Promise<UserDto> {
+    const user = await this.usersService.update(id, updateUserDto);
+    return new UserDto(user)
   }
 
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Put()
-  async updateByUser(@UserRequest() user: UserPayload, @Body() updateUserDto: UpdateUserDto): Promise<User> {
-    return await this.usersService.update(+user.id, updateUserDto);
+  async updateCurrentUser(@UserRequest() user: UserPayloadDto, @Body() updateUserDto: UpdateUserDto): Promise<UserDto> {
+    const userData = await this.usersService.update(user.id, updateUserDto);
+    return new UserDto(userData)
   }
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  async removeByAdmin(@Param('id') id: number): Promise<Omit<User, "id">> {
+  async removeUserById(@Param('id') id: number): Promise<DeleteUserDto> {
     await this.authService.removeTokenByUserId(id)
-    return await this.usersService.remove(id);
+    const userData = await this.usersService.remove(id);
+    return new DeleteUserDto(userData)
   }
 
   @UseGuards(AuthGuard)
   @Delete()
-  async removeByUser(@UserRequest() user: UserPayload): Promise<Omit<User, "id">> {
+  async removeCurrentUser(@UserRequest() user: UserPayloadDto): Promise<DeleteUserDto> {
     await this.authService.removeTokenByUserId(user.id)
-    return this.usersService.remove(user.id);
+    const userData = await this.usersService.remove(user.id);
+    return new DeleteUserDto(userData)
   }
 }

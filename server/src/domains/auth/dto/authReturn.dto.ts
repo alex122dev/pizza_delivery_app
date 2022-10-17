@@ -1,6 +1,6 @@
-import { User } from "src/domains/users/entities/user.entity"
+import { UserDto } from "src/domains/users/dto/user.dto"
 import { TokensReturnDto } from "./tokensReturn.dto"
 
 export class AuthReturnDto extends TokensReturnDto {
-    readonly user: User
+    readonly user: UserDto
 }

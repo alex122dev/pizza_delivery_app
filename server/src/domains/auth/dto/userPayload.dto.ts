@@ -1,6 +1,6 @@
 import { User } from "src/domains/users/entities/user.entity";
 
-export class UserPayload {
+export class UserPayloadDto {
     id: number
     email: string
 
