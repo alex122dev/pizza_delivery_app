@@ -10,32 +10,36 @@ export class UsersService {
   constructor(@InjectRepository(User)
   private usersRepository: Repository<User>) { }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const user = this.usersRepository.create(createUserDto)
     return await this.usersRepository.save(user)
   }
 
-  async getAll() {
+  async getAll(): Promise<User[]> {
     const users = await this.usersRepository.find()
     return users
   }
 
-  async getById(id: number) {
-    const user = await this.usersRepository.findOneBy({ id })
-    return user
+  async getById(id: number): Promise<User> {
+    try {
+      const user = await this.usersRepository.findOneBy({ id })
+      return user
+    } catch (e) {
+      return null
+    }
   }
 
-  async getByEmail(email: string) {
+  async getByEmail(email: string): Promise<User> {
     const user = await this.usersRepository.findOneBy({ email })
     return user
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.getById(id)
     return await this.usersRepository.save({ ...user, ...updateUserDto })
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<Omit<User, 'id'>> {
     const user = await this.getById(id)
     return await this.usersRepository.remove(user)
   }

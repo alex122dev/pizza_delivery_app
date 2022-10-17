@@ -8,6 +8,8 @@ import * as bcrypt from 'bcryptjs'
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { SignInDto } from './dto/signin.dto';
+import { TokensReturnDto } from './dto/tokensReturn.dto';
+import { AuthReturnDto } from './dto/authReturn.dto';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +20,7 @@ export class AuthService {
         private usersService: UsersService
     ) { }
 
-    generateTokens(payload: UserPayload) {
+    generateTokens(payload: UserPayload): TokensReturnDto {
         const accessToken = this.jwtService.sign(payload, { expiresIn: '30m' })
         const refreshToken = this.jwtService.sign(payload, { expiresIn: '2d' })
 
@@ -34,17 +36,17 @@ export class AuthService {
         }
     }
 
-    async getTokenByValue(refreshToken: string) {
+    async getTokenByValue(refreshToken: string): Promise<Token> {
         const token = await this.tokensRepository.findOneBy({ refreshToken })
         return token
     }
 
-    async getTokenByUserId(userId: number) {
+    async getTokenByUserId(userId: number): Promise<Token> {
         const token = await this.tokensRepository.findOneBy({ userId })
         return token
     }
 
-    async saveToken(refreshToken: string, userId: number) {
+    async saveToken(refreshToken: string, userId: number): Promise<Token> {
         const token = await this.getTokenByUserId(userId)
         if (token) {
             token.refreshToken = refreshToken
@@ -55,20 +57,25 @@ export class AuthService {
         return await this.tokensRepository.save(newToken)
     }
 
-    async removeTokenByValue(refreshToken: string) {
-        const token = await this.getTokenByValue(refreshToken)
-        return await this.tokensRepository.remove(token)
-    }
-
-    async removeTokenByUserId(userId: number) {
-        const token = await this.getTokenByUserId(userId)
-        if (!token) {
+    async removeTokenByValue(refreshToken: string): Promise<Omit<Token, 'id'>> {
+        try {
+            const token = await this.getTokenByValue(refreshToken)
+            return await this.tokensRepository.remove(token)
+        } catch (e) {
             return null
         }
-        return await this.tokensRepository.remove(token)
     }
 
-    async signUp(createUserDto: CreateUserDto) {
+    async removeTokenByUserId(userId: number): Promise<Omit<Token, 'id'>> {
+        try {
+            const token = await this.getTokenByUserId(userId)
+            return await this.tokensRepository.remove(token)
+        } catch (e) {
+            return null
+        }
+    }
+
+    async signUp(createUserDto: CreateUserDto): Promise<AuthReturnDto> {
         const candidate = await this.usersService.getByEmail(createUserDto.email)
         if (candidate) {
             throw new HttpException(`User with email ${createUserDto.email} is existing`, HttpStatus.BAD_REQUEST)
@@ -87,7 +94,7 @@ export class AuthService {
         return { ...tokens, user }
     }
 
-    async signIn(signInDto: SignInDto) {
+    async signIn(signInDto: SignInDto): Promise<AuthReturnDto> {
         const user = await this.usersService.getByEmail(signInDto.email)
         if (!user) {
             throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST)
@@ -106,7 +113,7 @@ export class AuthService {
         return { ...tokens, user }
     }
 
-    async signOut(refreshToken: string) {
+    async signOut(refreshToken: string): Promise<Omit<Token, 'id'>> {
         if (!refreshToken) {
             throw new UnauthorizedException({ message: 'User is not authorized' })
         }
@@ -118,7 +125,7 @@ export class AuthService {
         return token
     }
 
-    async refresh(refreshToken: string) {
+    async refresh(refreshToken: string): Promise<AuthReturnDto> {
         if (!refreshToken) {
             throw new UnauthorizedException({ message: 'User is not authorized' })
         }

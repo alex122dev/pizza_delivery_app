@@ -3,7 +3,10 @@ import { Request, Response } from 'express';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
+import { AuthReturnDto } from './dto/authReturn.dto';
 import { SignInDto } from './dto/signin.dto';
+import { SignOutDto } from './dto/signOut.dto';
+import { Token } from './entities/token.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -11,7 +14,7 @@ export class AuthController {
 
     @UsePipes(ValidationPipe)
     @Post('signup')
-    async signUp(@Res({ passthrough: true }) res: Response, @Body() createUserDto: CreateUserDto) {
+    async signUp(@Res({ passthrough: true }) res: Response, @Body() createUserDto: CreateUserDto): Promise<AuthReturnDto> {
         const userData = await this.authService.signUp(createUserDto)
         res.cookie('refreshToken', userData.refreshToken, {
             maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -22,7 +25,7 @@ export class AuthController {
 
     @UsePipes(ValidationPipe)
     @Post('signin')
-    async signIn(@Res({ passthrough: true }) res: Response, @Body() signInDto: SignInDto) {
+    async signIn(@Res({ passthrough: true }) res: Response, @Body() signInDto: SignInDto): Promise<AuthReturnDto> {
         const userData = await this.authService.signIn(signInDto)
         res.cookie('refreshToken', userData.refreshToken, {
             maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -33,7 +36,7 @@ export class AuthController {
 
     @UseGuards(AuthGuard)
     @Post('signout')
-    async signOut(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    async signOut(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<SignOutDto> {
         const { refreshToken } = req.cookies
         const token = await this.authService.signOut(refreshToken)
         res.clearCookie('refreshToken')
@@ -41,7 +44,7 @@ export class AuthController {
     }
 
     @Get('refresh')
-    async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<AuthReturnDto> {
         const { refreshToken } = req.cookies
         const userData = await this.authService.refresh(refreshToken)
         res.cookie('refreshToken', userData.refreshToken, {
