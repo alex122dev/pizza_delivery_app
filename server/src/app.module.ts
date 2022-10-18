@@ -7,10 +7,6 @@ import { AuthModule } from './domains/auth/auth.module';
 @Module({
   controllers: [],
   providers: [],
-  imports: [
-    TypeOrmModule.forRoot(dataSourceOptions),
-    UsersModule,
-    AuthModule
-  ],
+  imports: [TypeOrmModule.forRoot(dataSourceOptions), UsersModule, AuthModule],
 })
-export class AppModule { }
+export class AppModule {}

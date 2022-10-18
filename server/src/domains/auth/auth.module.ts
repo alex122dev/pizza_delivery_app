@@ -14,10 +14,8 @@ import { Token } from './entities/token.entity';
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY || 'SECRET',
     }),
-    forwardRef(() => UsersModule)
+    forwardRef(() => UsersModule),
   ],
-  exports: [
-    AuthService
-  ]
+  exports: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}
