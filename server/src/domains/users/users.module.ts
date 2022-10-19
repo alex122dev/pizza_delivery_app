@@ -12,7 +12,7 @@ import { RolesModule } from '../roles/roles.module';
   imports: [
     TypeOrmModule.forFeature([User]),
     forwardRef(() => AuthModule),
-    RolesModule,
+    forwardRef(() => RolesModule),
   ],
   exports: [UsersService],
 })

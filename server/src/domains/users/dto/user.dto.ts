@@ -1,4 +1,4 @@
-import { Role } from 'src/domains/roles/entities/role.entity';
+import { RoleDto } from 'src/domains/roles/dto/role.dto';
 import { User } from '../entities/user.entity';
 
 export class UserDto {
@@ -7,7 +7,7 @@ export class UserDto {
   firstName: string;
   lastName: string;
   phone: string;
-  roles: Role[];
+  roles: RoleDto[];
 
   constructor(user: User) {
     this.id = user.id;

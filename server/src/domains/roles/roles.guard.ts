@@ -6,18 +6,27 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Observable } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
+import { UserPayloadDto } from '../auth/dto/userPayload.dto';
+import { UsersService } from '../users/users.service';
 import { ROLES_KEY } from './roles.decorator';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector, private authService: AuthService) {}
+  constructor(
+    private reflector: Reflector,
+    private usersService: UsersService,
+  ) {}
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
+      const req = context.switchToHttp().getRequest();
+      const userPayload: UserPayloadDto = req.user;
+
+      if (!userPayload) {
+        throw new UnauthorizedException();
+      }
+
+      const user = await this.usersService.getById(userPayload.id);
       const requiredRoles = this.reflector.getAllAndOverride<string[]>(
         ROLES_KEY,
         [context.getHandler(), context.getClass()],
@@ -27,30 +36,7 @@ export class RolesGuard implements CanActivate {
         return true;
       }
 
-      const req = context.switchToHttp().getRequest();
-
-      const authorizationHeader = req.headers.authorization;
-
-      if (!authorizationHeader) {
-        throw new UnauthorizedException();
-      }
-
-      const bearer = authorizationHeader.split(' ')[0];
-      const accessToken = authorizationHeader.split(' ')[1];
-
-      if (bearer !== 'Bearer' || !accessToken) {
-        throw new UnauthorizedException();
-      }
-
-      const userPayload = this.authService.getUserPayloadFromToken(accessToken);
-
-      if (!userPayload) {
-        throw new UnauthorizedException();
-      }
-
-      req.user = userPayload;
-
-      const isAccess = userPayload.roles.some((role) =>
+      const isAccess = user.roles.some((role) =>
         requiredRoles.includes(role.value),
       );
 

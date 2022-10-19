@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RolesService } from '../roles/roles.service';
-import { UpdateUsersRolesDto } from './dto/update-users-roles.dto';
+import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -56,22 +56,18 @@ export class UsersService {
     return this.usersRepository.remove(user);
   }
 
-  async addRoleForUser(
-    updateUsersRolesDto: UpdateUsersRolesDto,
-  ): Promise<User> {
-    const user = await this.getById(updateUsersRolesDto.userId);
+  async addRoleForUser(updateUserRoleDto: UpdateUserRoleDto): Promise<User> {
+    const user = await this.getById(updateUserRoleDto.userId);
     const role = await this.rolesService.getByValue(
-      updateUsersRolesDto.roleValue,
+      updateUserRoleDto.roleValue,
     );
     return this.usersRepository.save({ ...user, roles: [...user.roles, role] });
   }
 
-  async deleteUsersRole(
-    updateUsersRolesDto: UpdateUsersRolesDto,
-  ): Promise<User> {
-    const user = await this.getById(updateUsersRolesDto.userId);
+  async deleteUsersRole(updateUserRoleDto: UpdateUserRoleDto): Promise<User> {
+    const user = await this.getById(updateUserRoleDto.userId);
     const newRoles = user.roles.filter(
-      (role) => role.value !== updateUsersRolesDto.roleValue,
+      (role) => role.value !== updateUserRoleDto.roleValue,
     );
     return this.usersRepository.save({ ...user, roles: newRoles });
   }
