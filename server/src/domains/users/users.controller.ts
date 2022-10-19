@@ -20,6 +20,9 @@ import { AuthService } from '../auth/auth.service';
 import { User } from './entities/user.entity';
 import { UserDto } from './dto/user.dto';
 import { DeleteUserDto } from './dto/delete-user.dto';
+import { RolesGuard } from '../roles/roles.guard';
+import { Roles } from '../roles/roles.decorator';
+import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 
 @Controller('users')
 export class UsersController {
@@ -35,7 +38,8 @@ export class UsersController {
     return new UserDto(user);
   }
 
-  @UseGuards(AuthGuard)
+  @Roles('ADMIN')
+  @UseGuards(AuthGuard, RolesGuard)
   @Get('all')
   async findAll(): Promise<UserDto[]> {
     const users = await this.usersService.getAll();
@@ -43,7 +47,8 @@ export class UsersController {
     return userDtoArray;
   }
 
-  @UseGuards(AuthGuard)
+  @Roles('ADMIN')
+  @UseGuards(AuthGuard, RolesGuard)
   @Get(':id')
   async getUserById(@Param('id') id: number): Promise<UserDto> {
     const user = await this.usersService.getById(id);
@@ -57,7 +62,18 @@ export class UsersController {
     return new UserDto(userData);
   }
 
-  @UseGuards(AuthGuard)
+  @Roles('ADMIN')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Put('role')
+  async addRoleForUser(
+    @Body() updateUserRoleDto: UpdateUserRoleDto,
+  ): Promise<UserDto> {
+    const user = await this.usersService.addRoleForUser(updateUserRoleDto);
+    return new UserDto(user);
+  }
+
+  @Roles('ADMIN')
+  @UseGuards(AuthGuard, RolesGuard)
   @UsePipes(ValidationPipe)
   @Put(':id')
   async updateUserById(
@@ -79,7 +95,18 @@ export class UsersController {
     return new UserDto(userData);
   }
 
-  @UseGuards(AuthGuard)
+  @Roles('ADMIN')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Delete('role')
+  async deleteUsersRole(
+    @Body() updateUserRoleDto: UpdateUserRoleDto,
+  ): Promise<UserDto> {
+    const user = await this.usersService.deleteUsersRole(updateUserRoleDto);
+    return new UserDto(user);
+  }
+
+  @Roles('ADMIN')
+  @UseGuards(AuthGuard, RolesGuard)
   @Delete(':id')
   async removeUserById(@Param('id') id: number): Promise<DeleteUserDto> {
     await this.authService.removeTokenByUserId(id);
