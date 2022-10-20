@@ -1,4 +1,4 @@
-import { Role } from "../../src/domains/roles/entities/role.entity";
+import { Role } from "../../../src/domains/roles/entities/role.entity";
 import { DataSource } from "typeorm";
 import { Seeder, SeederFactoryManager } from "typeorm-extension";
 

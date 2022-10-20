@@ -4,6 +4,8 @@ import { dataSourceOptions } from 'db/data-source';
 import { UsersModule } from './domains/users/users.module';
 import { AuthModule } from './domains/auth/auth.module';
 import { RolesModule } from './domains/roles/roles.module';
+import { OrdersModule } from './domains/orders/orders.module';
+import { StatusesModule } from './domains/statuses/statuses.module';
 
 @Module({
   controllers: [],
@@ -13,6 +15,8 @@ import { RolesModule } from './domains/roles/roles.module';
     UsersModule,
     AuthModule,
     RolesModule,
+    OrdersModule,
+    StatusesModule,
   ],
 })
 export class AppModule {}
