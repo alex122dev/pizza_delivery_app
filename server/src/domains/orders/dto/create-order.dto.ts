@@ -1,3 +1,1 @@
-export class CreateOrderDto {
-  userId: number;
-}
+export class CreateOrderDto {}

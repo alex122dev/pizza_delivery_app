@@ -15,11 +15,11 @@ export class OrdersService {
     private usersService: UsersService,
   ) {}
 
-  async create(createOrderDto: CreateOrderDto): Promise<Order> {
-    const user = await this.usersService.getById(createOrderDto.userId);
+  async create(userId: number, createOrderDto: CreateOrderDto): Promise<Order> {
+    const user = await this.usersService.getById(userId);
     const status = await this.statusesService.getByValue('processing');
     const order = this.ordersRepository.create({
-      userId: createOrderDto.userId,
+      userId,
       status,
       user,
     });

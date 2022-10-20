@@ -25,8 +25,11 @@ export class OrdersController {
 
   @UseGuards(AuthGuard)
   @Post()
-  async create(@Body() createOrderDto: CreateOrderDto): Promise<OrderDto> {
-    const order = await this.ordersService.create(createOrderDto);
+  async create(
+    @UserRequest() user: UserPayloadDto,
+    @Body() createOrderDto: CreateOrderDto,
+  ): Promise<OrderDto> {
+    const order = await this.ordersService.create(user.id, createOrderDto);
     return new OrderDto(order);
   }
 
