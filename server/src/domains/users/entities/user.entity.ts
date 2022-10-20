@@ -1,3 +1,4 @@
+import { Order } from 'src/domains/orders/entities/order.entity';
 import { Role } from 'src/domains/roles/entities/role.entity';
 import {
   Entity,
@@ -5,6 +6,7 @@ import {
   Column,
   ManyToMany,
   JoinTable,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('users')
@@ -30,4 +32,7 @@ export class User {
   @ManyToMany(() => Role, (role) => role.users)
   @JoinTable()
   roles: Role[];
+
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Order[];
 }

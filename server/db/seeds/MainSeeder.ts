@@ -1,11 +1,14 @@
-import { DataSource } from "typeorm";
-import { runSeeder, Seeder, SeederFactoryManager } from "typeorm-extension";
-import { AdminRoleSeeder } from "./AdminRoleSeeder";
-import { UserRoleSeeder } from "./UserRoleSeeder";
+import { DataSource } from 'typeorm';
+import { runSeeder, Seeder, SeederFactoryManager } from 'typeorm-extension';
+import { RolesSeeder } from './RolesSeeder';
+import { StatusesSeeder } from './StatusesSeeder';
 
 export class MainSeeder implements Seeder {
-    async run(dataSource: DataSource, factoryManager: SeederFactoryManager): Promise<void> {
-        await runSeeder(dataSource, AdminRoleSeeder)
-        await runSeeder(dataSource, UserRoleSeeder)
-    }
+  async run(
+    dataSource: DataSource,
+    factoryManager: SeederFactoryManager,
+  ): Promise<void> {
+    await runSeeder(dataSource, RolesSeeder);
+    await runSeeder(dataSource, StatusesSeeder);
+  }
 }
