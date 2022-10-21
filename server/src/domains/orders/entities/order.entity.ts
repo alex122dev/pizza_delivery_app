@@ -1,6 +1,14 @@
+import { Product } from 'src/domains/products/entities/product.entity';
 import { Status } from 'src/domains/statuses/entities/status.entity';
 import { User } from 'src/domains/users/entities/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('orders')
 export class Order {
@@ -15,4 +23,8 @@ export class Order {
 
   @ManyToOne(() => Status, (status) => status.orders)
   status: Status;
+
+  @ManyToMany(() => Product, (product) => product.orders)
+  @JoinTable()
+  products: Product[];
 }
