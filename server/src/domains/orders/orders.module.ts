@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '../auth/auth.module';
+import { ProductsModule } from '../products/products.module';
 import { StatusesModule } from '../statuses/statuses.module';
 import { UsersModule } from '../users/users.module';
 import { Order } from './entities/order.entity';
@@ -15,6 +16,7 @@ import { OrdersService } from './orders.service';
     StatusesModule,
     UsersModule,
     AuthModule,
+    ProductsModule,
   ],
   exports: [OrdersService],
 })

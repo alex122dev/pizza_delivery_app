@@ -6,6 +6,6 @@ export class ProductDto {
   name: string;
   description: string;
   image: string;
-  category: CategoryDto;
-  components: ComponentDto;
+  category: Omit<CategoryDto, 'products'>;
+  components: ComponentDto[];
 }
