@@ -63,7 +63,9 @@ export class OrdersController {
 
   @UseGuards(AuthGuard)
   @Get()
-  async getCurrentUserOrders(@UserRequest() user: UserPayloadDto) {
+  async getCurrentUserOrders(
+    @UserRequest() user: UserPayloadDto,
+  ): Promise<OrderDto[]> {
     const orders = await this.ordersService.getCurrentUserOrders(user.id);
     const ordersDtoArray = orders.map((order: Order) => new OrderDto(order));
     return ordersDtoArray;

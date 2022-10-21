@@ -9,7 +9,7 @@ export class RolesSeeder implements Seeder {
   ): Promise<void> {
     const rolesRepository = dataSource.getRepository(Role);
 
-    await rolesRepository.insert([
+    const roles = [
       {
         value: 'ADMIN',
         description: 'Access to administrator functionality',
@@ -18,6 +18,16 @@ export class RolesSeeder implements Seeder {
         value: 'USER',
         description: 'Access to client functionality',
       },
-    ]);
+    ];
+
+    for (const roleData of roles) {
+      const roleExists = await rolesRepository.findOneBy({
+        value: roleData.value,
+      });
+      if (!roleExists) {
+        const role = rolesRepository.create(roleData);
+        await rolesRepository.save(role);
+      }
+    }
   }
 }

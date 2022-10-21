@@ -9,7 +9,7 @@ export class StatusesSeeder implements Seeder {
   ): Promise<void> {
     const statusesRepository = dataSource.getRepository(Status);
 
-    await statusesRepository.insert([
+    const statuses = [
       {
         value: 'processing',
         description: 'Our managers are processing your order',
@@ -30,6 +30,16 @@ export class StatusesSeeder implements Seeder {
         value: 'canceled',
         description: 'Order was canceled',
       },
-    ]);
+    ];
+
+    for (const statusData of statuses) {
+      const statusExists = await statusesRepository.findOneBy({
+        value: statusData.value,
+      });
+      if (!statusExists) {
+        const status = statusesRepository.create(statusData);
+        await statusesRepository.save(status);
+      }
+    }
   }
 }
