@@ -9,9 +9,9 @@ import { signIn } from '../../stateManager/actionCreators/auth';
 import { SignInDto } from '../../dtos/auth/SignIn.dto';
 import { Preloader } from '../common/Preloader/Preloader';
 
-interface IProps { }
+interface IProps {}
 
-export const SignInForm: React.FC<IProps> = ({ }) => {
+export const SignInForm: React.FC<IProps> = ({}) => {
     const dispatch = useAppDispatch();
     const [formSendError, setFormSendError] = useState('');
 

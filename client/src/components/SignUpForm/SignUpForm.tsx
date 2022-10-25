@@ -11,9 +11,9 @@ import { Preloader } from '../common/Preloader/Preloader';
 import { phoneValidateRegExp } from '../../utils/validation/regularExpressions';
 import { phoneNumberMask } from '../../utils/masks/phoneNumberMask';
 
-interface IProps { }
+interface IProps {}
 
-export const SignUpForm: React.FC<IProps> = ({ }) => {
+export const SignUpForm: React.FC<IProps> = ({}) => {
     const dispatch = useAppDispatch();
     const [formSendError, setFormSendError] = useState('');
 
