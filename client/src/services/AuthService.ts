@@ -18,7 +18,9 @@ export class AuthService {
         return $api.post<SignOutDto>('/auth/signout');
     }
 
-    static async checkIfUserAuthorized(): Promise<AxiosResponse<AuthReturnDto>> {
+    static async checkIfUserAuthorized(): Promise<
+        AxiosResponse<AuthReturnDto>
+    > {
         return axios.get<AuthReturnDto>(`${API_URL}/auth/refresh`, {
             withCredentials: true,
         });

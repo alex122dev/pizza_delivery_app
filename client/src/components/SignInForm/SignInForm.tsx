@@ -9,9 +9,9 @@ import { signIn } from '../../stateManager/actionCreators/auth';
 import { SignInDto } from '../../dtos/auth/SignIn.dto';
 import { Preloader } from '../common/Preloader/Preloader';
 
-interface IProps { }
+interface IProps {}
 
-export const SignInForm: React.FC<IProps> = ({ }) => {
+export const SignInForm: React.FC<IProps> = ({}) => {
     const dispatch = useAppDispatch();
     const [formSendError, setFormSendError] = useState('');
 
@@ -20,7 +20,12 @@ export const SignInForm: React.FC<IProps> = ({ }) => {
         password: '',
     };
 
-    const submit = async (values: SignInDto, { resetForm }: { resetForm: (nextState?: Partial<FormikState<SignInDto>>) => void }): Promise<void> => {
+    const submit = async (
+        values: SignInDto,
+        {
+            resetForm,
+        }: { resetForm: (nextState?: Partial<FormikState<SignInDto>>) => void },
+    ): Promise<void> => {
         try {
             setFormSendError('');
             await dispatch(signIn(values));
@@ -28,43 +33,52 @@ export const SignInForm: React.FC<IProps> = ({ }) => {
         } catch (e: any) {
             setFormSendError(e.response?.data?.message);
         }
-    }
+    };
 
     const validationSchemaObject = Yup.object({
         email: Yup.string().required().email(),
         password: Yup.string().required().min(6).max(100),
-    })
+    });
 
-    const renderTextField = (name: string, placeholder: string, label: string) => {
-        return <Field
-            type='text'
-            name={name}
-            placeholder={placeholder}
-            allItemClass={styles.item}
-            label={label}
-            component={CustomInput}
-        />
-    }
+    const renderTextField = (
+        name: string,
+        placeholder: string,
+        label: string,
+    ) => {
+        return (
+            <Field
+                type='text'
+                name={name}
+                placeholder={placeholder}
+                allItemClass={styles.item}
+                label={label}
+                component={CustomInput}
+            />
+        );
+    };
 
     const renderFormSendErrorBlock = () => {
-        return formSendError && (
-            <p className={styles.errMessage}>
-                Try again, please. Some error occured:{' '}
-                {formSendError}
-            </p>
-        )
-    }
+        return (
+            formSendError && (
+                <p className={styles.errMessage}>
+                    Try again, please. Some error occured: {formSendError}
+                </p>
+            )
+        );
+    };
 
     const renderSendButton = (isSubmitting: boolean) => {
-        return <CustomButton
-            type='submit'
-            startColor='green'
-            disabled={isSubmitting}
-            className={styles.sendBtn}
-        >
-            Sign In
-        </CustomButton>
-    }
+        return (
+            <CustomButton
+                type='submit'
+                startColor='green'
+                disabled={isSubmitting}
+                className={styles.sendBtn}
+            >
+                Sign In
+            </CustomButton>
+        );
+    };
 
     return (
         <Formik
@@ -77,7 +91,11 @@ export const SignInForm: React.FC<IProps> = ({ }) => {
                 <Form className={styles.formBody}>
                     {isSubmitting && <Preloader className={styles.preloader} />}
                     {renderTextField('email', 'Type your email', 'Email')}
-                    {renderTextField('password', 'Type your password', 'Password')}
+                    {renderTextField(
+                        'password',
+                        'Type your password',
+                        'Password',
+                    )}
                     {renderFormSendErrorBlock()}
                     {renderSendButton(isSubmitting)}
                 </Form>

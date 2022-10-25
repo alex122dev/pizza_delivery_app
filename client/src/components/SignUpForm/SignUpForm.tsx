@@ -11,9 +11,9 @@ import { Preloader } from '../common/Preloader/Preloader';
 import { phoneValidateRegExp } from '../../utils/validation/regularExpressions';
 import { phoneNumberMask } from '../../utils/masks/phoneNumberMask';
 
-interface IProps { }
+interface IProps {}
 
-export const SignUpForm: React.FC<IProps> = ({ }) => {
+export const SignUpForm: React.FC<IProps> = ({}) => {
     const dispatch = useAppDispatch();
     const [formSendError, setFormSendError] = useState('');
 
@@ -25,16 +25,24 @@ export const SignUpForm: React.FC<IProps> = ({ }) => {
         phone: '',
     };
 
-    const submit = async (values: SignUpDto, { resetForm }: { resetForm: (nextState?: Partial<FormikState<SignUpDto>>) => void }): Promise<void> => {
+    const submit = async (
+        values: SignUpDto,
+        {
+            resetForm,
+        }: { resetForm: (nextState?: Partial<FormikState<SignUpDto>>) => void },
+    ): Promise<void> => {
         try {
             setFormSendError('');
-            const sendData: SignUpDto = { ...values, phone: values.phone.replace(/\D/g, '') }
+            const sendData: SignUpDto = {
+                ...values,
+                phone: values.phone.replace(/\D/g, ''),
+            };
             await dispatch(signUp(sendData));
             resetForm();
         } catch (e: any) {
             setFormSendError(e.response?.data?.message);
         }
-    }
+    };
 
     const validationSchemaObject = Yup.object({
         email: Yup.string().required().email(),
@@ -44,51 +52,70 @@ export const SignUpForm: React.FC<IProps> = ({ }) => {
         phone: Yup.string()
             .required()
             .matches(phoneValidateRegExp, 'The phone number is invalid'),
-    })
+    });
 
-    const renderTextField = (name: string, placeholder: string, label: string) => {
-        return <Field
-            type='text'
-            name={name}
-            placeholder={placeholder}
-            allItemClass={styles.item}
-            label={label}
-            component={CustomInput}
-        />
-    }
+    const renderTextField = (
+        name: string,
+        placeholder: string,
+        label: string,
+    ) => {
+        return (
+            <Field
+                type='text'
+                name={name}
+                placeholder={placeholder}
+                allItemClass={styles.item}
+                label={label}
+                component={CustomInput}
+            />
+        );
+    };
 
-    const renderPhoneField = (setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void) => {
-        return <Field
-            type='tel'
-            name='phone'
-            placeholder='+38 (095) 644-64-64'
-            maxLength={19}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => phoneNumberMask(e, setFieldValue)}
-            allItemClass={styles.item}
-            label='Phone'
-            component={CustomInput}
-        />
-    }
+    const renderPhoneField = (
+        setFieldValue: (
+            field: string,
+            value: any,
+            shouldValidate?: boolean,
+        ) => void,
+    ) => {
+        return (
+            <Field
+                type='tel'
+                name='phone'
+                placeholder='+38 (095) 644-64-64'
+                maxLength={19}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    phoneNumberMask(e, setFieldValue)
+                }
+                allItemClass={styles.item}
+                label='Phone'
+                component={CustomInput}
+            />
+        );
+    };
 
     const renderFormSendErrorBlock = () => {
-        return formSendError && (
-            <p className={styles.errMessage}>
-                Try again, please. Some error occured:{' '}
-                {formSendError}
-            </p>
-        )
-    }
+        return (
+            formSendError && (
+                <p className={styles.errMessage}>
+                    Try again, please. Some error occured: {formSendError}
+                </p>
+            )
+        );
+    };
 
     const renderSendButton = (isSubmitting: boolean) => {
-        return <CustomButton
-            type='submit'
-            startColor='green'
-            disabled={isSubmitting}
-            className={styles.sendBtn}
-        >
-            Sign Up
-        </CustomButton>
-    }
+        return (
+            <CustomButton
+                type='submit'
+                startColor='green'
+                disabled={isSubmitting}
+                className={styles.sendBtn}
+            >
+                Sign Up
+            </CustomButton>
+        );
+    };
 
     return (
         <Formik
@@ -101,9 +128,21 @@ export const SignUpForm: React.FC<IProps> = ({ }) => {
                 <Form className={styles.formBody}>
                     {isSubmitting && <Preloader className={styles.preloader} />}
                     {renderTextField('email', 'Type your email', 'Email')}
-                    {renderTextField('password', 'Type your password', 'Password')}
-                    {renderTextField('firstName', 'Type your first name', 'First name')}
-                    {renderTextField('lastName', 'Type your last name', 'Last name')}
+                    {renderTextField(
+                        'password',
+                        'Type your password',
+                        'Password',
+                    )}
+                    {renderTextField(
+                        'firstName',
+                        'Type your first name',
+                        'First name',
+                    )}
+                    {renderTextField(
+                        'lastName',
+                        'Type your last name',
+                        'Last name',
+                    )}
                     {renderPhoneField(setFieldValue)}
                     {renderFormSendErrorBlock()}
                     {renderSendButton(isSubmitting)}
