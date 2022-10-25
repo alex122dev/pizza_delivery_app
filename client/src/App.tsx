@@ -3,9 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.scss';
 import { Header } from './components/Header/Header';
 import { useAppDispatch } from './hooks/redux';
-import { Home } from './pages/Home/Home';
-import { SignIn } from './pages/SignIn/SignIn';
-import { SignUp } from './pages/SignUp/SignUp';
+import { Home, SignIn, SignUp } from './pages';
 import { checkIfUserAuthorized } from './stateManager/actionCreators/auth';
 
 function App() {

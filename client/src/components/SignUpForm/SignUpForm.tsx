@@ -11,9 +11,9 @@ import { Preloader } from '../common/Preloader/Preloader';
 import { phoneValidateRegExp } from '../../utils/validation/regularExpressions';
 import { phoneNumberMask } from '../../utils/masks/phoneNumberMask';
 
-interface IProps {}
+interface IProps { }
 
-export const SignUpForm: React.FC<IProps> = ({}) => {
+export const SignUpForm: React.FC<IProps> = ({ }) => {
     const dispatch = useAppDispatch();
     const [formSendError, setFormSendError] = useState('');
 
@@ -25,7 +25,7 @@ export const SignUpForm: React.FC<IProps> = ({}) => {
         phone: '',
     };
 
-    const submit = async (
+    const onFormSubmit = async (
         values: SignUpDto,
         {
             resetForm,
@@ -121,7 +121,7 @@ export const SignUpForm: React.FC<IProps> = ({}) => {
         <Formik
             enableReinitialize={true}
             initialValues={formInitialValues}
-            onSubmit={submit}
+            onSubmit={onFormSubmit}
             validationSchema={validationSchemaObject}
         >
             {({ isSubmitting, setFieldValue }) => (
