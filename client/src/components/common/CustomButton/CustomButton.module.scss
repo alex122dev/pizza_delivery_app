@@ -1,0 +1,55 @@
+.btn {
+    min-height: 40px;
+
+    padding: 5px 30px;
+    border-radius: 10px;
+    color: #fff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.3s ease 0s;
+
+    &.green {
+        background-color: #23BA99;
+
+        @media (any-hover: hover) {
+            &:hover {
+                background-color: #199278;
+            }
+        }
+    }
+
+    &.blue {
+        background-color: #374FC7;
+
+        @media (any-hover: hover) {
+            &:hover {
+                background-color: #27388e; //374FC7
+            }
+        }
+    }
+
+    &.red {
+        background-color: #F2323F;
+
+        @media (any-hover: hover) {
+            &:hover {
+                background-color: #be101c; // F2323F
+            }
+        }
+    }
+
+    &:disabled {
+        color: #8C8C8C;
+        background-color: #dedede;
+
+        @media (any-hover: hover) {
+            &:hover {
+                color: #8C8C8C;
+                background-color: #dedede;
+            }
+        }
+    }
+}
