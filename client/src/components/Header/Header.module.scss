@@ -26,15 +26,22 @@
 }
 
 .nav {
+    flex: 1 1 auto;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .link {
     padding: 10px;
+    display: inline-block;
 
     &_active {
         font-weight: 700;
         color: green;
     }
 }
+
+.shopLinks {}
+
+.userLinks {}

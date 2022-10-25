@@ -6,13 +6,13 @@ import { useAppDispatch } from './hooks/redux';
 import { Home } from './pages/Home/Home';
 import { SignIn } from './pages/SignIn/SignIn';
 import { SignUp } from './pages/SignUp/SignUp';
-import { checkIsAuth } from './redux/actionCreators/auth';
+import { checkIfUserAuthorized } from './stateManager/actionCreators/auth';
 
 function App() {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(checkIsAuth());
+        dispatch(checkIfUserAuthorized());
     }, []);
 
     return (

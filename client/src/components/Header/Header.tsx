@@ -4,64 +4,52 @@ import logoImage from '../../assets/image/logo.png';
 import { Link, NavLink } from 'react-router-dom';
 import cn from 'classnames';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { signOut } from '../../redux/actionCreators/auth';
+import { signOut } from '../../stateManager/actionCreators/auth';
 
-interface IProps {}
+interface IProps { }
 
-export const Header: FC<IProps> = ({}) => {
+export const Header: FC<IProps> = ({ }) => {
     const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
 
+    const renderLogo = () => {
+        return <Link to={'/home'} className={styles.logo}>
+            <img src={logoImage} alt='logo' />
+        </Link>
+    }
+
+    const renderNavLink = (to: string, text: string) => {
+        return <NavLink
+            to={to}
+            className={({ isActive }) => cn(styles.link, { [styles.link_active]: isActive })}
+        >{text}
+        </NavLink>
+    }
+
+    const renderUserSign = () => {
+        return user ? (
+            <button onClick={() => dispatch(signOut())}>
+                Sign Out
+            </button>
+        ) : (
+            <>
+                {renderNavLink("/signin", "Sign In")}
+                {renderNavLink("/signup", "Sign Up")}
+            </>
+        )
+    }
+
     return (
         <div className={styles.container}>
-            <Link to={'/home'} className={styles.logo}>
-                <img src={logoImage} alt='logo' />
-            </Link>
+            {renderLogo()}
             <nav className={styles.nav}>
-                <NavLink
-                    to={'/home'}
-                    className={({ isActive }) =>
-                        cn(styles.link, { [styles.link_active]: isActive })
-                    }
-                >
-                    Home
-                </NavLink>
-                <NavLink
-                    to={'/menu'}
-                    className={({ isActive }) =>
-                        cn(styles.link, { [styles.link_active]: isActive })
-                    }
-                >
-                    Menu
-                </NavLink>
-                {user ? (
-                    <button onClick={() => dispatch(signOut())}>
-                        Sign Out
-                    </button>
-                ) : (
-                    <>
-                        <NavLink
-                            to={'/signin'}
-                            className={({ isActive }) =>
-                                cn(styles.link, {
-                                    [styles.link_active]: isActive,
-                                })
-                            }
-                        >
-                            Sign In
-                        </NavLink>
-                        <NavLink
-                            to={'/signup'}
-                            className={({ isActive }) =>
-                                cn(styles.link, {
-                                    [styles.link_active]: isActive,
-                                })
-                            }
-                        >
-                            Sign Up
-                        </NavLink>
-                    </>
-                )}
+                <div className={styles.shopLinks}>
+                    {renderNavLink("/home", "Home")}
+                    {renderNavLink("/menu", "Menu")}
+                </div>
+                <div className={styles.userLinks}>
+                    {renderUserSign()}
+                </div>
             </nav>
         </div>
     );

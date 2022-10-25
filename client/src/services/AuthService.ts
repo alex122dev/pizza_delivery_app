@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
-import { AuthReturnDto } from '../dtos/AuthReturn.dto';
-import { SignInDto } from '../dtos/SignIn.dto';
-import { SignOutDto } from '../dtos/SignOut.dto';
-import { SignUpDto } from '../dtos/SignUp.dto';
+import { AuthReturnDto } from '../dtos/auth/AuthReturn.dto';
+import { SignInDto } from '../dtos/auth/SignIn.dto';
+import { SignOutDto } from '../dtos/auth/SignOut.dto';
+import { SignUpDto } from '../dtos/auth/SignUp.dto';
 import { $api, API_URL } from '../http/http';
 
 export class AuthService {
@@ -18,7 +18,7 @@ export class AuthService {
         return $api.post<SignOutDto>('/auth/signout');
     }
 
-    static async checkIsAuth(): Promise<AxiosResponse<AuthReturnDto>> {
+    static async checkIfUserAuthorized(): Promise<AxiosResponse<AuthReturnDto>> {
         return axios.get<AuthReturnDto>(`${API_URL}/auth/refresh`, {
             withCredentials: true,
         });

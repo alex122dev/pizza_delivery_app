@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { UserDto } from '../../dtos/User.dto';
+import { UserDto } from '../../dtos/users/User.dto';
 
 interface IInitialState {
     user: UserDto | null;

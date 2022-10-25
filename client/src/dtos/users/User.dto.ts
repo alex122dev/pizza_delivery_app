@@ -1,4 +1,4 @@
-import { RoleDto } from './Role.dto';
+import { RoleDto } from '../roles/Role.dto';
 
 export interface UserDto {
     id: number;
