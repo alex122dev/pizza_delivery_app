@@ -45,15 +45,21 @@ export const Header: FC<IProps> = ({}) => {
     };
 
     return (
-        <div className={styles.container}>
-            {renderLogo()}
-            <nav className={styles.nav}>
-                <div className={styles.shopLinks}>
-                    {renderNavLink('/home', 'Home')}
-                    {renderNavLink('/menu', 'Menu')}
+        <header className={styles.header}>
+            <div className={styles.container}>
+                <div className={styles.body}>
+                    {renderLogo()}
+                    <nav className={styles.nav}>
+                        <div className={styles.shopLinks}>
+                            {renderNavLink('/home', 'Home')}
+                            {renderNavLink('/menu', 'Menu')}
+                        </div>
+                        <div className={styles.userLinks}>
+                            {renderUserSign()}
+                        </div>
+                    </nav>
                 </div>
-                <div className={styles.userLinks}>{renderUserSign()}</div>
-            </nav>
-        </div>
+            </div>
+        </header>
     );
 };
