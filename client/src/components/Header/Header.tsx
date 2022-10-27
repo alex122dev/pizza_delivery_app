@@ -1,24 +1,16 @@
 import { FC } from 'react';
 import styles from './Header.module.scss';
-import logoImage from '../../assets/image/logo.png';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import cn from 'classnames';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { signOut } from '../../stateManager/actionCreators/auth';
+import { Logo } from '../Logo/Logo';
 
 interface IProps {}
 
 export const Header: FC<IProps> = ({}) => {
     const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
-
-    const renderLogo = () => {
-        return (
-            <Link to={'/home'} className={styles.logo}>
-                <img src={logoImage} alt='logo' />
-            </Link>
-        );
-    };
 
     const renderNavLink = (to: string, text: string) => {
         return (
@@ -48,7 +40,7 @@ export const Header: FC<IProps> = ({}) => {
         <header className={styles.header}>
             <div className={styles.container}>
                 <div className={styles.body}>
-                    {renderLogo()}
+                    <Logo />
                     <nav className={styles.nav}>
                         <div className={styles.shopLinks}>
                             {renderNavLink('/home', 'Home')}

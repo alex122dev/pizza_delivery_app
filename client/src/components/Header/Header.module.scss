@@ -1,3 +1,5 @@
+@import '../../variables/variables.scss';
+
 .header {
     position: sticky;
     z-index: 5;
@@ -17,27 +19,13 @@
 .body {
     border-radius: 50px;
     padding: 10px;
-    background-color: #fff;
+    background-color: $whiteColor;
     display: flex;
     align-items: center;
-    border: 2px solid #23BA99;
+    border: 2px solid $lightGreenColor;
 
     @media (max-width: 767.98px) {
         padding: 5px;
-    }
-}
-
-.logo {
-    position: relative;
-    width: 60px;
-    height: 60px;
-
-    img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
     }
 }
 
@@ -54,7 +42,7 @@
 
     &_active {
         font-weight: 700;
-        color: green;
+        color: $lightGreenColor;
     }
 }
 

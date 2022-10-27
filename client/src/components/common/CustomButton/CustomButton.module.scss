@@ -1,9 +1,11 @@
+@import '../../../variables/variables.scss';
+
 .btn {
     min-height: 40px;
 
     padding: 5px 30px;
     border-radius: 10px;
-    color: #fff;
+    color: $whiteColor;
 
     display: flex;
     align-items: center;
@@ -12,43 +14,43 @@
     transition: all 0.3s ease 0s;
 
     &.green {
-        background-color: #23BA99;
+        background-color: $lightGreenColor;
 
         @media (any-hover: hover) {
             &:hover {
-                background-color: #199278;
+                background-color: $lightGreenHoverColor;
             }
         }
     }
 
     &.blue {
-        background-color: #374FC7;
+        background-color: $lightBlueColor;
 
         @media (any-hover: hover) {
             &:hover {
-                background-color: #27388e; //374FC7
+                background-color: $lightBlueHoverColor;
             }
         }
     }
 
     &.red {
-        background-color: #F2323F;
+        background-color: $redColor;
 
         @media (any-hover: hover) {
             &:hover {
-                background-color: #be101c; // F2323F
+                background-color: $redHoverColor;
             }
         }
     }
 
     &:disabled {
-        color: #8C8C8C;
-        background-color: #dedede;
+        color: $disabledColor;
+        background-color: $disabledTextColor;
 
         @media (any-hover: hover) {
             &:hover {
-                color: #8C8C8C;
-                background-color: #dedede;
+                color: $disabledColor;
+                background-color: $disabledTextColor;
             }
         }
     }

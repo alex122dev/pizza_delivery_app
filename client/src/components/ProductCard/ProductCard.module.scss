@@ -1,0 +1,91 @@
+@import '../../variables/variables.scss';
+
+.productCart {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+
+    &::after {
+        content: '';
+        transition: all 0.3s ease 0s;
+    }
+
+    @media (any-hover: hover) {
+        &:hover {
+            &::after {
+                position: absolute;
+                pointer-events: none;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 2;
+                background-color: $yellowOpacityColor;
+            }
+        }
+    }
+}
+
+.productImage {
+    position: relative;
+    padding-bottom: 70%;
+    background-color: #fff;
+
+    img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.productContent {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background-color: $lightYellowColor;
+}
+
+.productName {
+    font-size: 20px;
+    font-weight: 700;
+
+    &::first-letter {
+        text-transform: uppercase;
+    }
+
+    margin-bottom: 10px;
+}
+
+.productDescription {
+    flex: 1 1 auto;
+    margin-bottom: 10px;
+}
+
+.priceAndButtonBlock {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.priceBlock {
+    display: flex;
+    padding: 10px;
+}
+
+.price {
+    font-size: 20px;
+    font-weight: 700;
+    margin-right: 3px;
+}
+
+.currency {
+    align-self: flex-start;
+    font-size: 14px;
+    color: $currencyOpacityColor;
+}
