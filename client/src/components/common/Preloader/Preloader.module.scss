@@ -1,3 +1,5 @@
+@import '../../../variables/variables.scss';
+
 .preloader {
     //display: inline-block;
     display: block;
@@ -13,8 +15,8 @@
     height: 64px;
     margin: 8px;
     border-radius: 50%;
-    border: 6px solid #3C4252;
-    border-color: #3C4252 transparent #3C4252 transparent;
+    border: 6px solid $darkBlueColor;
+    border-color: $darkBlueColor transparent $darkBlueColor transparent;
     animation: preloader 1.2s linear infinite;
 }
 

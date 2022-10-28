@@ -1,0 +1,133 @@
+@import '../../variables/variables.scss';
+
+.container {
+    display: flex;
+    column-gap: 40px;
+
+    @media (max-width: 767.98px) {
+        flex-direction: column;
+    }
+}
+
+.productImage {
+    flex: 0 1 50%;
+    align-self: flex-start;
+    position: relative;
+    padding-bottom: 30%;
+
+    img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    @media (max-width: 767.98px) {
+        align-self: stretch;
+        padding-bottom: 50%;
+        margin-bottom: 20px;
+    }
+}
+
+.productContent {
+    flex: 0 1 50%;
+
+    display: flex;
+    flex-direction: column;
+
+    @media (max-width: 767.98px) {
+        padding: 0 10px;
+    }
+
+    @media (max-width: 479.98px) {
+        padding: 0;
+    }
+}
+
+.productName {
+    font-size: 32px;
+    font-weight: 700;
+
+    &::first-letter {
+        text-transform: uppercase;
+    }
+
+    margin-bottom: 20px;
+}
+
+.productDescription {
+    flex: 1 1 auto;
+
+    &::first-letter {
+        text-transform: uppercase;
+    }
+
+    margin-bottom: 20px;
+}
+
+.productComponents {
+    margin-bottom: 20px;
+}
+
+.componentsTitle {
+    margin-bottom: 10px;
+}
+
+.componentsBody {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+
+    @media (max-width: 479.98px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.componentsItem {}
+
+.componentImage {
+    position: relative;
+    padding-bottom: 60%;
+    background-color: $whiteColor;
+    margin-bottom: 5px;
+
+    img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.componentName {
+    &::first-letter {
+        text-transform: uppercase;
+    }
+}
+
+.priceAndButtonBlock {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.priceBlock {
+    display: flex;
+    padding: 10px;
+}
+
+.price {
+    font-size: 20px;
+    font-weight: 700;
+    margin-right: 3px;
+}
+
+.currency {
+    align-self: flex-start;
+    font-size: 14px;
+    color: $currencyOpacityColor;
+}
+
+.toCardButton {}

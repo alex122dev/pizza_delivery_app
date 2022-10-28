@@ -1,0 +1,43 @@
+@import '../../variables/variables.scss';
+
+.container {}
+
+.categoryBlock {
+    &:not(:last-child) {
+        margin-bottom: 40px;
+    }
+}
+
+.categoryName {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+
+    &::first-letter {
+        text-transform: uppercase;
+    }
+
+    margin-bottom: 20px;
+}
+
+.productsBlock {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+
+    @media (max-width: 991.98px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width: 767.98px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 479.98px) {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+.toCardButton {
+    z-index: 3;
+}

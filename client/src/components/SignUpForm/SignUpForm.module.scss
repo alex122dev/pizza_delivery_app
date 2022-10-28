@@ -1,3 +1,5 @@
+@import '../../variables/variables.scss';
+
 .formBody {
     position: relative;
     padding: 20px;
@@ -6,7 +8,7 @@
     flex-direction: column;
     margin: 0 auto;
     border-radius: 30px;
-    background-color: #E8EAED;
+    background-color: $formBgColor;
     transition: all 0.3s ease 0s;
 
     @media (max-width: 767.98px) {
@@ -22,7 +24,7 @@
 }
 
 .errMessage {
-    color: red;
+    color: $redColor;
     font-weight: 700;
     margin-bottom: 10px;
 }

@@ -17,7 +17,7 @@ export class CategoriesSeeder implements Seeder {
         name: 'drinks',
       },
       {
-        name: 'additions',
+        name: 'sides',
       },
       {
         name: 'desserts',
