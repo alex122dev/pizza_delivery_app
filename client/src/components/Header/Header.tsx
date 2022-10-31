@@ -6,9 +6,9 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { signOut } from '../../stateManager/actionCreators/auth';
 import { Logo } from '../Logo/Logo';
 
-interface IProps {}
+interface IProps { }
 
-export const Header: FC<IProps> = ({}) => {
+export const Header: FC<IProps> = ({ }) => {
     const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
 
@@ -47,6 +47,7 @@ export const Header: FC<IProps> = ({}) => {
                             {renderNavLink('/menu', 'Menu')}
                         </div>
                         <div className={styles.userLinks}>
+                            {renderNavLink('/cart', 'Cart')}
                             {renderUserSign()}
                         </div>
                     </nav>

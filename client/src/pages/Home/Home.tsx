@@ -1,40 +1,32 @@
 import { FC } from 'react';
-import { CustomButton } from '../../components/common/CustomButton/CustomButton';
+import { AddProductToCardButton } from '../../components/AddProductToCardButton/AddProductToCardButton';
+import { CounterProductBlock } from '../../components/CounterProductBlock/CounterProductBlock';
 import { ProductCard } from '../../components/ProductCard/ProductCard';
 import { CategoryDto } from '../../dtos/categories/category.dto';
 import { ProductDto } from '../../dtos/products/product.dto';
 import { useAppSelector } from '../../hooks/redux';
 import styles from './Home.module.scss';
 
-interface IProps {}
+interface IProps { }
 
-export const Home: FC<IProps> = ({}) => {
+export const Home: FC<IProps> = ({ }) => {
     const categories = useAppSelector((state) => state.categories.categories);
-
-    const renderButtonForProductCard = () => {
-        return (
-            <CustomButton
-                startColor='green'
-                className={styles.toCardButton}
-                onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                }}
-            >
-                To cart
-            </CustomButton>
-        );
-    };
+    const orderItems = useAppSelector(state => state.cart.orderItems)
 
     const renderProductsCards = (
         products: Omit<ProductDto, 'category' | 'components'>[],
     ) => {
-        return products.map((product) => (
-            <ProductCard
+        return products.map((product) => {
+            const orderItemWithProduct = orderItems.find(orderItem => orderItem.product.id === product.id)
+
+            return <ProductCard
+                key={product.id}
                 product={product}
-                button={renderButtonForProductCard()}
+                button={orderItemWithProduct
+                    ? <CounterProductBlock orderItem={orderItemWithProduct} />
+                    : <AddProductToCardButton product={product} />}
             />
-        ));
+        })
     };
 
     const renderCategory = (category: CategoryDto) => {
