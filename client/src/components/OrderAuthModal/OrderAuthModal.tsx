@@ -15,6 +15,12 @@ interface IProps {
     setIsOrderConfirmed: (b: boolean) => void;
 }
 
+enum formComponentEnum {
+    none = 'none',
+    signIn = 'signin',
+    signUp = 'signup',
+}
+
 export const OrderAuthModal: React.FC<IProps> = ({
     isActive,
     setIsActive,
@@ -22,13 +28,11 @@ export const OrderAuthModal: React.FC<IProps> = ({
     setIsOrderConfirmed,
 }) => {
     const user = useAppSelector((state) => state.auth.user);
-    const [isSignIn, setIsSignIn] = useState(false);
-    const [isSignUp, setIsSignUp] = useState(false);
+    const [formComponent, setFormComponent] = useState(formComponentEnum.none);
 
     useEffect(() => {
         if (user) {
-            setIsSignIn(false);
-            setIsSignUp(false);
+            setFormComponent(formComponentEnum.none);
         }
     }, [user]);
 
@@ -47,18 +51,22 @@ export const OrderAuthModal: React.FC<IProps> = ({
     };
 
     const renderAuthButtons = () => {
-        if (!user && !isSignIn && !isSignUp) {
+        if (!user && formComponent === formComponentEnum.none) {
             return (
                 <div className={styles.authButtons}>
                     <CustomButton
                         startColor='blue'
-                        onClick={(e) => setIsSignIn(true)}
+                        onClick={(e) =>
+                            setFormComponent(formComponentEnum.signIn)
+                        }
                     >
                         Sign In
                     </CustomButton>
                     <CustomButton
                         startColor='blue'
-                        onClick={(e) => setIsSignUp(true)}
+                        onClick={(e) =>
+                            setFormComponent(formComponentEnum.signUp)
+                        }
                     >
                         Sign Up
                     </CustomButton>
@@ -70,12 +78,11 @@ export const OrderAuthModal: React.FC<IProps> = ({
     };
 
     const renderBackButton = () => {
-        if (isSignIn || isSignUp) {
+        if (formComponent !== formComponentEnum.none) {
             return (
                 <BackButton
                     onClick={(e) => {
-                        setIsSignIn(false);
-                        setIsSignUp(false);
+                        setFormComponent(formComponentEnum.none);
                     }}
                 />
             );
@@ -132,8 +139,12 @@ export const OrderAuthModal: React.FC<IProps> = ({
                     {renderCloseButton()}
                     {renderTitle()}
                     {renderAuthButtons()}
-                    {isSignIn && !isSignUp && <SignInForm />}
-                    {!isSignIn && isSignUp && <SignUpForm />}
+                    {formComponent === formComponentEnum.signIn && (
+                        <SignInForm />
+                    )}
+                    {formComponent === formComponentEnum.signUp && (
+                        <SignUpForm />
+                    )}
                     {renderSuccessButton()}
                 </div>
             </div>

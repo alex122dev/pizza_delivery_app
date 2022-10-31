@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { signOut } from '../../stateManager/actionCreators/auth';
 import { Logo } from '../Logo/Logo';
 import { Link as ScrollLink } from 'react-scroll';
+import { CategoryDto } from '../../dtos/categories/category.dto';
 
 interface IProps {}
 
@@ -40,6 +41,20 @@ export const Header: FC<IProps> = ({}) => {
         );
     };
 
+    const renderMenuItems = (category: CategoryDto) => {
+        return (
+            <ScrollLink
+                key={category.id}
+                to={category.name}
+                smooth
+                offset={-100}
+                className={styles.menuLinks}
+            >
+                {category.name}
+            </ScrollLink>
+        );
+    };
+
     const renderMenu = () => {
         if (pathname !== '/home') {
             return null;
@@ -59,19 +74,7 @@ export const Header: FC<IProps> = ({}) => {
                     <span />
                 </button>
                 <div className={styles.menuBody}>
-                    {categories.map((category) => {
-                        return (
-                            <ScrollLink
-                                key={category.id}
-                                to={category.name}
-                                smooth
-                                offset={-100}
-                                className={styles.menuLinks}
-                            >
-                                {category.name}
-                            </ScrollLink>
-                        );
-                    })}
+                    {categories.map(renderMenuItems)}
                 </div>
             </div>
         );

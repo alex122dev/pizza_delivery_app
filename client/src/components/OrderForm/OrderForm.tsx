@@ -60,8 +60,6 @@ export const OrderForm: React.FC<IProps> = ({}) => {
                 comment: values.comment,
                 orderItems,
             };
-            //console.log('sendData', sendData);
-            //await dispatch(createOrder(sendData));
             dispatch(clearCart());
             resetForm();
             setIsModalActive(true);
