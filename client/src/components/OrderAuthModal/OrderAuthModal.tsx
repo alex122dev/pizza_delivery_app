@@ -15,7 +15,7 @@ interface IProps {
     setIsOrderConfirmed: (b: boolean) => void;
 }
 
-enum formComponentEnum {
+enum SelectedFormComponent {
     none = 'none',
     signIn = 'signin',
     signUp = 'signup',
@@ -28,11 +28,13 @@ export const OrderAuthModal: React.FC<IProps> = ({
     setIsOrderConfirmed,
 }) => {
     const user = useAppSelector((state) => state.auth.user);
-    const [formComponent, setFormComponent] = useState(formComponentEnum.none);
+    const [formComponent, setFormComponent] = useState(
+        SelectedFormComponent.none,
+    );
 
     useEffect(() => {
         if (user) {
-            setFormComponent(formComponentEnum.none);
+            setFormComponent(SelectedFormComponent.none);
         }
     }, [user]);
 
@@ -50,45 +52,45 @@ export const OrderAuthModal: React.FC<IProps> = ({
         );
     };
 
+    const renderOpenFormButton = (
+        text: string,
+        selectedComponent: SelectedFormComponent,
+    ) => {
+        return (
+            <CustomButton
+                startColor='blue'
+                onClick={(e) => setFormComponent(selectedComponent)}
+            >
+                {text}
+            </CustomButton>
+        );
+    };
+
     const renderAuthButtons = () => {
-        if (!user && formComponent === formComponentEnum.none) {
-            return (
-                <div className={styles.authButtons}>
-                    <CustomButton
-                        startColor='blue'
-                        onClick={(e) =>
-                            setFormComponent(formComponentEnum.signIn)
-                        }
-                    >
-                        Sign In
-                    </CustomButton>
-                    <CustomButton
-                        startColor='blue'
-                        onClick={(e) =>
-                            setFormComponent(formComponentEnum.signUp)
-                        }
-                    >
-                        Sign Up
-                    </CustomButton>
-                </div>
-            );
+        if (user || formComponent !== SelectedFormComponent.none) {
+            return null;
         }
 
-        return null;
+        return (
+            <div className={styles.authButtons}>
+                {renderOpenFormButton('Sign In', SelectedFormComponent.signIn)}
+                {renderOpenFormButton('Sign Up', SelectedFormComponent.signUp)}
+            </div>
+        );
     };
 
     const renderBackButton = () => {
-        if (formComponent !== formComponentEnum.none) {
-            return (
-                <BackButton
-                    onClick={(e) => {
-                        setFormComponent(formComponentEnum.none);
-                    }}
-                />
-            );
+        if (formComponent === SelectedFormComponent.none) {
+            return null;
         }
 
-        return null;
+        return (
+            <BackButton
+                onClick={(e) => {
+                    setFormComponent(SelectedFormComponent.none);
+                }}
+            />
+        );
     };
 
     const renderSuccessButton = () => {
@@ -112,23 +114,8 @@ export const OrderAuthModal: React.FC<IProps> = ({
         );
     };
 
-    const renderTitle = () => {
-        if (!isOrderConfirmed) {
-            return (
-                <h2 className={styles.modalTitle}>
-                    {user
-                        ? 'Success! You can place an order.'
-                        : 'To place an order, you must sign in or sign up!'}
-                </h2>
-            );
-        }
-
-        return (
-            <h2 className={styles.modalTitle}>
-                Thank you! Your order is being processed. Our managers will
-                contact you shortly.
-            </h2>
-        );
+    const renderTitle = (text: string) => {
+        return <h2 className={styles.modalTitle}>{text}</h2>;
     };
 
     return (
@@ -137,12 +124,23 @@ export const OrderAuthModal: React.FC<IProps> = ({
                 <div className={styles.body}>
                     {renderBackButton()}
                     {renderCloseButton()}
-                    {renderTitle()}
+                    {!isOrderConfirmed &&
+                        !user &&
+                        renderTitle(
+                            'To place an order, you must sign in or sign up!',
+                        )}
+                    {!isOrderConfirmed &&
+                        user &&
+                        renderTitle('Success! You can place an order.')}
+                    {isOrderConfirmed &&
+                        renderTitle(
+                            'Thank you! Your order is being processed. Our managers will contact you shortly.',
+                        )}
                     {renderAuthButtons()}
-                    {formComponent === formComponentEnum.signIn && (
+                    {formComponent === SelectedFormComponent.signIn && (
                         <SignInForm />
                     )}
-                    {formComponent === formComponentEnum.signUp && (
+                    {formComponent === SelectedFormComponent.signUp && (
                         <SignUpForm />
                     )}
                     {renderSuccessButton()}

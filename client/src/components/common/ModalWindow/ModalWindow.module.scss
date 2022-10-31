@@ -28,8 +28,10 @@
     max-width: 1440px;
     margin: 0 auto;
     padding: 30px;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
+    align-items: center;
 
     @media (max-width: 1024px) {
         padding: 0px;
@@ -39,7 +41,7 @@
 .content {
     border-radius: 30px;
     background-color: $whiteColor;
-    min-height: calc(100vh - 60px);
+    min-height: 200px;
     display: flex;
     flex-direction: column;
 
