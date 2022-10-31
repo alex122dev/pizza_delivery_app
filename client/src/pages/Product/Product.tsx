@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { AddProductToCardButton } from '../../components/AddProductToCardButton/AddProductToCardButton';
 import { InfoMessage } from '../../components/common/InfoMessage/InfoMessage';
 import { Preloader } from '../../components/common/Preloader/Preloader';
-import { CounterProductBlock } from '../../components/CounterProductBlock/CounterProductBlock';
+import { QuantityProductBlock } from '../../components/QuantityProductBlock/QuantityProductBlock';
 import { ComponentDto } from '../../dtos/components/component.dto';
 import { ProductDto } from '../../dtos/products/product.dto';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
@@ -12,13 +12,13 @@ import { getProductById } from '../../stateManager/actionCreators/products';
 import { setCurrentProduct } from '../../stateManager/slices/productsSlice';
 import styles from './Product.module.scss';
 
-interface IProps { }
+interface IProps {}
 
-export const Product: React.FC<IProps> = ({ }) => {
+export const Product: React.FC<IProps> = ({}) => {
     const dispatch = useAppDispatch();
     const isFetching = useAppSelector((state) => state.products.isFetching);
     const product = useAppSelector((state) => state.products.currentProduct);
-    const orderItems = useAppSelector(state => state.cart.orderItems)
+    const orderItems = useAppSelector((state) => state.cart.orderItems);
     const { productId } = useParams();
 
     useEffect(() => {
@@ -59,12 +59,16 @@ export const Product: React.FC<IProps> = ({ }) => {
     };
 
     const renderButton = (product: ProductDto) => {
-        const orderItemWithProduct = orderItems.find(orderItem => orderItem.product.id === product.id)
+        const orderItemWithProduct = orderItems.find(
+            (orderItem) => orderItem.product.id === product.id,
+        );
 
-        return orderItemWithProduct
-            ? <CounterProductBlock orderItem={orderItemWithProduct} />
-            : <AddProductToCardButton product={product} />
-    }
+        return orderItemWithProduct ? (
+            <QuantityProductBlock orderItem={orderItemWithProduct} />
+        ) : (
+            <AddProductToCardButton product={product} />
+        );
+    };
 
     const renderProduct = () => {
         if (!product) {

@@ -1,13 +1,13 @@
 @import '../../variables/variables.scss';
 
-.countBlock {
+.quantityBlock {
     display: flex;
     align-items: center;
     position: relative;
     z-index: 3;
 }
 
-.countBtn {
+.quantityBtn {
     position: relative;
     flex: 0 0 30px;
     width: 30px;
@@ -62,7 +62,7 @@
     }
 }
 
-.count {
+.quantity {
     display: inline-block;
     padding: 5px 10px;
     font-size: 20px;

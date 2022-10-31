@@ -32,7 +32,10 @@ function App() {
                                 element={<Product />}
                             />
                             <Route path='/cart' element={<Cart />} />
-                            <Route path='/' element={<Navigate to={'/home'} />} />
+                            <Route
+                                path='/'
+                                element={<Navigate to={'/home'} />}
+                            />
                         </Routes>
                     </ScrollToTop>
                 </div>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { ProductDto } from '../../dtos/products/product.dto';
 import { useAppDispatch } from '../../hooks/redux';
 import { addProduct } from '../../stateManager/slices/cartSlice';
@@ -6,11 +6,11 @@ import { CustomButton } from '../common/CustomButton/CustomButton';
 import styles from './AddProductToCardButton.module.scss';
 
 interface IProps {
-    product: Omit<ProductDto, 'category' | 'components'>
+    product: Omit<ProductDto, 'category' | 'components'>;
 }
 
 export const AddProductToCardButton: React.FC<IProps> = ({ product }) => {
-    const dispatch = useAppDispatch()
+    const dispatch = useAppDispatch();
 
     return (
         <CustomButton
@@ -19,10 +19,10 @@ export const AddProductToCardButton: React.FC<IProps> = ({ product }) => {
             onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                dispatch(addProduct(product))
+                dispatch(addProduct(product));
             }}
         >
             To cart
         </CustomButton>
     );
-}
+};

@@ -1,16 +1,20 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import styles from './Header.module.scss';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import cn from 'classnames';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { signOut } from '../../stateManager/actionCreators/auth';
 import { Logo } from '../Logo/Logo';
+import { Link as ScrollLink } from 'react-scroll';
 
-interface IProps { }
+interface IProps {}
 
-export const Header: FC<IProps> = ({ }) => {
+export const Header: FC<IProps> = ({}) => {
     const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
+    const categories = useAppSelector((state) => state.categories.categories);
+    const { pathname } = useLocation();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const renderNavLink = (to: string, text: string) => {
         return (
@@ -36,6 +40,43 @@ export const Header: FC<IProps> = ({ }) => {
         );
     };
 
+    const renderMenu = () => {
+        if (pathname !== '/home') {
+            return null;
+        }
+
+        return (
+            <div
+                className={cn(styles.menuNavigation, {
+                    [styles.active]: isMenuOpen,
+                })}
+            >
+                <button
+                    className={[styles.link, styles.menuBtn].join(' ')}
+                    onClick={(e) => setIsMenuOpen(!isMenuOpen)}
+                >
+                    Menu
+                    <span />
+                </button>
+                <div className={styles.menuBody}>
+                    {categories.map((category) => {
+                        return (
+                            <ScrollLink
+                                key={category.id}
+                                to={category.name}
+                                smooth
+                                offset={-100}
+                                className={styles.menuLinks}
+                            >
+                                {category.name}
+                            </ScrollLink>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    };
+
     return (
         <header className={styles.header}>
             <div className={styles.container}>
@@ -44,7 +85,7 @@ export const Header: FC<IProps> = ({ }) => {
                     <nav className={styles.nav}>
                         <div className={styles.shopLinks}>
                             {renderNavLink('/home', 'Home')}
-                            {renderNavLink('/menu', 'Menu')}
+                            {renderMenu()}
                         </div>
                         <div className={styles.userLinks}>
                             {renderNavLink('/cart', 'Cart')}

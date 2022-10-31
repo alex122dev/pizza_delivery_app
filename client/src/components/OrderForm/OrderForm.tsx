@@ -1,5 +1,5 @@
 import { Field, Form, Formik, FormikState } from 'formik';
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { CheckoutOrderDto } from '../../dtos/orders/CheckoutOrder.dto';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import * as Yup from 'yup';
@@ -14,14 +14,12 @@ import { OrderAuthModal } from '../OrderAuthModal/OrderAuthModal';
 import { CreateOrderDto } from '../../dtos/orders/CreateOrder.dto';
 import { clearCart } from '../../stateManager/slices/cartSlice';
 
-interface IProps {
+interface IProps {}
 
-}
-
-export const OrderForm: React.FC<IProps> = ({ }) => {
+export const OrderForm: React.FC<IProps> = ({}) => {
     const dispatch = useAppDispatch();
-    const user = useAppSelector(state => state.auth.user)
-    const orderItems = useAppSelector(state => state.cart.orderItems)
+    const user = useAppSelector((state) => state.auth.user);
+    const orderItems = useAppSelector((state) => state.cart.orderItems);
     const [formSendError, setFormSendError] = useState('');
     const [isModalActive, setIsModalActive] = useState(false);
     const [isOrderConfirmed, setIsOrderConfirmed] = useState(false);
@@ -29,41 +27,45 @@ export const OrderForm: React.FC<IProps> = ({ }) => {
     const formInitialValues: CheckoutOrderDto = {
         phone: user ? phoneMaskFormat(user.phone) : '',
         address: '',
-        comment: ''
+        comment: '',
     };
 
     const onFormSubmit = async (
         values: CheckoutOrderDto,
         {
             resetForm,
-        }: { resetForm: (nextState?: Partial<FormikState<CheckoutOrderDto>>) => void },
+        }: {
+            resetForm: (
+                nextState?: Partial<FormikState<CheckoutOrderDto>>,
+            ) => void;
+        },
     ): Promise<void> => {
         if (orderItems.length === 0) {
-            setFormSendError('to place an order, add products to the cart')
-            return
+            setFormSendError('to place an order, add products to the cart');
+            return;
         }
 
         if (!user) {
             setFormSendError('');
-            setIsModalActive(true)
-            return
+            setIsModalActive(true);
+            return;
         }
 
         try {
             setFormSendError('');
-            const formatedPhone = values.phone.replace(/\D/g, '')
+            const formatedPhone = values.phone.replace(/\D/g, '');
             const sendData: CreateOrderDto = {
                 phone: formatedPhone,
                 address: values.address,
                 comment: values.comment,
-                orderItems
-            }
+                orderItems,
+            };
             //console.log('sendData', sendData);
             //await dispatch(createOrder(sendData));
-            dispatch(clearCart())
+            dispatch(clearCart());
             resetForm();
-            setIsModalActive(true)
-            setIsOrderConfirmed(true)
+            setIsModalActive(true);
+            setIsOrderConfirmed(true);
         } catch (e: any) {
             setFormSendError(e.response?.data?.message);
         }
@@ -74,7 +76,7 @@ export const OrderForm: React.FC<IProps> = ({ }) => {
             .required()
             .matches(phoneValidateRegExp, 'The phone number is invalid'),
         address: Yup.string().required(),
-        comment: Yup.string()
+        comment: Yup.string(),
     });
 
     const renderPhoneField = (
@@ -138,7 +140,6 @@ export const OrderForm: React.FC<IProps> = ({ }) => {
         );
     };
 
-
     return (
         <>
             <Formik
@@ -148,16 +149,31 @@ export const OrderForm: React.FC<IProps> = ({ }) => {
             >
                 {({ isSubmitting, setFieldValue }) => (
                     <Form className={styles.formBody}>
-                        {isSubmitting && <Preloader className={styles.preloader} />}
+                        {isSubmitting && (
+                            <Preloader className={styles.preloader} />
+                        )}
                         {renderPhoneField(setFieldValue)}
-                        {renderTextField('address', 'Type your address', 'Address')}
-                        {renderTextField('comment', 'Type your comment (optional)', 'Comment')}
+                        {renderTextField(
+                            'address',
+                            'Type your address',
+                            'Address',
+                        )}
+                        {renderTextField(
+                            'comment',
+                            'Type your comment (optional)',
+                            'Comment',
+                        )}
                         {renderFormSendErrorBlock()}
                         {renderSendButton(isSubmitting)}
                     </Form>
                 )}
             </Formik>
-            <OrderAuthModal isActive={isModalActive} setIsActive={setIsModalActive} isOrderConfirmed={isOrderConfirmed} setIsOrderConfirmed={setIsOrderConfirmed} />
+            <OrderAuthModal
+                isActive={isModalActive}
+                setIsActive={setIsModalActive}
+                isOrderConfirmed={isOrderConfirmed}
+                setIsOrderConfirmed={setIsOrderConfirmed}
+            />
         </>
     );
-}
+};
