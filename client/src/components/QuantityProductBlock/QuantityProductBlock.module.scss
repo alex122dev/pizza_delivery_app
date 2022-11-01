@@ -1,0 +1,70 @@
+@import '../../variables/variables.scss';
+
+.quantityBlock {
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 3;
+}
+
+.quantityBtn {
+    position: relative;
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    border: 2px solid $mainColor;
+    background-color: $yellowOpacityColor;
+    border-radius: 50%;
+    transition: all 0.3s ease 0s;
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: calc(100% - 8px);
+        height: 2px;
+        background-color: $mainColor;
+        transition: all 0.3s ease 0s;
+    }
+
+    @media (any-hover: hover) {
+        &:hover {
+            background-color: $lightYellowColor;
+            border-color: $lightGreenHoverColor;
+
+            &::before,
+            &::after {
+                background-color: $lightGreenHoverColor;
+            }
+        }
+    }
+
+    &.decrementBtn {
+        &::before {
+            transform: translate(-50%, -50%);
+        }
+
+        &::after {
+            display: none;
+        }
+    }
+
+    &.incrementBtn {
+        &::before {
+            transform: translate(-50%, -50%);
+        }
+
+        &::after {
+            transform: translate(-50%, -50%) rotate(-90deg);
+        }
+    }
+}
+
+.quantity {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 20px;
+    font-weight: 500;
+}

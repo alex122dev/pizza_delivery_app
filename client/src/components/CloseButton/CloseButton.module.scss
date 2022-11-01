@@ -1,0 +1,45 @@
+@import '../../variables/variables.scss';
+
+.closeBtn {
+    position: absolute;
+    z-index: 3;
+    top: 5px;
+    right: 5px;
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    border: 2px solid $mainColor;
+    border-radius: 50%;
+    transition: all 0.3s ease 0s;
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: calc(100% - 8px);
+        height: 2px;
+        background-color: $mainColor;
+        transition: all 0.3s ease 0s;
+    }
+
+    &::before {
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &::after {
+        transform: translate(-50%, -50%) rotate(-45deg);
+    }
+
+    @media (any-hover: hover) {
+        &:hover {
+            border-color: $redColor;
+
+            &::before,
+            &::after {
+                background-color: $redColor;
+            }
+        }
+    }
+}

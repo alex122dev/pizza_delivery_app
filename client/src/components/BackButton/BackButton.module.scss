@@ -1,0 +1,54 @@
+@import '../../variables/variables.scss';
+
+.backBtn {
+    position: absolute;
+    z-index: 3;
+    top: 10px;
+    left: 10px;
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    border: 2px solid $mainColor;
+    border-radius: 50%;
+    transition: all 0.3s ease 0s;
+
+    &::before,
+    &::after,
+    span {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: calc(50%);
+        height: 2px;
+        background-color: $mainColor;
+        transition: all 0.3s ease 0s;
+    }
+
+    &::before {
+        transform-origin: top left;
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &::after {
+        transform-origin: bottom left;
+        transform: translate(-50%, -50%) rotate(-45deg);
+    }
+
+    span {
+        width: calc(70%);
+        transform: translate(-40%, -50%);
+    }
+
+    @media (any-hover: hover) {
+        &:hover {
+            border-color: $lightGreenColor;
+
+            &::before,
+            &::after,
+            span {
+                background-color: $lightGreenColor;
+            }
+        }
+    }
+}

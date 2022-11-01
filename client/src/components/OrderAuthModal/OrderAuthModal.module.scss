@@ -1,0 +1,36 @@
+@import '../../variables/variables.scss';
+
+.container {
+    flex: 1 1 auto;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.body {
+    padding: 40px 20px 20px 20px;
+}
+
+.closeModalBtn {
+    top: 10px;
+    right: 10px;
+}
+
+.modalTitle {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    padding: 0 40px;
+}
+
+.authButtons {
+    display: flex;
+    justify-content: center;
+    column-gap: 20px;
+}
+
+.successBtn {
+    margin: 0 auto;
+}

@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import { CustomButton } from '../../components/common/CustomButton/CustomButton';
+import { AddProductToCardButton } from '../../components/AddProductToCardButton/AddProductToCardButton';
+import { QuantityProductBlock } from '../../components/QuantityProductBlock/QuantityProductBlock';
 import { ProductCard } from '../../components/ProductCard/ProductCard';
 import { CategoryDto } from '../../dtos/categories/category.dto';
 import { ProductDto } from '../../dtos/products/product.dto';
@@ -10,36 +11,41 @@ interface IProps {}
 
 export const Home: FC<IProps> = ({}) => {
     const categories = useAppSelector((state) => state.categories.categories);
-
-    const renderButtonForProductCard = () => {
-        return (
-            <CustomButton
-                startColor='green'
-                className={styles.toCardButton}
-                onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                }}
-            >
-                To cart
-            </CustomButton>
-        );
-    };
+    const orderItems = useAppSelector((state) => state.cart.orderItems);
 
     const renderProductsCards = (
         products: Omit<ProductDto, 'category' | 'components'>[],
     ) => {
-        return products.map((product) => (
-            <ProductCard
-                product={product}
-                button={renderButtonForProductCard()}
-            />
-        ));
+        return products.map((product) => {
+            const orderItemWithProduct = orderItems.find(
+                (orderItem) => orderItem.product.id === product.id,
+            );
+
+            return (
+                <ProductCard
+                    key={product.id}
+                    product={product}
+                    button={
+                        orderItemWithProduct ? (
+                            <QuantityProductBlock
+                                orderItem={orderItemWithProduct}
+                            />
+                        ) : (
+                            <AddProductToCardButton product={product} />
+                        )
+                    }
+                />
+            );
+        });
     };
 
     const renderCategory = (category: CategoryDto) => {
         return (
-            <section key={category.id} className={styles.categoryBlock}>
+            <section
+                key={category.id}
+                id={category.name}
+                className={styles.categoryBlock}
+            >
                 <h2 className={styles.categoryName}>{category.name}</h2>
                 <div className={styles.productsBlock}>
                     {renderProductsCards(category.products)}

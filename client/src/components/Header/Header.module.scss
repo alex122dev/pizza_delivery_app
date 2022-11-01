@@ -46,6 +46,109 @@
     }
 }
 
-.shopLinks {}
+.shopLinks {
+    display: flex;
+    align-items: center;
+}
 
 .userLinks {}
+
+.menuNavigation {
+    position: relative;
+
+    @media (any-hover: hover) {
+        &:hover {
+            & .menuBody {
+                top: 100%;
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            & .menuBtn {
+                span {
+                    transform: rotate(-180deg);
+                }
+            }
+        }
+    }
+
+    @media (hover: none) {
+        &.active {
+            & .menuBody {
+                top: 100%;
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            & .menuBtn {
+                span {
+                    transform: rotate(-180deg);
+                }
+            }
+        }
+    }
+}
+
+.menuBtn {
+    display: flex;
+
+    span {
+        width: 18px;
+        height: 18px;
+        flex: 0 0 18px;
+        position: relative;
+        transition: all 0.3s ease 0s;
+        margin-left: 3px;
+
+        &::before,
+        &::after,
+        span {
+            content: '';
+            position: absolute;
+            top: 25%;
+            width: calc(50%);
+            height: 2px;
+            background-color: $mainColor;
+            transition: all 0.3s ease 0s;
+        }
+
+        &::before {
+            left: 22.5%;
+            transform-origin: top left;
+            transform: rotate(45deg);
+        }
+
+        &::after {
+            right: 22.5%;
+            transform: rotate(-45deg);
+            transform-origin: top right;
+        }
+    }
+}
+
+.menuBody {
+    max-width: 100vw;
+    position: absolute;
+    top: -100%;
+    left: 0;
+    opacity: 0;
+    border: 2px solid $mainColor;
+    background-color: $lightGreenColor;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    column-gap: 15px;
+    transition: all 0.3s ease 0s;
+    pointer-events: none;
+
+    @media (max-width: 479.98px) {
+        flex-direction: column;
+        row-gap: 10px;
+    }
+}
+
+.menuLinks {
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 700;
+}

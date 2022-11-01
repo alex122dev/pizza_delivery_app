@@ -14,7 +14,7 @@ type CustomInpPropsType = {
 export const CustomInput: React.FC<CustomInpPropsType & FieldProps> = ({
     field, // { name, value, onChange, onBlur }
     form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
-    allItemClass, // style for all block of our custom input
+    allItemClass = styles.allItemClass, // style for all block of our custom input
     errorBlock = styles.errorBlock, // style for block with error message
     labelClass = styles.labelClass, // style for block with label
     label = 'Label text', // text inside label
