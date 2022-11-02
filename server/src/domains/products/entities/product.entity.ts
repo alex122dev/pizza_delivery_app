@@ -1,5 +1,6 @@
 import { Category } from 'src/domains/categories/entities/category.entity';
 import { Component } from 'src/domains/components/entities/component.entity';
+import { OrderItem } from 'src/domains/orderItems/entities/orderItem.entity';
 import { Order } from 'src/domains/orders/entities/order.entity';
 import {
   Column,
@@ -7,6 +8,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -34,6 +36,6 @@ export class Product {
   @JoinTable()
   components: Component[];
 
-  @ManyToMany(() => Order, (order) => order.products)
-  orders: Order[];
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
+  orderItem: OrderItem;
 }

@@ -11,6 +11,7 @@ import { ProductsModule } from './domains/products/products.module';
 import { CategoriesModule } from './domains/categories/categories.module';
 import { resolve } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { OrderItemsModule } from './domains/orderItems/order-items.module';
 
 @Module({
   controllers: [],
@@ -28,6 +29,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     ComponentsModule,
     ProductsModule,
     CategoriesModule,
+    OrderItemsModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }

@@ -1,12 +1,11 @@
-import { Product } from 'src/domains/products/entities/product.entity';
+import { OrderItem } from 'src/domains/orderItems/entities/orderItem.entity';
 import { Status } from 'src/domains/statuses/entities/status.entity';
 import { User } from 'src/domains/users/entities/user.entity';
 import {
   Column,
   Entity,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -24,7 +23,18 @@ export class Order {
   @ManyToOne(() => Status, (status) => status.orders)
   status: Status;
 
-  @ManyToMany(() => Product, (product) => product.orders)
-  @JoinTable()
-  products: Product[];
+  @Column()
+  address: string
+
+  @Column()
+  phone: string
+
+  @Column({ nullable: true })
+  comment: string
+
+  @Column()
+  totalPrice: number
+
+  @OneToMany(() => OrderItem, orderItem => orderItem.order)
+  orderItems: OrderItem[]
 }
