@@ -24,17 +24,17 @@ export class Order {
   status: Status;
 
   @Column()
-  address: string
+  address: string;
 
   @Column()
-  phone: string
+  phone: string;
 
   @Column({ nullable: true })
-  comment: string
+  comment: string;
 
   @Column()
-  totalPrice: number
+  totalPrice: number;
 
-  @OneToMany(() => OrderItem, orderItem => orderItem.order)
-  orderItems: OrderItem[]
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
+  orderItems: OrderItem[];
 }

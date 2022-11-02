@@ -13,6 +13,7 @@ import { phoneMaskFormat } from '../../utils/transformer/phoneMaskFormat';
 import { OrderAuthModal } from '../OrderAuthModal/OrderAuthModal';
 import { CreateOrderDto } from '../../dtos/orders/CreateOrder.dto';
 import { clearCart } from '../../stateManager/slices/cartSlice';
+import { createOrder } from '../../stateManager/actionCreators/orders';
 
 interface IProps {}
 
@@ -60,6 +61,7 @@ export const OrderForm: React.FC<IProps> = ({}) => {
                 comment: values.comment,
                 orderItems,
             };
+            dispatch(createOrder(sendData));
             dispatch(clearCart());
             resetForm();
             setIsModalActive(true);

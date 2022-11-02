@@ -7,9 +7,9 @@ export class OrderDto {
   userId: number;
   status: StatusDto;
   address: string;
-  phone: string
-  comment?: string
-  totalPrice: number
+  phone: string;
+  comment?: string;
+  totalPrice: number;
   orderItems: OrderItemDto[];
 
   constructor(order: Order) {

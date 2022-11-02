@@ -32,4 +32,4 @@ import { OrderItemsModule } from './domains/orderItems/order-items.module';
     OrderItemsModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}

@@ -2,28 +2,20 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { CreateOrderItemDto } from '../../dtos/orders/CreateOrderItem.dto';
 import { ProductDto } from '../../dtos/products/product.dto';
-import { useAppDispatch } from '../../hooks/redux';
 import { API_URL } from '../../http/http';
-import { removeProduct } from '../../stateManager/slices/cartSlice';
-import { CloseButton } from '../CloseButton/CloseButton';
-import { QuantityProductBlock } from '../QuantityProductBlock/QuantityProductBlock';
 import styles from './OrderedProductCard.module.scss';
 
 interface IProps {
     orderItem: CreateOrderItemDto;
+    closeButton?: JSX.Element;
+    quantity?: JSX.Element;
 }
 
-export const OrderedProductCard: React.FC<IProps> = ({ orderItem }) => {
-    const dispatch = useAppDispatch();
-
-    const renderRemoveBtn = () => {
-        return (
-            <CloseButton
-                onClick={() => dispatch(removeProduct(orderItem.product.id))}
-            />
-        );
-    };
-
+export const OrderedProductCard: React.FC<IProps> = ({
+    orderItem,
+    closeButton,
+    quantity,
+}) => {
     const renderProduct = (
         product: Omit<ProductDto, 'category' | 'components'>,
     ) => {
@@ -49,10 +41,10 @@ export const OrderedProductCard: React.FC<IProps> = ({ orderItem }) => {
                             </span>
                             <span className={styles.currency}>UAH</span>
                         </div>
-                        {<QuantityProductBlock orderItem={orderItem} />}
+                        {quantity}
                     </div>
                 </div>
-                {renderRemoveBtn()}
+                {closeButton}
             </div>
         );
     };

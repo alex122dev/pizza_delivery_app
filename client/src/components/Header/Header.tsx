@@ -32,7 +32,10 @@ export const Header: FC<IProps> = ({}) => {
 
     const renderUserSign = () => {
         return user ? (
-            <button onClick={() => dispatch(signOut())}>Sign Out</button>
+            <>
+                {renderNavLink('/orders', 'Orders')}
+                <button onClick={() => dispatch(signOut())}>Sign Out</button>
+            </>
         ) : (
             <>
                 {renderNavLink('/signin', 'Sign In')}

@@ -16,8 +16,8 @@ import { OrdersService } from './orders.service';
     StatusesModule,
     UsersModule,
     AuthModule,
-    OrderItemsModule
+    OrderItemsModule,
   ],
   exports: [OrdersService],
 })
-export class OrdersModule { }
+export class OrdersModule {}

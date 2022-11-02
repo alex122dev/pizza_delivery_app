@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateOrderItemDto } from '../orderItems/dto/createOrderItem.dto';
@@ -16,34 +16,39 @@ export class OrdersService {
     @InjectRepository(Order) private ordersRepository: Repository<Order>,
     private statusesService: StatusesService,
     private usersService: UsersService,
-    private orderItemsService: OrderItemsService
-  ) { }
+    private orderItemsService: OrderItemsService,
+  ) {}
 
   private calculateTotalPrice(orderItems: CreateOrderItemDto[]): number {
     const totalPrice = orderItems.reduce(
-      (acc, orderItem) =>
-        acc + orderItem.product.price * orderItem.quantity,
+      (acc, orderItem) => acc + orderItem.product.price * orderItem.quantity,
       0,
     );
 
-    return totalPrice
+    return totalPrice;
   }
 
-  private async createOrderItems(order: Order, orderItemsDto: CreateOrderItemDto[]): Promise<OrderItem[]> {
-    const orderItems = []
+  private async createOrderItems(
+    order: Order,
+    orderItemsDto: CreateOrderItemDto[],
+  ): Promise<OrderItem[]> {
+    const orderItems = [];
 
     for (const createOrderItemDto of orderItemsDto) {
-      const orderItem = await this.orderItemsService.create(order, createOrderItemDto)
-      orderItems.push(orderItem)
+      const orderItem = await this.orderItemsService.create(
+        order,
+        createOrderItemDto,
+      );
+      orderItems.push(orderItem);
     }
 
-    return orderItems
+    return orderItems;
   }
 
   async create(userId: number, createOrderDto: CreateOrderDto): Promise<Order> {
     const user = await this.usersService.getById(userId);
     const status = await this.statusesService.getByValue('processing');
-    const totalPrice = this.calculateTotalPrice(createOrderDto.orderItems)
+    const totalPrice = this.calculateTotalPrice(createOrderDto.orderItems);
     const order = this.ordersRepository.create({
       userId,
       status,
@@ -51,12 +56,15 @@ export class OrdersService {
       address: createOrderDto.address,
       phone: createOrderDto.phone,
       comment: createOrderDto.comment,
-      totalPrice
+      totalPrice,
     });
 
-    await this.ordersRepository.save(order)
+    await this.ordersRepository.save(order);
 
-    const orderItems = await this.createOrderItems(order, createOrderDto.orderItems)
+    const orderItems = await this.createOrderItems(
+      order,
+      createOrderDto.orderItems,
+    );
 
     return this.ordersRepository.save({ ...order, orderItems });
   }
@@ -64,16 +72,21 @@ export class OrdersService {
   async update(id: number, updateOrderDto: UpdateOrderDto): Promise<Order> {
     const order = await this.getById(id);
     if (updateOrderDto.status) {
-      const status = await this.statusesService.getByValue(updateOrderDto.status);
-      order.status = status ? status : order.status
+      const status = await this.statusesService.getByValue(
+        updateOrderDto.status,
+      );
+      order.status = status ? status : order.status;
     }
 
     if (updateOrderDto.orderItems && updateOrderDto.orderItems.length > 0) {
-      await this.orderItemsService.removeAllByOrderId(order.id)
-      const orderItems = await this.createOrderItems(order, updateOrderDto.orderItems)
-      order.orderItems = orderItems
-      const totalPrice = this.calculateTotalPrice(updateOrderDto.orderItems)
-      order.totalPrice = totalPrice
+      await this.orderItemsService.removeAllByOrderId(order.id);
+      const orderItems = await this.createOrderItems(
+        order,
+        updateOrderDto.orderItems,
+      );
+      order.orderItems = orderItems;
+      const totalPrice = this.calculateTotalPrice(updateOrderDto.orderItems);
+      order.totalPrice = totalPrice;
     }
 
     return this.ordersRepository.save({
@@ -85,13 +98,16 @@ export class OrdersService {
   }
 
   async cancelOrder(orderId: number): Promise<Order | null> {
-    const order = await this.getById(orderId)
+    const order = await this.getById(orderId);
     if (order.status.value !== 'processing') {
-      return null
+      throw new HttpException(
+        'The order cannot be canceled. Previously, the status of the order was changed',
+        HttpStatus.CONFLICT,
+      );
     }
 
-    const cancelStatus = await this.statusesService.getByValue('canceled')
-    return this.ordersRepository.save({ ...order, status: cancelStatus })
+    const cancelStatus = await this.statusesService.getByValue('canceled');
+    return this.ordersRepository.save({ ...order, status: cancelStatus });
   }
 
   async getAll(): Promise<Order[]> {

@@ -23,7 +23,7 @@ import { OrdersService } from './orders.service';
 
 @Controller('orders')
 export class OrdersController {
-  constructor(private ordersService: OrdersService) { }
+  constructor(private ordersService: OrdersService) {}
 
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
@@ -50,10 +50,8 @@ export class OrdersController {
 
   @UseGuards(AuthGuard)
   @Post(':id/cancel')
-  async cancelOrder(@Param('id') id: number): Promise<OrderDto | { message: string }> {
-    const order = await this.ordersService.cancelOrder(id)
-    if (!order) return { message: 'The order cannot be canceled' }
-
+  async cancelOrder(@Param('id') id: number): Promise<OrderDto> {
+    const order = await this.ordersService.cancelOrder(id);
     return new OrderDto(order);
   }
 
