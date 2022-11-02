@@ -25,7 +25,7 @@ export const Orders: React.FC<IProps> = ({}) => {
         }
     }, [cancelError]);
 
-    const renderColumnNames = (text: string) => {
+    const renderColumnName = (text: string) => {
         return (
             <div>
                 <div className={styles.nameItem}>{text}</div>
@@ -36,12 +36,12 @@ export const Orders: React.FC<IProps> = ({}) => {
     const renderNamesBlock = () => {
         return (
             <div className={styles.namesBlock}>
-                {renderColumnNames('id')}
-                {renderColumnNames('order items')}
-                {renderColumnNames('address')}
-                {renderColumnNames('phone')}
-                {renderColumnNames('status')}
-                {renderColumnNames('total price')}
+                {renderColumnName('id')}
+                {renderColumnName('order items')}
+                {renderColumnName('address')}
+                {renderColumnName('phone')}
+                {renderColumnName('status')}
+                {renderColumnName('total price')}
             </div>
         );
     };
