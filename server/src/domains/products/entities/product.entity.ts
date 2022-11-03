@@ -1,7 +1,6 @@
-import { Category } from 'src/domains/categories/entities/category.entity';
-import { Component } from 'src/domains/components/entities/component.entity';
-import { OrderItem } from 'src/domains/orderItems/entities/orderItem.entity';
-import { Order } from 'src/domains/orders/entities/order.entity';
+import { Category } from '../../categories/entities/category.entity';
+import { Component } from '../../components/entities/component.entity';
+import { OrderItem } from '../../orderItems/entities/orderItem.entity';
 import {
   Column,
   Entity,

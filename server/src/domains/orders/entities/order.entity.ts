@@ -1,6 +1,6 @@
-import { OrderItem } from 'src/domains/orderItems/entities/orderItem.entity';
-import { Status } from 'src/domains/statuses/entities/status.entity';
-import { User } from 'src/domains/users/entities/user.entity';
+import { OrderItem } from '../../orderItems/entities/orderItem.entity';
+import { Status } from '../../statuses/entities/status.entity';
+import { User } from '../../users/entities/user.entity';
 import {
   Column,
   Entity,
