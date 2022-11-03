@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ProductsService } from '../products/products.service';
+import { CreateOrderItemDto } from '../orderItems/dto/createOrderItem.dto';
+import { OrderItem } from '../orderItems/entities/orderItem.entity';
+import { OrderItemsService } from '../orderItems/order-items.service';
 import { StatusesService } from '../statuses/statuses.service';
 import { UsersService } from '../users/users.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -14,68 +16,117 @@ export class OrdersService {
     @InjectRepository(Order) private ordersRepository: Repository<Order>,
     private statusesService: StatusesService,
     private usersService: UsersService,
-    private productsService: ProductsService,
+    private orderItemsService: OrderItemsService,
   ) {}
+
+  private calculateTotalPrice(orderItems: CreateOrderItemDto[]): number {
+    const totalPrice = orderItems.reduce(
+      (acc, orderItem) => acc + orderItem.product.price * orderItem.quantity,
+      0,
+    );
+
+    return totalPrice;
+  }
+
+  private async createOrderItems(
+    order: Order,
+    orderItemsDto: CreateOrderItemDto[],
+  ): Promise<OrderItem[]> {
+    const orderItems = [];
+
+    for (const createOrderItemDto of orderItemsDto) {
+      const orderItem = await this.orderItemsService.create(
+        order,
+        createOrderItemDto,
+      );
+      orderItems.push(orderItem);
+    }
+
+    return orderItems;
+  }
 
   async create(userId: number, createOrderDto: CreateOrderDto): Promise<Order> {
     const user = await this.usersService.getById(userId);
     const status = await this.statusesService.getByValue('processing');
-    const products = [];
-
-    for (const productName of createOrderDto.products) {
-      const product = await this.productsService.getByName(productName);
-      if (product) {
-        products.push(product);
-      }
-    }
-
+    const totalPrice = this.calculateTotalPrice(createOrderDto.orderItems);
     const order = this.ordersRepository.create({
       userId,
       status,
       user,
-      products,
+      address: createOrderDto.address,
+      phone: createOrderDto.phone,
+      comment: createOrderDto.comment,
+      totalPrice,
     });
-    return this.ordersRepository.save(order);
+
+    await this.ordersRepository.save(order);
+
+    const orderItems = await this.createOrderItems(
+      order,
+      createOrderDto.orderItems,
+    );
+
+    return this.ordersRepository.save({ ...order, orderItems });
   }
 
   async update(id: number, updateOrderDto: UpdateOrderDto): Promise<Order> {
     const order = await this.getById(id);
-    const status = await this.statusesService.getByValue(updateOrderDto.status);
-    const products = [];
+    if (updateOrderDto.status) {
+      const status = await this.statusesService.getByValue(
+        updateOrderDto.status,
+      );
+      order.status = status ? status : order.status;
+    }
 
-    if (updateOrderDto.products) {
-      for (const productName of updateOrderDto.products) {
-        const product = await this.productsService.getByName(productName);
-        if (product) {
-          products.push(product);
-        }
-      }
+    if (updateOrderDto.orderItems && updateOrderDto.orderItems.length > 0) {
+      await this.orderItemsService.removeAllByOrderId(order.id);
+      const orderItems = await this.createOrderItems(
+        order,
+        updateOrderDto.orderItems,
+      );
+      order.orderItems = orderItems;
+      const totalPrice = this.calculateTotalPrice(updateOrderDto.orderItems);
+      order.totalPrice = totalPrice;
     }
 
     return this.ordersRepository.save({
       ...order,
-      status: status ? status : order.status,
-      products: products.length > 0 ? products : order.products,
+      address: updateOrderDto.address ? updateOrderDto.address : order.address,
+      phone: updateOrderDto.phone ? updateOrderDto.phone : order.phone,
+      comment: updateOrderDto.comment ? updateOrderDto.comment : order.comment,
     });
+  }
+
+  async cancelOrder(orderId: number): Promise<Order | null> {
+    const order = await this.getById(orderId);
+    if (order.status.value !== 'processing') {
+      throw new HttpException(
+        'The order cannot be canceled. Previously, the status of the order was changed',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const cancelStatus = await this.statusesService.getByValue('canceled');
+    return this.ordersRepository.save({ ...order, status: cancelStatus });
   }
 
   async getAll(): Promise<Order[]> {
     return this.ordersRepository.find({
-      relations: { status: true, products: true },
+      relations: { status: true, orderItems: { product: true } },
     });
   }
 
   async getById(id: number): Promise<Order> {
     return this.ordersRepository.findOne({
       where: { id },
-      relations: { status: true, products: true },
+      relations: { status: true, orderItems: { product: true } },
     });
   }
 
   async getCurrentUserOrders(userId: number): Promise<Order[]> {
     return this.ordersRepository.find({
       where: { userId },
-      relations: { status: true, products: true },
+      relations: { status: true, orderItems: { product: true } },
     });
   }
 

@@ -7,6 +7,8 @@ import {
   Delete,
   Body,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { UserPayloadDto } from '../auth/dto/userPayload.dto';
@@ -23,6 +25,7 @@ import { OrdersService } from './orders.service';
 export class OrdersController {
   constructor(private ordersService: OrdersService) {}
 
+  @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
   @Post()
   async create(
@@ -33,6 +36,7 @@ export class OrdersController {
     return new OrderDto(order);
   }
 
+  @UsePipes(ValidationPipe)
   @Roles('ADMIN')
   @UseGuards(AuthGuard, RolesGuard)
   @Put(':id')
@@ -41,6 +45,13 @@ export class OrdersController {
     @Body() updateOrderDto: UpdateOrderDto,
   ): Promise<OrderDto> {
     const order = await this.ordersService.update(id, updateOrderDto);
+    return new OrderDto(order);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post(':id/cancel')
+  async cancelOrder(@Param('id') id: number): Promise<OrderDto> {
+    const order = await this.ordersService.cancelOrder(id);
     return new OrderDto(order);
   }
 

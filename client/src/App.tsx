@@ -5,7 +5,7 @@ import { Footer } from './components/Footer/Footer';
 import { Header } from './components/Header/Header';
 import { ScrollToTop } from './components/ScrollToTop/ScrollToTop';
 import { useAppDispatch } from './hooks/redux';
-import { Cart, Home, Product, SignIn, SignUp } from './pages';
+import { Cart, Home, Orders, Product, SignIn, SignUp } from './pages';
 import { checkIfUserAuthorized } from './stateManager/actionCreators/auth';
 import { getAllCategories } from './stateManager/actionCreators/categories';
 
@@ -32,6 +32,7 @@ function App() {
                                 element={<Product />}
                             />
                             <Route path='/cart' element={<Cart />} />
+                            <Route path='/orders' element={<Orders />} />
                             <Route
                                 path='/'
                                 element={<Navigate to={'/home'} />}

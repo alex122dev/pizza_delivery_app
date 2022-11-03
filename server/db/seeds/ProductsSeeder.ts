@@ -72,7 +72,7 @@ export class ProductsSeeder implements Seeder {
         components: ['feta', 'olives', 'mozzarella', 'garlic sauce', 'tuna'],
       },
       {
-        name: 'ham_with_mushrooms',
+        name: 'ham with mushrooms',
         description: 'delicious pizza',
         image: 'pizza/ham_with_mushrooms.jpg',
         price: 22000,

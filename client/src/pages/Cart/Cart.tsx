@@ -1,13 +1,26 @@
 import React from 'react';
+import { CloseButton } from '../../components/CloseButton/CloseButton';
 import { OrderedProductCard } from '../../components/OrderedProductCard/OrderedProductCard';
 import { OrderForm } from '../../components/OrderForm/OrderForm';
-import { useAppSelector } from '../../hooks/redux';
+import { QuantityProductBlock } from '../../components/QuantityProductBlock/QuantityProductBlock';
+import { CreateOrderItemDto } from '../../dtos/orders/CreateOrderItem.dto';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { removeProduct } from '../../stateManager/slices/cartSlice';
 import styles from './Cart.module.scss';
 
 interface IProps {}
 
 export const Cart: React.FC<IProps> = ({}) => {
     const orderItems = useAppSelector((state) => state.cart.orderItems);
+    const dispatch = useAppDispatch();
+
+    const renderRemoveBtn = (orderItem: CreateOrderItemDto) => {
+        return (
+            <CloseButton
+                onClick={() => dispatch(removeProduct(orderItem.product.id))}
+            />
+        );
+    };
 
     const renderProductsFromCart = () => {
         if (orderItems.length === 0) {
@@ -18,6 +31,8 @@ export const Cart: React.FC<IProps> = ({}) => {
             <OrderedProductCard
                 key={orderItem.product.id}
                 orderItem={orderItem}
+                closeButton={renderRemoveBtn(orderItem)}
+                quantity={<QuantityProductBlock orderItem={orderItem} />}
             />
         ));
     };
