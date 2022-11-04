@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { AddProductToCardButton } from '../../components/AddProductToCardButton/AddProductToCardButton';
 import { InfoMessage } from '../../components/common/InfoMessage/InfoMessage';
 import { Preloader } from '../../components/common/Preloader/Preloader';
-import { QuantityProductBlock } from '../../components/QuantityProductBlock/QuantityProductBlock';
+import { ToCartQuantityBlock } from '../../components/ToCartQuantityBlock/QuantityCartBlock';
 import { ComponentDto } from '../../dtos/components/component.dto';
 import { ProductDto } from '../../dtos/products/product.dto';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
@@ -64,7 +64,7 @@ export const Product: React.FC<IProps> = ({}) => {
         );
 
         return orderItemWithProduct ? (
-            <QuantityProductBlock orderItem={orderItemWithProduct} />
+            <ToCartQuantityBlock orderItem={orderItemWithProduct} />
         ) : (
             <AddProductToCardButton product={product} />
         );

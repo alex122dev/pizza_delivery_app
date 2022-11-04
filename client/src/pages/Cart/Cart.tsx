@@ -2,7 +2,7 @@ import React from 'react';
 import { CloseButton } from '../../components/CloseButton/CloseButton';
 import { OrderedProductCard } from '../../components/OrderedProductCard/OrderedProductCard';
 import { OrderForm } from '../../components/OrderForm/OrderForm';
-import { QuantityProductBlock } from '../../components/QuantityProductBlock/QuantityProductBlock';
+import { ToCartQuantityBlock } from '../../components/ToCartQuantityBlock/QuantityCartBlock';
 import { CreateOrderItemDto } from '../../dtos/orders/CreateOrderItem.dto';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { removeProduct } from '../../stateManager/slices/cartSlice';
@@ -32,7 +32,7 @@ export const Cart: React.FC<IProps> = ({}) => {
                 key={orderItem.product.id}
                 orderItem={orderItem}
                 closeButton={renderRemoveBtn(orderItem)}
-                quantity={<QuantityProductBlock orderItem={orderItem} />}
+                quantity={<ToCartQuantityBlock orderItem={orderItem} />}
             />
         ));
     };

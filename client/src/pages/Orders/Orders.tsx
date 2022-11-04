@@ -2,8 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { CustomButton } from '../../components/common/CustomButton/CustomButton';
 import { ModalWindow } from '../../components/common/ModalWindow/ModalWindow';
 import { OrderCard } from '../../components/OrderCard/OrderCard';
+import { OrderPropertyNames } from '../../components/OrderPropertyNames/OrderPropertyNames';
+import { OrderDto } from '../../dtos/orders/Order.dto';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { getCurrentUserOrders } from '../../stateManager/actionCreators/orders';
+import {
+    cancelOrder,
+    getCurrentUserOrders,
+} from '../../stateManager/actionCreators/orders';
 import { setCancelError } from '../../stateManager/slices/ordersSlice';
 import styles from './Orders.module.scss';
 
@@ -25,33 +30,35 @@ export const Orders: React.FC<IProps> = ({}) => {
         }
     }, [cancelError]);
 
-    const renderColumnName = (text: string) => {
-        return (
-            <div>
-                <div className={styles.nameItem}>{text}</div>
-            </div>
-        );
-    };
+    const renderCancelButton = (order: OrderDto) => {
+        if (order.status.value !== 'processing') {
+            return null;
+        }
 
-    const renderNamesBlock = () => {
         return (
-            <div className={styles.namesBlock}>
-                {renderColumnName('id')}
-                {renderColumnName('order items')}
-                {renderColumnName('address')}
-                {renderColumnName('phone')}
-                {renderColumnName('status')}
-                {renderColumnName('total price')}
-            </div>
+            <CustomButton
+                startColor='red'
+                onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dispatch(cancelOrder(order.id));
+                }}
+            >
+                Cancel
+            </CustomButton>
         );
     };
 
     const renderOrdersList = () => {
         return (
             <div className={styles.ordersList}>
-                {renderNamesBlock()}
+                {<OrderPropertyNames />}
                 {orders.map((order) => (
-                    <OrderCard key={order.id} order={order} />
+                    <OrderCard
+                        key={order.id}
+                        order={order}
+                        button={renderCancelButton(order)}
+                    />
                 ))}
             </div>
         );

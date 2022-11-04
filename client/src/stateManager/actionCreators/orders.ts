@@ -1,8 +1,11 @@
 import axios from 'axios';
 import { CreateOrderDto } from '../../dtos/orders/CreateOrder.dto';
+import { UpdateOrderDto } from '../../dtos/orders/UpdateOrderdto';
 import { OrdersService } from '../../services/OrdersService';
 import {
     cancelOrderById,
+    replaceUpdatedInAllOrder,
+    setAllOrders,
     setCancelError,
     setOrders,
 } from '../slices/ordersSlice';
@@ -38,3 +41,24 @@ export const cancelOrder = (id: number) => async (dispatch: AppDispatch) => {
         }
     }
 };
+
+export const getAllOrders = () => async (dispatch: AppDispatch) => {
+    try {
+        const response = await OrdersService.getAll();
+        dispatch(setAllOrders(response.data));
+    } catch (e: any) {
+        throw e;
+    }
+};
+
+export const updateOrder =
+    (orderId: number, dto: UpdateOrderDto) => async (dispatch: AppDispatch) => {
+        try {
+            const response = await OrdersService.updateOrder(orderId, dto);
+            dispatch(
+                replaceUpdatedInAllOrder({ id: orderId, order: response.data }),
+            );
+        } catch (e) {
+            throw e;
+        }
+    };
