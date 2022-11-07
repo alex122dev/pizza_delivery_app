@@ -3,12 +3,14 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.scss';
 import { Footer } from './components/Footer/Footer';
 import { Header } from './components/Header/Header';
+import { RequireAuth } from './components/RequireAuth/RequireAuth';
 import { ScrollToTop } from './components/ScrollToTop/ScrollToTop';
 import { useAppDispatch } from './hooks/redux';
 import {
     AllOrders,
     Cart,
     Home,
+    NoAccess,
     Orders,
     Product,
     SignIn,
@@ -40,8 +42,23 @@ function App() {
                                 element={<Product />}
                             />
                             <Route path='/cart' element={<Cart />} />
-                            <Route path='/orders' element={<Orders />} />
-                            <Route path='/allorders' element={<AllOrders />} />
+                            <Route
+                                path='/orders'
+                                element={
+                                    <RequireAuth>
+                                        <Orders />
+                                    </RequireAuth>
+                                }
+                            />
+                            <Route
+                                path='/allorders'
+                                element={
+                                    <RequireAuth requiredRoles={['ADMIN']}>
+                                        <AllOrders />
+                                    </RequireAuth>
+                                }
+                            />
+                            <Route path='/noaccess' element={<NoAccess />} />
                             <Route
                                 path='/'
                                 element={<Navigate to={'/home'} />}
