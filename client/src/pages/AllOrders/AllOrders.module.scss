@@ -17,18 +17,7 @@
     row-gap: 10px;
 }
 
-.modalBody {
-    flex: 1 1 auto;
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-items: center;
-}
-
-.errorTitle {
-    flex: 1 1 auto;
-    font-size: 28px;
-    color: $redColor;
-    margin-bottom: 20px;
+.editBtn {
+    position: relative;
+    z-index: 3;
 }

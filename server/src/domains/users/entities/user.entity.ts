@@ -1,5 +1,5 @@
-import { Order } from 'src/domains/orders/entities/order.entity';
-import { Role } from 'src/domains/roles/entities/role.entity';
+import { Order } from '../../orders/entities/order.entity';
+import { Role } from '../../roles/entities/role.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,

@@ -1,0 +1,7 @@
+@import '../../variables/variables.scss';
+
+.errMessage {
+    color: $redColor;
+    font-weight: 700;
+    margin-bottom: 10px;
+}

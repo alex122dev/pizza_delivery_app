@@ -33,7 +33,9 @@ export const Header: FC<IProps> = ({}) => {
     const renderUserSign = () => {
         return user ? (
             <>
-                {renderNavLink('/orders', 'Orders')}
+                {user.roles.some((role) => ['ADMIN'].includes(role.value)) &&
+                    renderNavLink('./allorders', 'All Orders')}
+                {renderNavLink('/orders', 'My Orders')}
                 <button onClick={() => dispatch(signOut())}>Sign Out</button>
             </>
         ) : (

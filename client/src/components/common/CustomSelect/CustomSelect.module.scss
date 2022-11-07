@@ -1,0 +1,111 @@
+@import '../../../variables/variables.scss';
+
+.body {
+    position: relative;
+    user-select: none;
+    max-width: 100%;
+    font-size: 20px;
+}
+
+.btn {
+    width: 100%;
+    padding: 6px 15px;
+    color: $mainColor;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: $whiteColor;
+    border-radius: 5px;
+    border: 2px solid $inputBorderColor;
+
+    @media (any-hover: hover) {
+        &:hover {
+            border-color: $lightGreenColor;
+        }
+    }
+
+    .arrow {
+        width: 18px;
+        height: 18px;
+        flex: 0 0 18px;
+        position: relative;
+        transition: all 0.3s ease 0s;
+        margin-left: 3px;
+
+        &::before,
+        &::after,
+        span {
+            content: '';
+            position: absolute;
+            top: 25%;
+            width: calc(50%);
+            height: 2px;
+            background-color: $mainColor;
+            transition: all 0.3s ease 0s;
+        }
+
+        &::before {
+            left: 22.5%;
+            transform-origin: top left;
+            transform: rotate(45deg);
+        }
+
+        &::after {
+            right: 22.5%;
+            transform: rotate(-45deg);
+            transform-origin: top right;
+        }
+
+        .active & {
+            transform: rotate(180deg);
+        }
+    }
+}
+
+.chosen {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    padding-right: 10px;
+}
+
+.content {
+    position: absolute;
+    z-index: 5;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease 0s;
+    max-width: calc(100vw - 60px);
+    min-width: 100%;
+    max-height: 100vh;
+    overflow-y: auto;
+    background: $whiteColor;
+    border-radius: 5px;
+    border: 1px solid $inputBorderColor;
+
+    .active & {
+        pointer-events: all;
+        top: 110%;
+        opacity: 1;
+    }
+}
+
+.option {
+    cursor: pointer;
+    color: $greyColor;
+    padding: 5px;
+    white-space: nowrap;
+    word-wrap: break-word;
+
+    @media (any-hover: hover) {
+        &:hover {
+            background-color: $yellowOpacityColor;
+            color: $mainColor;
+        }
+    }
+}
