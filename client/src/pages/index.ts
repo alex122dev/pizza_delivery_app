@@ -5,3 +5,4 @@ export * from './Product/Product';
 export * from './Cart/Cart';
 export * from './Orders/Orders';
 export * from './AllOrders/AllOrders';
+export * from './NoAccess/NoAccess';
