@@ -3,6 +3,7 @@ import { CloseButton } from '../../components/CloseButton/CloseButton';
 import { OrderedProductCard } from '../../components/OrderedProductCard/OrderedProductCard';
 import { OrderForm } from '../../components/OrderForm/OrderForm';
 import { ToCartQuantityBlock } from '../../components/ToCartQuantityBlock/QuantityCartBlock';
+import { TotalPriceBlock } from '../../components/TotalPriceBlock/TotalPriceBlock';
 import { CreateOrderItemDto } from '../../dtos/orders/CreateOrderItem.dto';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { removeProduct } from '../../stateManager/slices/cartSlice';
@@ -37,23 +38,6 @@ export const Cart: React.FC<IProps> = ({}) => {
         ));
     };
 
-    const renderTotalPrice = () => {
-        const totalPrice = orderItems.reduce(
-            (acc, orderItem) =>
-                acc + orderItem.product.price * orderItem.quantity,
-            0,
-        );
-
-        return (
-            <div className={styles.totalPrice}>
-                <span className={styles.price}>
-                    Total price: {totalPrice / 100}
-                </span>
-                <span className={styles.currency}>UAH</span>
-            </div>
-        );
-    };
-
     return (
         <div className={styles.container}>
             <div className={styles.orderForm}>
@@ -64,7 +48,7 @@ export const Cart: React.FC<IProps> = ({}) => {
                 <h3 className={styles.title}>Your order</h3>
                 <div className={styles.productList}>
                     {renderProductsFromCart()}
-                    {renderTotalPrice()}
+                    <TotalPriceBlock orderItems={orderItems} />
                 </div>
             </div>
         </div>

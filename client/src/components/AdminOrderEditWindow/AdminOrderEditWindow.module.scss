@@ -45,24 +45,6 @@
     }
 }
 
-.totalPrice {
-    align-self: flex-end;
-    display: flex;
-    padding: 10px;
-}
-
-.price {
-    font-size: 20px;
-    font-weight: 700;
-    margin-right: 3px;
-}
-
-.currency {
-    align-self: flex-start;
-    font-size: 14px;
-    color: $currencyOpacityColor;
-}
-
 .modalBody {
     position: relative;
     padding: 20px;
