@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { AddProductToCardButton } from '../../components/AddProductToCardButton/AddProductToCardButton';
 import { InfoMessage } from '../../components/common/InfoMessage/InfoMessage';
 import { Preloader } from '../../components/common/Preloader/Preloader';
+import { PriceBlock } from '../../components/PriceBlock/PriceBlock';
 import { ToCartQuantityBlock } from '../../components/ToCartQuantityBlock/QuantityCartBlock';
 import { ComponentDto } from '../../dtos/components/component.dto';
 import { ProductDto } from '../../dtos/products/product.dto';
@@ -90,12 +91,7 @@ export const Product: React.FC<IProps> = ({}) => {
                     </p>
                     {renderComponents(product)}
                     <div className={styles.priceAndButtonBlock}>
-                        <div className={styles.priceBlock}>
-                            <span className={styles.price}>
-                                {product.price / 100}
-                            </span>
-                            <span className={styles.currency}>UAH</span>
-                        </div>
+                        <PriceBlock price={product.price} />
                         {renderButton(product)}
                     </div>
                 </div>

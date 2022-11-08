@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { CreateOrderItemDto } from '../../dtos/orders/CreateOrderItem.dto';
 import { ProductDto } from '../../dtos/products/product.dto';
 import { API_URL } from '../../http/http';
+import { PriceBlock } from '../PriceBlock/PriceBlock';
 import styles from './OrderedProductCard.module.scss';
 
 interface IProps {
@@ -35,12 +36,7 @@ export const OrderedProductCard: React.FC<IProps> = ({
                     <h5 className={styles.name}>{product.name}</h5>
                     <p className={styles.description}>{product.description}</p>
                     <div className={styles.priceAndButtonBlock}>
-                        <div className={styles.priceBlock}>
-                            <span className={styles.price}>
-                                {product.price / 100}
-                            </span>
-                            <span className={styles.currency}>UAH</span>
-                        </div>
+                        <PriceBlock price={product.price} />
                         {quantity}
                     </div>
                 </div>

@@ -1,13 +1,14 @@
-import { Field, Form, Formik, FormikState } from 'formik';
+import { Form, Formik, FormikState } from 'formik';
 import * as Yup from 'yup';
 import React, { useState } from 'react';
 import styles from './SignInForm.module.scss';
-import { CustomButton } from '../common/CustomButton/CustomButton';
-import { CustomInput } from '../common/CustomInput/CustomInput';
 import { useAppDispatch } from '../../hooks/redux';
 import { signIn } from '../../stateManager/actionCreators/auth';
 import { SignInDto } from '../../dtos/auth/SignIn.dto';
 import { Preloader } from '../common/Preloader/Preloader';
+import { CustomFormikTextField } from '../CustomFormikTextField/CustomFormikTextField';
+import { CustomFormikSendError } from '../CustomFormikSendError/CustomFormikSendError';
+import { CustomFormikSendFormButton } from '../CustomFormikSendFormButton/CustomFormikSendFormButton';
 
 interface IProps {}
 
@@ -40,46 +41,6 @@ export const SignInForm: React.FC<IProps> = ({}) => {
         password: Yup.string().required().min(6).max(100),
     });
 
-    const renderTextField = (
-        name: string,
-        placeholder: string,
-        label: string,
-    ) => {
-        return (
-            <Field
-                type='text'
-                name={name}
-                placeholder={placeholder}
-                allItemClass={styles.item}
-                label={label}
-                component={CustomInput}
-            />
-        );
-    };
-
-    const renderFormSendErrorBlock = () => {
-        return (
-            formSendError && (
-                <p className={styles.errMessage}>
-                    Try again, please. Some error occured: {formSendError}
-                </p>
-            )
-        );
-    };
-
-    const renderSendButton = (isSubmitting: boolean) => {
-        return (
-            <CustomButton
-                type='submit'
-                startColor='green'
-                disabled={isSubmitting}
-                className={styles.sendBtn}
-            >
-                Sign In
-            </CustomButton>
-        );
-    };
-
     return (
         <Formik
             enableReinitialize={true}
@@ -90,14 +51,24 @@ export const SignInForm: React.FC<IProps> = ({}) => {
             {({ isSubmitting }) => (
                 <Form className={styles.formBody}>
                     {isSubmitting && <Preloader className={styles.preloader} />}
-                    {renderTextField('email', 'Type your email', 'Email')}
-                    {renderTextField(
-                        'password',
-                        'Type your password',
-                        'Password',
+                    <CustomFormikTextField
+                        name='email'
+                        label='Email'
+                        placeholder='Type your email'
+                    />
+                    <CustomFormikTextField
+                        name='password'
+                        label='Password'
+                        placeholder='Type your password'
+                    />
+                    {formSendError && (
+                        <CustomFormikSendError message={formSendError} />
                     )}
-                    {renderFormSendErrorBlock()}
-                    {renderSendButton(isSubmitting)}
+                    <CustomFormikSendFormButton
+                        text='Sign In'
+                        isSubmitting={isSubmitting}
+                        className={styles.sendBtn}
+                    />
                 </Form>
             )}
         </Formik>

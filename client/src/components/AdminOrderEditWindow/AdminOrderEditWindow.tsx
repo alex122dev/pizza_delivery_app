@@ -11,6 +11,7 @@ import { EditOrderForm } from '../EditOrderForm/EditOrderForm';
 import { OrderedProductCard } from '../OrderedProductCard/OrderedProductCard';
 import { Products } from '../Products/Products';
 import { QuantityProductBlock } from '../QuantityProductBlock/QuantityProductBlock';
+import { TotalPriceBlock } from '../TotalPriceBlock/TotalPriceBlock';
 import styles from './AdminOrderEditWindow.module.scss';
 
 interface IProps {
@@ -109,23 +110,6 @@ export const AdminOrderEditWindow: React.FC<IProps> = ({ order }) => {
         ));
     };
 
-    const renderTotalPrice = () => {
-        const totalPrice = localOrderItems.reduce(
-            (acc, orderItem) =>
-                acc + orderItem.product.price * orderItem.quantity,
-            0,
-        );
-
-        return (
-            <div className={styles.totalPrice}>
-                <span className={styles.price}>
-                    Total price: {totalPrice / 100}
-                </span>
-                <span className={styles.currency}>UAH</span>
-            </div>
-        );
-    };
-
     const renderAddNewProductsButton = () => {
         return (
             <CustomButton
@@ -196,7 +180,7 @@ export const AdminOrderEditWindow: React.FC<IProps> = ({ order }) => {
                 <h3 className={styles.title}>Customer order</h3>
                 <div className={styles.productList}>
                     {renderLocalOrderItems()}
-                    {renderTotalPrice()}
+                    <TotalPriceBlock orderItems={localOrderItems} />
                     {renderAddNewProductsButton()}
                 </div>
             </div>

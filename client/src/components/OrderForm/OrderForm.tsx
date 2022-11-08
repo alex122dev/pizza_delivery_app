@@ -1,19 +1,20 @@
-import { Field, Form, Formik, FormikState } from 'formik';
+import { Form, Formik, FormikState } from 'formik';
 import React, { useState } from 'react';
 import { CheckoutOrderDto } from '../../dtos/orders/CheckoutOrder.dto';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import * as Yup from 'yup';
 import styles from './OrderForm.module.scss';
-import { CustomInput } from '../common/CustomInput/CustomInput';
-import { CustomButton } from '../common/CustomButton/CustomButton';
 import { Preloader } from '../common/Preloader/Preloader';
 import { phoneValidateRegExp } from '../../utils/validation/regularExpressions';
-import { phoneNumberMask } from '../../utils/masks/phoneNumberMask';
 import { phoneMaskFormat } from '../../utils/transformer/phoneMaskFormat';
 import { OrderAuthModal } from '../OrderAuthModal/OrderAuthModal';
 import { CreateOrderDto } from '../../dtos/orders/CreateOrder.dto';
 import { clearCart } from '../../stateManager/slices/cartSlice';
 import { createOrder } from '../../stateManager/actionCreators/orders';
+import { CustomFormikPhoneField } from '../CustomFormikPhoneField/CustomFormikPhoneField';
+import { CustomFormikTextField } from '../CustomFormikTextField/CustomFormikTextField';
+import { CustomFormikSendError } from '../CustomFormikSendError/CustomFormikSendError';
+import { CustomFormikSendFormButton } from '../CustomFormikSendFormButton/CustomFormikSendFormButton';
 
 interface IProps {}
 
@@ -61,7 +62,7 @@ export const OrderForm: React.FC<IProps> = ({}) => {
                 comment: values.comment,
                 orderItems,
             };
-            dispatch(createOrder(sendData));
+            await dispatch(createOrder(sendData));
             dispatch(clearCart());
             resetForm();
             setIsModalActive(true);
@@ -79,67 +80,6 @@ export const OrderForm: React.FC<IProps> = ({}) => {
         comment: Yup.string(),
     });
 
-    const renderPhoneField = (
-        setFieldValue: (
-            field: string,
-            value: any,
-            shouldValidate?: boolean,
-        ) => void,
-    ) => {
-        return (
-            <Field
-                type='tel'
-                name='phone'
-                placeholder='+38 (095) 644-64-64'
-                maxLength={19}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    phoneNumberMask(e, setFieldValue)
-                }
-                label='Phone'
-                component={CustomInput}
-            />
-        );
-    };
-
-    const renderTextField = (
-        name: string,
-        placeholder: string,
-        label: string,
-    ) => {
-        return (
-            <Field
-                type='text'
-                name={name}
-                placeholder={placeholder}
-                label={label}
-                component={CustomInput}
-            />
-        );
-    };
-
-    const renderFormSendErrorBlock = () => {
-        return (
-            formSendError && (
-                <p className={styles.errMessage}>
-                    Try again, please. Some error occured: {formSendError}
-                </p>
-            )
-        );
-    };
-
-    const renderSendButton = (isSubmitting: boolean) => {
-        return (
-            <CustomButton
-                type='submit'
-                startColor='green'
-                disabled={isSubmitting}
-                className={styles.sendBtn}
-            >
-                Checkout
-            </CustomButton>
-        );
-    };
-
     return (
         <>
             <Formik
@@ -152,19 +92,25 @@ export const OrderForm: React.FC<IProps> = ({}) => {
                         {isSubmitting && (
                             <Preloader className={styles.preloader} />
                         )}
-                        {renderPhoneField(setFieldValue)}
-                        {renderTextField(
-                            'address',
-                            'Type your address',
-                            'Address',
+                        <CustomFormikPhoneField setFieldValue={setFieldValue} />
+                        <CustomFormikTextField
+                            name='address'
+                            label='Address'
+                            placeholder='Type your address'
+                        />
+                        <CustomFormikTextField
+                            name='comment'
+                            label='Comment'
+                            placeholder='Type your comment (optional)'
+                        />
+                        {formSendError && (
+                            <CustomFormikSendError message={formSendError} />
                         )}
-                        {renderTextField(
-                            'comment',
-                            'Type your comment (optional)',
-                            'Comment',
-                        )}
-                        {renderFormSendErrorBlock()}
-                        {renderSendButton(isSubmitting)}
+                        <CustomFormikSendFormButton
+                            text='Checkout'
+                            isSubmitting={isSubmitting}
+                            className={styles.sendBtn}
+                        />
                     </Form>
                 )}
             </Formik>
