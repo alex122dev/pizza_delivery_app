@@ -7,6 +7,9 @@ import { OrderItemsService } from '../orderItems/order-items.service';
 import { StatusesService } from '../statuses/statuses.service';
 import { UsersService } from '../users/users.service';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { FilteredOrdersDto } from './dto/filteredOrders.dto';
+import { SearchQueryDto } from './dto/searchQuery.dto';
+import { FilterDto } from './dto/filter.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { Order } from './entities/order.entity';
 
@@ -110,10 +113,41 @@ export class OrdersService {
     return this.ordersRepository.save({ ...order, status: cancelStatus });
   }
 
-  async getAll(): Promise<Order[]> {
-    return this.ordersRepository.find({
+  async getAll(
+    query: SearchQueryDto,
+  ): Promise<{ orders: Order[]; totalCount: number }> {
+    const filter: FilterDto = {};
+    const searhcStatus = await this.statusesService.getByValue(query.status);
+    if (query.status && searhcStatus) {
+      filter.status = searhcStatus;
+    }
+
+    if (Number(query.orderId)) {
+      filter.id = Number(query.orderId);
+    }
+
+    if (Number(query.userId)) {
+      filter.userId = Number(query.userId);
+    }
+
+    const currentPage = Number(query.currentPage)
+      ? Number(query.currentPage)
+      : 1;
+    const pageSize = Number(query.pageSize) ? Number(query.pageSize) : 5;
+
+    const totalCount = await this.ordersRepository.count({ where: filter });
+    const orders = await this.ordersRepository.find({
+      where: filter,
       relations: { status: true, orderItems: { product: true } },
+      take: pageSize,
+      skip: pageSize * (currentPage - 1),
+      order: { id: 'DESC' },
     });
+
+    return {
+      orders,
+      totalCount,
+    };
   }
 
   async getById(id: number): Promise<Order> {
@@ -127,6 +161,7 @@ export class OrdersService {
     return this.ordersRepository.find({
       where: { userId },
       relations: { status: true, orderItems: { product: true } },
+      order: { id: 'DESC' },
     });
   }
 

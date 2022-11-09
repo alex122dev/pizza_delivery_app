@@ -1,11 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { OrderDto } from '../../dtos/orders/Order.dto';
+import { FilterDto } from '../../dtos/orders/Filter.dto';
 
 interface IInitialState {
     orders: OrderDto[];
     allOrders: OrderDto[];
     cancelError: string;
     editingOrders: number[];
+    isFetchingAllOrders: boolean;
+    currentPage: number;
+    pageSize: number;
+    totalOrdersCount: number;
+    filter: FilterDto;
 }
 
 const initialState: IInitialState = {
@@ -13,6 +19,11 @@ const initialState: IInitialState = {
     allOrders: [],
     cancelError: '',
     editingOrders: [],
+    isFetchingAllOrders: false,
+    currentPage: 1,
+    pageSize: 5,
+    totalOrdersCount: 0,
+    filter: {},
 };
 
 const ordersSlice = createSlice({
@@ -60,6 +71,18 @@ const ordersSlice = createSlice({
                 state.allOrders[orderIndex] = action.payload.order;
             }
         },
+        setIsFetchingAllOrders: (state, action: PayloadAction<boolean>) => {
+            state.isFetchingAllOrders = action.payload;
+        },
+        setFilter: (state, action: PayloadAction<FilterDto>) => {
+            state.filter = action.payload;
+        },
+        setCurrentPage: (state, action: PayloadAction<number>) => {
+            state.currentPage = action.payload;
+        },
+        setTotalOrdersCount: (state, action: PayloadAction<number>) => {
+            state.totalOrdersCount = action.payload;
+        },
     },
 });
 
@@ -71,6 +94,10 @@ export const {
     addToEditingOrders,
     removeFromEditingOrders,
     replaceUpdatedInAllOrder,
+    setIsFetchingAllOrders,
+    setFilter,
+    setCurrentPage,
+    setTotalOrdersCount,
 } = ordersSlice.actions;
 
 export const ordersReducer = ordersSlice.reducer;

@@ -1,0 +1,14 @@
+.numberInput {
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    &:hover,
+    &:focus {
+        -moz-appearance: number-input;
+    }
+}

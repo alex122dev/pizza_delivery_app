@@ -29,6 +29,7 @@ export const FullOrderInfo: React.FC<IProps> = ({ order }) => {
         <div className={styles.fullOrderBody}>
             <div className={styles.textBlock}>
                 {renderFullOrderProperty('id', `${order.id}`)}
+                {renderFullOrderProperty('userId', `${order.userId}`)}
                 {renderFullOrderProperty('address', `${order.address}`)}
                 {renderFullOrderProperty('phone', `${order.phone}`)}
                 {renderFullOrderProperty(
