@@ -1,4 +1,4 @@
-export interface QueryParamsDto {
+export interface OrdersFilterQueryParamsDto {
     orderId?: string;
     userId?: string;
     status?: string;

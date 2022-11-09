@@ -1,4 +1,4 @@
-export class SearchQueryDto {
+export class OrdersSearchQueryDto {
   orderId?: string;
   userId?: string;
   status?: string;

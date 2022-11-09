@@ -1,6 +1,6 @@
 import { Form, Formik } from 'formik';
 import React from 'react';
-import { FilterDto } from '../../dtos/orders/Filter.dto';
+import { OrdersFilterDto } from '../../dtos/orders/OrdersFilter.dto';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import styles from './SearchAllOrdersForm.module.scss';
 import { getAllOrders } from '../../stateManager/actionCreators/orders';
@@ -8,7 +8,7 @@ import { CustomFormikSendFormButton } from '../CustomFormikSendFormButton/Custom
 import { CustomFormikNumberField } from '../CustomFormikNumberField/CustomFormikNumberField';
 import { OptionType } from '../common/CustomSelect/CustomSelect';
 import { CustomFormikSelectField } from '../CustomFormikSelectField/CustomFormikSelectField';
-import { FilterOrdersFormDto } from '../../dtos/orders/FilterOrdersForm.dto';
+import { OrdersFilterFormDto } from '../../dtos/orders/OrdersFilterForm.dto';
 
 interface IProps {}
 
@@ -20,9 +20,9 @@ export const SearchAllOrdersForm: React.FC<IProps> = ({}) => {
     const pageSize = useAppSelector((state) => state.orders.pageSize);
     const statuses = useAppSelector((state) => state.statuses.statuses);
 
-    const formInitialValues: FilterOrdersFormDto = {
-        orderId: orderId ? String(orderId) : '',
-        userId: userId ? String(userId) : '',
+    const formInitialValues: OrdersFilterFormDto = {
+        orderId: orderId || '',
+        userId: userId || '',
         status: status || '',
     };
 
@@ -34,11 +34,11 @@ export const SearchAllOrdersForm: React.FC<IProps> = ({}) => {
         })),
     ];
 
-    const onFormSubmit = async (values: FilterOrdersFormDto): Promise<void> => {
+    const onFormSubmit = async (values: OrdersFilterFormDto): Promise<void> => {
         try {
-            const sendData: FilterDto = {
-                orderId: Number(values.orderId),
-                userId: Number(values.userId),
+            const sendData: OrdersFilterDto = {
+                orderId: values.orderId,
+                userId: values.userId,
                 status: values.status,
             };
             await dispatch(getAllOrders(1, pageSize, sendData));

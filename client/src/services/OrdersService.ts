@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { CreateOrderDto } from '../dtos/orders/CreateOrder.dto';
 import { OrderDto } from '../dtos/orders/Order.dto';
-import { FilterDto } from '../dtos/orders/Filter.dto';
+import { OrdersFilterDto } from '../dtos/orders/OrdersFilter.dto';
 import { UpdateOrderDto } from '../dtos/orders/UpdateOrderdto';
 import { $api } from '../http/http';
 import { FilteredOrdersDto } from '../dtos/orders/FilteredOrders.dto';
@@ -22,7 +22,7 @@ export class OrdersService {
     static async getAll(
         currentPage: number,
         pageSize: number,
-        filter: FilterDto,
+        filter: OrdersFilterDto,
     ): Promise<AxiosResponse<FilteredOrdersDto>> {
         return $api.get<FilteredOrdersDto>(`/orders/all`, {
             params: { currentPage, pageSize, ...filter },

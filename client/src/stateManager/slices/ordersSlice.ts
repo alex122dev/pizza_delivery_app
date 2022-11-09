@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { OrderDto } from '../../dtos/orders/Order.dto';
-import { FilterDto } from '../../dtos/orders/Filter.dto';
+import { OrdersFilterDto } from '../../dtos/orders/OrdersFilter.dto';
 
 interface IInitialState {
     orders: OrderDto[];
@@ -11,7 +11,7 @@ interface IInitialState {
     currentPage: number;
     pageSize: number;
     totalOrdersCount: number;
-    filter: FilterDto;
+    filter: OrdersFilterDto;
 }
 
 const initialState: IInitialState = {
@@ -74,7 +74,7 @@ const ordersSlice = createSlice({
         setIsFetchingAllOrders: (state, action: PayloadAction<boolean>) => {
             state.isFetchingAllOrders = action.payload;
         },
-        setFilter: (state, action: PayloadAction<FilterDto>) => {
+        setFilter: (state, action: PayloadAction<OrdersFilterDto>) => {
             state.filter = action.payload;
         },
         setCurrentPage: (state, action: PayloadAction<number>) => {

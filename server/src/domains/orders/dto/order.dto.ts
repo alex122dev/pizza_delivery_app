@@ -11,6 +11,7 @@ export class OrderDto {
   comment?: string;
   totalPrice: number;
   orderItems: OrderItemDto[];
+  createdDate: Date;
 
   constructor(order: Order) {
     this.id = order.id;
@@ -21,5 +22,6 @@ export class OrderDto {
     this.comment = order.comment;
     this.totalPrice = order.totalPrice;
     this.orderItems = order.orderItems;
+    this.createdDate = order.createdDate;
   }
 }

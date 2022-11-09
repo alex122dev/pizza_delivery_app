@@ -9,14 +9,6 @@ const initialState: IInitialState = {
     statuses: [],
 };
 
-export const StatusesValueList = [
-    'processing',
-    'coocking',
-    'delivering',
-    'received',
-    'canceled',
-];
-
 const statusesSlice = createSlice({
     name: 'statuses',
     initialState,

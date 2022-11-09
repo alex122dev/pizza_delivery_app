@@ -8,9 +8,9 @@ import { OrderCard } from '../../components/OrderCard/OrderCard';
 import { OrderPropertyNames } from '../../components/OrderPropertyNames/OrderPropertyNames';
 import { Paginator } from '../../components/Paginator/Paginator';
 import { SearchAllOrdersForm } from '../../components/SearchAllOrdersForm/SearchAllOrdersForm';
-import { FilterDto } from '../../dtos/orders/Filter.dto';
+import { OrdersFilterDto } from '../../dtos/orders/OrdersFilter.dto';
 import { OrderDto } from '../../dtos/orders/Order.dto';
-import { QueryParamsDto } from '../../dtos/orders/QueryParams.dto';
+import { OrdersFilterQueryParamsDto } from '../../dtos/orders/OrdersFilterQueryParams.dto';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { getAllOrders } from '../../stateManager/actionCreators/orders';
 import { getAllStatuses } from '../../stateManager/actionCreators/statuses';
@@ -18,7 +18,6 @@ import {
     addToEditingOrders,
     removeFromEditingOrders,
 } from '../../stateManager/slices/ordersSlice';
-import { StatusesValueList } from '../../stateManager/slices/statusesSlice';
 import styles from './AllOrders.module.scss';
 
 interface IProps {}
@@ -43,25 +42,15 @@ export const AllOrders: React.FC<IProps> = ({}) => {
     }, []);
 
     useEffect(() => {
-        const queryParams: QueryParamsDto = Object.fromEntries([
+        const queryParams: OrdersFilterQueryParamsDto = Object.fromEntries([
             ...Array.from(searchParams),
         ]);
-        const actualFilter: FilterDto = {};
 
-        if (Number(queryParams.orderId)) {
-            actualFilter.orderId = Number(queryParams.orderId);
-        }
+        const actualFilter: OrdersFilterDto = {};
 
-        if (Number(queryParams.userId)) {
-            actualFilter.userId = Number(queryParams.userId);
-        }
-
-        if (
-            queryParams.status &&
-            StatusesValueList.includes(queryParams.status)
-        ) {
-            actualFilter.status = queryParams.status;
-        }
+        actualFilter.orderId = queryParams.orderId;
+        actualFilter.userId = queryParams.userId;
+        actualFilter.status = queryParams.status;
 
         const actualPage: number = Number(queryParams.page)
             ? Number(queryParams.page)
@@ -70,11 +59,11 @@ export const AllOrders: React.FC<IProps> = ({}) => {
     }, []);
 
     useEffect(() => {
-        const queryParamsObj: QueryParamsDto = {};
+        const queryParamsObj: OrdersFilterQueryParamsDto = {};
 
-        if (filter.orderId) queryParamsObj.orderId = String(filter.orderId);
-        if (filter.userId) queryParamsObj.userId = String(filter.userId);
-        if (filter.status) queryParamsObj.status = String(filter.status);
+        if (filter.orderId) queryParamsObj.orderId = filter.orderId;
+        if (filter.userId) queryParamsObj.userId = filter.userId;
+        if (filter.status) queryParamsObj.status = filter.status;
         queryParamsObj.page = String(currentPage);
 
         setSearchParams({ ...queryParamsObj });

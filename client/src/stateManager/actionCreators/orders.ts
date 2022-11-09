@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { CreateOrderDto } from '../../dtos/orders/CreateOrder.dto';
-import { FilterDto } from '../../dtos/orders/Filter.dto';
+import { OrdersFilterDto } from '../../dtos/orders/OrdersFilter.dto';
 import { UpdateOrderDto } from '../../dtos/orders/UpdateOrderdto';
 import { OrdersService } from '../../services/OrdersService';
 import {
@@ -48,7 +48,7 @@ export const cancelOrder = (id: number) => async (dispatch: AppDispatch) => {
 };
 
 export const getAllOrders =
-    (currentPage: number, pageSize: number, filter: FilterDto) =>
+    (currentPage: number, pageSize: number, filter: OrdersFilterDto) =>
     async (dispatch: AppDispatch) => {
         try {
             dispatch(setIsFetchingAllOrders(true));

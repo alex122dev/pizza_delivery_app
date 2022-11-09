@@ -19,7 +19,7 @@ import { UserRequest } from '../users/userRequest.decorator';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { FilteredOrdersDto } from './dto/filteredOrders.dto';
 import { OrderDto } from './dto/order.dto';
-import { SearchQueryDto } from './dto/searchQuery.dto';
+import { OrdersSearchQueryDto } from './dto/ordersSearchQuery.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { Order } from './entities/order.entity';
 import { OrdersService } from './orders.service';
@@ -62,7 +62,7 @@ export class OrdersController {
   @UseGuards(AuthGuard, RolesGuard)
   @Get('all')
   async getAllOrders(
-    @Query() query: SearchQueryDto,
+    @Query() query: OrdersSearchQueryDto,
   ): Promise<FilteredOrdersDto> {
     const filteredOrdersObject = await this.ordersService.getAll(query);
     const ordersDtoArray = filteredOrdersObject.orders.map(
