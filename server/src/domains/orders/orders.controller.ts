@@ -9,6 +9,7 @@ import {
   UseGuards,
   UsePipes,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { UserPayloadDto } from '../auth/dto/userPayload.dto';
@@ -16,7 +17,9 @@ import { Roles } from '../roles/roles.decorator';
 import { RolesGuard } from '../roles/roles.guard';
 import { UserRequest } from '../users/userRequest.decorator';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { FilteredOrdersDto } from './dto/filteredOrders.dto';
 import { OrderDto } from './dto/order.dto';
+import { OrdersSearchQueryDto } from './dto/ordersSearchQuery.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { Order } from './entities/order.entity';
 import { OrdersService } from './orders.service';
@@ -58,10 +61,17 @@ export class OrdersController {
   @Roles('ADMIN')
   @UseGuards(AuthGuard, RolesGuard)
   @Get('all')
-  async getAllOrders(): Promise<OrderDto[]> {
-    const orders = await this.ordersService.getAll();
-    const ordersDtoArray = orders.map((order: Order) => new OrderDto(order));
-    return ordersDtoArray;
+  async getAllOrders(
+    @Query() query: OrdersSearchQueryDto,
+  ): Promise<FilteredOrdersDto> {
+    const filteredOrdersObject = await this.ordersService.getAll(query);
+    const ordersDtoArray = filteredOrdersObject.orders.map(
+      (order: Order) => new OrderDto(order),
+    );
+    return {
+      orders: ordersDtoArray,
+      totalCount: filteredOrdersObject.totalCount,
+    };
   }
 
   @Roles('ADMIN')

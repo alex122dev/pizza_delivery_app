@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { CreateOrderDto } from '../../dtos/orders/CreateOrder.dto';
+import { OrdersFilterDto } from '../../dtos/orders/OrdersFilter.dto';
 import { UpdateOrderDto } from '../../dtos/orders/UpdateOrderdto';
 import { OrdersService } from '../../services/OrdersService';
 import {
@@ -7,7 +8,11 @@ import {
     replaceUpdatedInAllOrder,
     setAllOrders,
     setCancelError,
+    setCurrentPage,
+    setFilter,
+    setIsFetchingAllOrders,
     setOrders,
+    setTotalOrdersCount,
 } from '../slices/ordersSlice';
 import { AppDispatch } from '../store';
 
@@ -42,14 +47,26 @@ export const cancelOrder = (id: number) => async (dispatch: AppDispatch) => {
     }
 };
 
-export const getAllOrders = () => async (dispatch: AppDispatch) => {
-    try {
-        const response = await OrdersService.getAll();
-        dispatch(setAllOrders(response.data));
-    } catch (e: any) {
-        throw e;
-    }
-};
+export const getAllOrders =
+    (currentPage: number, pageSize: number, filter: OrdersFilterDto) =>
+    async (dispatch: AppDispatch) => {
+        try {
+            dispatch(setIsFetchingAllOrders(true));
+            dispatch(setCurrentPage(currentPage));
+            const response = await OrdersService.getAll(
+                currentPage,
+                pageSize,
+                filter,
+            );
+            dispatch(setFilter(filter));
+            dispatch(setAllOrders(response.data.orders));
+            dispatch(setTotalOrdersCount(response.data.totalCount));
+        } catch (e: any) {
+            throw e;
+        } finally {
+            dispatch(setIsFetchingAllOrders(false));
+        }
+    };
 
 export const updateOrder =
     (orderId: number, dto: UpdateOrderDto) => async (dispatch: AppDispatch) => {

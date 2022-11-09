@@ -1,8 +1,10 @@
 import { AxiosResponse } from 'axios';
 import { CreateOrderDto } from '../dtos/orders/CreateOrder.dto';
 import { OrderDto } from '../dtos/orders/Order.dto';
+import { OrdersFilterDto } from '../dtos/orders/OrdersFilter.dto';
 import { UpdateOrderDto } from '../dtos/orders/UpdateOrderdto';
 import { $api } from '../http/http';
+import { FilteredOrdersDto } from '../dtos/orders/FilteredOrders.dto';
 
 export class OrdersService {
     static async create(dto: CreateOrderDto): Promise<AxiosResponse<OrderDto>> {
@@ -17,8 +19,14 @@ export class OrdersService {
         return $api.post<OrderDto>(`/orders/${id}/cancel`);
     }
 
-    static async getAll(): Promise<AxiosResponse<OrderDto[]>> {
-        return $api.get<OrderDto[]>(`/orders/all`);
+    static async getAll(
+        currentPage: number,
+        pageSize: number,
+        filter: OrdersFilterDto,
+    ): Promise<AxiosResponse<FilteredOrdersDto>> {
+        return $api.get<FilteredOrdersDto>(`/orders/all`, {
+            params: { currentPage, pageSize, ...filter },
+        });
     }
 
     static async updateOrder(

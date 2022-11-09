@@ -3,6 +3,7 @@ import { Status } from '../../statuses/entities/status.entity';
 import { User } from '../../users/entities/user.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -37,4 +38,7 @@ export class Order {
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
   orderItems: OrderItem[];
+
+  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  createdDate: Date;
 }

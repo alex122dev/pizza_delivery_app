@@ -10,7 +10,6 @@ import { Preloader } from '../common/Preloader/Preloader';
 import { CheckoutUpdateOrderDto } from '../../dtos/orders/CheckoutUpdateOrder.dto';
 import { UpdateOrderDto } from '../../dtos/orders/UpdateOrderdto';
 import { CreateOrderItemDto } from '../../dtos/orders/CreateOrderItem.dto';
-import { CustomSelect } from '../common/CustomSelect/CustomSelect';
 import { updateOrder } from '../../stateManager/actionCreators/orders';
 import { ModalWindow } from '../common/ModalWindow/ModalWindow';
 import { removeFromEditingOrders } from '../../stateManager/slices/ordersSlice';
@@ -19,6 +18,7 @@ import { CustomFormikTextField } from '../CustomFormikTextField/CustomFormikText
 import { CustomFormikSendFormButton } from '../CustomFormikSendFormButton/CustomFormikSendFormButton';
 import { CustomFormikSendError } from '../CustomFormikSendError/CustomFormikSendError';
 import styles from './EditOrderForm.module.scss';
+import { CustomFormikSelectField } from '../CustomFormikSelectField/CustomFormikSelectField';
 
 interface IProps {
     order: OrderDto;
@@ -77,26 +77,6 @@ export const EditOrderForm: React.FC<IProps> = ({ order, localOrderItems }) => {
         status: Yup.string().required(),
     });
 
-    const renderStatusSelect = (
-        initialStatus: string,
-        setFieldValue: (
-            field: string,
-            value: any,
-            shouldValidate?: boolean,
-        ) => void,
-    ) => {
-        return (
-            <div className={styles.selectBlock}>
-                <label className={styles.selectLabel}>Status</label>
-                <CustomSelect
-                    options={statusesOptions}
-                    selected={initialStatus}
-                    setSelected={(v: string) => setFieldValue('status', v)}
-                />
-            </div>
-        );
-    };
-
     const renderSuccessButton = () => {
         return (
             <CustomButton
@@ -143,7 +123,13 @@ export const EditOrderForm: React.FC<IProps> = ({ order, localOrderItems }) => {
                         label='Address'
                         placeholder='Type your address'
                     />
-                    {renderStatusSelect(values.status, setFieldValue)}
+                    <CustomFormikSelectField
+                        fieldName='status'
+                        setFieldValue={setFieldValue}
+                        initialValue={values.status}
+                        label={'Status'}
+                        options={statusesOptions}
+                    />
                     <CustomFormikTextField
                         name='comment'
                         label='Comment'

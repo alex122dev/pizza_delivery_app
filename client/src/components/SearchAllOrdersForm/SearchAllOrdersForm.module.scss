@@ -1,0 +1,22 @@
+@import '../../variables/variables.scss';
+
+.formBody {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    column-gap: 20px;
+    align-items: center;
+    padding: 10px;
+    background-color: $whiteColor;
+    border-radius: 20px;
+    border: 2px solid $darkBlueColor;
+
+    &>div {
+        &:not(:last-child) {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.sendBtn {
+    align-self: flex-end;
+}
