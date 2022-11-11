@@ -12,6 +12,7 @@ import { CategoriesModule } from './domains/categories/categories.module';
 import { resolve } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { OrderItemsModule } from './domains/orderItems/order-items.module';
+import { FilesModule } from './domains/files/files.module';
 
 @Module({
   controllers: [],
@@ -30,6 +31,7 @@ import { OrderItemsModule } from './domains/orderItems/order-items.module';
     ProductsModule,
     CategoriesModule,
     OrderItemsModule,
+    FilesModule,
   ],
 })
 export class AppModule {}
