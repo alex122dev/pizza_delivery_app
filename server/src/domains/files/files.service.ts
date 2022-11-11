@@ -5,19 +5,20 @@ import * as uuid from 'uuid';
 
 @Injectable()
 export class FilesService {
-  createNewFile(file: Express.Multer.File, folder: string) {
+  static pathToStatic = path.resolve(
+    __dirname,
+    '..',
+    '..',
+    '..',
+    '..',
+    'static',
+  );
+
+  createNewFile(file: Express.Multer.File, folderName: string) {
     try {
       const ext = file.originalname.split('.').pop();
       const fileName = uuid.v4() + `.${ext}`;
-      const filePath = path.resolve(
-        __dirname,
-        '..',
-        '..',
-        '..',
-        '..',
-        'static',
-        folder,
-      );
+      const filePath = path.resolve(FilesService.pathToStatic, folderName);
 
       if (!fs.existsSync(filePath)) {
         fs.mkdirSync(filePath, { recursive: true });
@@ -33,25 +34,15 @@ export class FilesService {
     }
   }
 
-  renameFile(oldFolder: string, newFolder: string, fileName: string) {
+  renameFile(oldFolder: string, newFolderName: string, fileName: string) {
     const oldPath = path.resolve(
-      __dirname,
-      '..',
-      '..',
-      '..',
-      '..',
-      'static',
+      FilesService.pathToStatic,
       oldFolder,
       fileName,
     );
     const newPath = path.resolve(
-      __dirname,
-      '..',
-      '..',
-      '..',
-      '..',
-      'static',
-      newFolder,
+      FilesService.pathToStatic,
+      newFolderName,
       fileName,
     );
 
@@ -59,17 +50,9 @@ export class FilesService {
     return true;
   }
 
-  removeFile(fileName: string, folder: string) {
+  removeFile(fileName: string, folderName: string) {
     try {
-      const filePath = path.resolve(
-        __dirname,
-        '..',
-        '..',
-        '..',
-        '..',
-        'static',
-        folder,
-      );
+      const filePath = path.resolve(FilesService.pathToStatic, folderName);
       const file = path.join(filePath, fileName);
 
       if (!fs.existsSync(file)) {

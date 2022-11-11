@@ -5,6 +5,7 @@ import { CategoriesService } from '../categories/categories.service';
 import { ComponentsService } from '../components/components.service';
 import { Component } from '../components/entities/component.entity';
 import { FilesService } from '../files/files.service';
+import { ImageService } from '../image/image.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
@@ -16,7 +17,10 @@ export class ProductsService {
     private filesService: FilesService,
     private categoriesService: CategoriesService,
     private componentsService: ComponentsService,
+    private imageService: ImageService,
   ) {}
+
+  static imageFileTypes = /(jpg|jpeg|png|gif)$/;
 
   async getById(id: number): Promise<Product> {
     return this.productsRepository.findOne({
@@ -39,39 +43,18 @@ export class ProductsService {
   }
 
   private async createProductComponents(
-    componentsId: number[],
+    componentIds: number[],
   ): Promise<Component[]> {
     const productComponents: Component[] = [];
 
-    for (const componentId of componentsId) {
-      const componentFromBd = await this.componentsService.getById(componentId);
+    for (const id of componentIds) {
+      const componentFromBd = await this.componentsService.getById(id);
       if (componentFromBd) {
         productComponents.push(componentFromBd);
       }
     }
 
     return productComponents;
-  }
-
-  private getNewImageLocation(oldLocation: string, newFolder: string): string {
-    const oldFolder = oldLocation.split('/')[0];
-    const fileName = oldLocation.split('/')[1];
-    this.filesService.renameFile(oldFolder, newFolder, fileName);
-    const imageLocation = `${newFolder}/${fileName}`;
-    return imageLocation;
-  }
-
-  private replaceProductImage(
-    oldLocation: string,
-    newImage: Express.Multer.File,
-    newFolder: string,
-  ) {
-    const oldFolder = oldLocation.split('/')[0];
-    const fileName = oldLocation.split('/')[1];
-    this.filesService.removeFile(fileName, oldFolder);
-    const newFileName = this.filesService.createNewFile(newImage, newFolder);
-    const imageLocation = `${newFolder}/${newFileName}`;
-    return imageLocation;
   }
 
   async create(
@@ -90,13 +73,15 @@ export class ProductsService {
       image,
       productCategory.name,
     );
-    const imagePlacement = `${productCategory.name}/${fileName}`;
-    const productPrice = dto.price * 100;
+    const imagePlacement = this.imageService.generateLocationString(
+      productCategory.name,
+      fileName,
+    );
     const productComponents: Component[] = [];
 
-    if (dto.componentsId && dto.componentsId.length > 0) {
+    if (dto.componentIds && dto.componentIds.length > 0) {
       const productComponentsArray = await this.createProductComponents(
-        dto.componentsId,
+        dto.componentIds,
       );
       productComponents.push(...productComponentsArray);
     }
@@ -104,7 +89,7 @@ export class ProductsService {
     const newProduct = this.productsRepository.create({
       name: dto.name,
       description: dto.description,
-      price: productPrice,
+      price: dto.price,
       category: productCategory,
       isActive: dto.isActive,
       components: productComponents,
@@ -123,11 +108,10 @@ export class ProductsService {
     const productCategory = await this.categoriesService.getById(
       dto.categoryId,
     );
-    const productPrice = dto.price ? dto.price * 100 : product.price;
 
     if (dto.categoryId && productCategory) {
       product.category = productCategory;
-      const imageLocation = this.getNewImageLocation(
+      const imageLocation = this.imageService.getNewImageLocation(
         product.image,
         productCategory.name,
       );
@@ -135,7 +119,7 @@ export class ProductsService {
     }
 
     if (image) {
-      const imageLocation = this.replaceProductImage(
+      const imageLocation = this.imageService.replaceProductImage(
         product.image,
         image,
         product.category.name,
@@ -143,9 +127,9 @@ export class ProductsService {
       product.image = imageLocation;
     }
 
-    if (dto.componentsId && dto.componentsId.length > 0) {
+    if (dto.componentIds && dto.componentIds.length > 0) {
       const productComponents = await this.createProductComponents(
-        dto.componentsId,
+        dto.componentIds,
       );
       product.components = productComponents;
     }
@@ -156,7 +140,7 @@ export class ProductsService {
 
     return this.productsRepository.save({
       ...product,
-      price: productPrice,
+      price: dto.price ? dto.price : product.price,
       name: dto.name ? dto.name : product.name,
       description: dto.description ? dto.description : product.description,
     });

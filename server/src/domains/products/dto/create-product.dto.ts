@@ -1,7 +1,6 @@
 import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
-  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -32,5 +31,5 @@ export class CreateProductDto {
   @IsArray()
   @IsNumber({}, { each: true })
   @Type(() => Number)
-  componentsId?: number[];
+  componentIds?: number[];
 }
