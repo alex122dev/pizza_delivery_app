@@ -8,6 +8,7 @@ import { ScrollToTop } from './components/ScrollToTop/ScrollToTop';
 import { useAppDispatch } from './hooks/redux';
 import {
     AllOrders,
+    AllProducts,
     Cart,
     Home,
     NoAccess,
@@ -55,6 +56,14 @@ function App() {
                                 element={
                                     <RequireAuth requiredRoles={['ADMIN']}>
                                         <AllOrders />
+                                    </RequireAuth>
+                                }
+                            />
+                            <Route
+                                path='/allproducts'
+                                element={
+                                    <RequireAuth requiredRoles={['ADMIN']}>
+                                        <AllProducts />
                                     </RequireAuth>
                                 }
                             />

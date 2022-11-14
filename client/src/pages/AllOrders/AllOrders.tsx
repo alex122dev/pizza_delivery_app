@@ -5,7 +5,7 @@ import { CustomButton } from '../../components/common/CustomButton/CustomButton'
 import { InfoMessage } from '../../components/common/InfoMessage/InfoMessage';
 import { Preloader } from '../../components/common/Preloader/Preloader';
 import { OrderCard } from '../../components/OrderCard/OrderCard';
-import { OrderPropertyNames } from '../../components/OrderPropertyNames/OrderPropertyNames';
+import { PropertyNamesRow } from '../../components/PropertyNamesRow/PropertyNamesRow';
 import { Paginator } from '../../components/Paginator/Paginator';
 import { SearchAllOrdersForm } from '../../components/SearchAllOrdersForm/SearchAllOrdersForm';
 import { OrdersFilterDto } from '../../dtos/orders/OrdersFilter.dto';
@@ -36,6 +36,14 @@ export const AllOrders: React.FC<IProps> = ({}) => {
         (state) => state.orders.isFetchingAllOrders,
     );
     const [searchParams, setSearchParams] = useSearchParams();
+    const propertiesArray = [
+        'id',
+        'order items',
+        'address',
+        'phone',
+        'status',
+        'total price',
+    ];
 
     useEffect(() => {
         dispatch(getAllStatuses());
@@ -131,7 +139,7 @@ export const AllOrders: React.FC<IProps> = ({}) => {
         <div className={styles.container}>
             <h2 className={styles.title}>All customer orders</h2>
             <div className={styles.ordersList}>
-                {<OrderPropertyNames />}
+                {<PropertyNamesRow names={propertiesArray} />}
                 {<SearchAllOrdersForm />}
                 {isFetchingAllOrders && <Preloader />}
                 {renderOrdersList()}

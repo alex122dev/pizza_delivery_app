@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CustomButton } from '../../components/common/CustomButton/CustomButton';
 import { ModalWindow } from '../../components/common/ModalWindow/ModalWindow';
 import { OrderCard } from '../../components/OrderCard/OrderCard';
-import { OrderPropertyNames } from '../../components/OrderPropertyNames/OrderPropertyNames';
+import { PropertyNamesRow } from '../../components/PropertyNamesRow/PropertyNamesRow';
 import { OrderDto } from '../../dtos/orders/Order.dto';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
@@ -19,6 +19,14 @@ export const Orders: React.FC<IProps> = ({}) => {
     const orders = useAppSelector((state) => state.orders.orders);
     const [isModalActive, setIsModalActive] = useState(false);
     const cancelError = useAppSelector((state) => state.orders.cancelError);
+    const propertiesArray = [
+        'id',
+        'order items',
+        'address',
+        'phone',
+        'status',
+        'total price',
+    ];
 
     useEffect(() => {
         dispatch(getCurrentUserOrders());
@@ -52,7 +60,7 @@ export const Orders: React.FC<IProps> = ({}) => {
     const renderOrdersList = () => {
         return (
             <div className={styles.ordersList}>
-                {<OrderPropertyNames />}
+                {<PropertyNamesRow names={propertiesArray} />}
                 {orders.map((order) => (
                     <OrderCard
                         key={order.id}

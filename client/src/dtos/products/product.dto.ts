@@ -9,4 +9,5 @@ export interface ProductDto {
     price: number;
     category: Omit<CategoryDto, 'products'>;
     components: ComponentDto[];
+    isActive: boolean;
 }

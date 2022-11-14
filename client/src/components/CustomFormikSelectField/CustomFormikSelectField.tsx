@@ -5,7 +5,7 @@ import styles from './CustomFormikSelectField.module.scss';
 interface IProps {
     label: string;
     fieldName: string;
-    initialValue: string;
+    initialValue: string | number;
     options: OptionType[];
     setFieldValue: (
         field: string,

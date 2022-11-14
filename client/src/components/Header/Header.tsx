@@ -7,6 +7,7 @@ import { signOut } from '../../stateManager/actionCreators/auth';
 import { Logo } from '../Logo/Logo';
 import { Link as ScrollLink } from 'react-scroll';
 import { CategoryDto } from '../../dtos/categories/category.dto';
+import { UserDto } from '../../dtos/users/User.dto';
 
 interface IProps {}
 
@@ -30,11 +31,23 @@ export const Header: FC<IProps> = ({}) => {
         );
     };
 
+    const renderAdminLinks = (user: UserDto) => {
+        if (!user.roles.some((role) => ['ADMIN'].includes(role.value))) {
+            return null;
+        }
+
+        return (
+            <>
+                {renderNavLink('./allproducts', 'All Products')}
+                {renderNavLink('./allorders', 'All Orders')}
+            </>
+        );
+    };
+
     const renderUserSign = () => {
         return user ? (
             <>
-                {user.roles.some((role) => ['ADMIN'].includes(role.value)) &&
-                    renderNavLink('./allorders', 'All Orders')}
+                {renderAdminLinks(user)}
                 {renderNavLink('/orders', 'My Orders')}
                 <button onClick={() => dispatch(signOut())}>Sign Out</button>
             </>
