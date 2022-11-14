@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '../auth/auth.module';
 import { CategoriesModule } from '../categories/categories.module';
 import { ComponentsModule } from '../components/components.module';
-import { FilesModule } from '../files/files.module';
 import { ImageModule } from '../image/image.module';
 import { UsersModule } from '../users/users.module';
 import { Product } from './entities/product.entity';
@@ -15,7 +14,6 @@ import { ProductsService } from './products.service';
   providers: [ProductsService],
   imports: [
     TypeOrmModule.forFeature([Product]),
-    FilesModule,
     CategoriesModule,
     ComponentsModule,
     AuthModule,

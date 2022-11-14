@@ -5,7 +5,12 @@ import { FilesService } from '../files/files.service';
 export class ImageService {
   constructor(private filesService: FilesService) {}
 
-  generateLocationString(folderName: string, fileName: string) {
+  saveImage(image: Express.Multer.File, folderName: string): string {
+    const fileName = this.filesService.createNewFile(image, folderName);
+    return this.generateLocationString(folderName, fileName);
+  }
+
+  generateLocationString(folderName: string, fileName: string): string {
     return `${folderName}/${fileName}`;
   }
 
@@ -21,7 +26,7 @@ export class ImageService {
     oldLocation: string,
     newImageFile: Express.Multer.File,
     newFolderName: string,
-  ) {
+  ): string {
     const oldFolder = oldLocation.split('/')[0];
     const fileName = oldLocation.split('/')[1];
     this.filesService.removeFile(fileName, oldFolder);

@@ -1,10 +1,9 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CategoriesService } from '../categories/categories.service';
 import { ComponentsService } from '../components/components.service';
 import { Component } from '../components/entities/component.entity';
-import { FilesService } from '../files/files.service';
 import { ImageService } from '../image/image.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -14,7 +13,6 @@ import { Product } from './entities/product.entity';
 export class ProductsService {
   constructor(
     @InjectRepository(Product) private productsRepository: Repository<Product>,
-    private filesService: FilesService,
     private categoriesService: CategoriesService,
     private componentsService: ComponentsService,
     private imageService: ImageService,
@@ -69,13 +67,9 @@ export class ProductsService {
       throw new BadRequestException();
     }
 
-    const fileName = this.filesService.createNewFile(
+    const imageLocation = this.imageService.saveImage(
       image,
       productCategory.name,
-    );
-    const imagePlacement = this.imageService.generateLocationString(
-      productCategory.name,
-      fileName,
     );
     const productComponents: Component[] = [];
 
@@ -93,7 +87,7 @@ export class ProductsService {
       category: productCategory,
       isActive: dto.isActive,
       components: productComponents,
-      image: imagePlacement,
+      image: imageLocation,
     });
 
     return this.productsRepository.save(newProduct);

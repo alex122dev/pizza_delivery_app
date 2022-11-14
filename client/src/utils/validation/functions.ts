@@ -1,4 +1,4 @@
-export const checkIfFileAreCorrectType = (file: File): boolean => {
+export const isFileTypeCorrect = (file: File): boolean => {
     const supportedTypes = [
         'image/jpg',
         'image/jpeg',

@@ -11,7 +11,7 @@ import {
     updateProduct,
 } from '../../stateManager/actionCreators/products';
 import { removeFromEditingProducts } from '../../stateManager/slices/productsSlice';
-import { checkIfFileAreCorrectType } from '../../utils/validation/functions';
+import { isFileTypeCorrect } from '../../utils/validation/functions';
 import { CustomButton } from '../common/CustomButton/CustomButton';
 import { CustomInput } from '../common/CustomInput/CustomInput';
 import { ModalWindow } from '../common/ModalWindow/ModalWindow';
@@ -107,7 +107,7 @@ export const ProductEditForm: React.FC<IProps> = ({
                 then: Yup.mixed().test(
                     'Invalid file type',
                     'Invalid file type',
-                    checkIfFileAreCorrectType,
+                    isFileTypeCorrect,
                 ),
             }),
         },
