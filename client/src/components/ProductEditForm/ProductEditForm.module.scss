@@ -19,7 +19,6 @@
 }
 
 .productImage {
-    //align-self: flex-start;
     position: relative;
     padding-bottom: 50%;
 
@@ -35,12 +34,6 @@
 .uploadBtn {}
 
 .fileInputBlock {
-    &:not(:last-child) {
-        margin-bottom: 0;
-    }
-}
-
-.fileInputLabel {
     display: none;
 }
 

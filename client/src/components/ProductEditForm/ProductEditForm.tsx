@@ -5,6 +5,7 @@ import { EditProductFormValuesDto } from '../../dtos/products/editProductFormVal
 import { ProductDto } from '../../dtos/products/product.dto';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { API_URL } from '../../http/http';
+import { getAllCategories } from '../../stateManager/actionCreators/categories';
 import {
     createNewProduct,
     getAllProducts,
@@ -94,6 +95,12 @@ export const ProductEditForm: React.FC<IProps> = ({
         }
     };
 
+    const imageValidate = (file: File) => {
+        const isValid = isFileTypeCorrect(file);
+        setFormSendError(isValid ? '' : 'Invalid file type');
+        return isValid;
+    };
+
     const validationSchemaObject = Yup.object().shape(
         {
             name: Yup.string().required(),
@@ -107,8 +114,12 @@ export const ProductEditForm: React.FC<IProps> = ({
                 then: Yup.mixed().test(
                     'Invalid file type',
                     'Invalid file type',
-                    isFileTypeCorrect,
+                    imageValidate,
                 ),
+                otherwise: Yup.mixed().test(() => {
+                    setFormSendError('');
+                    return true;
+                }),
             }),
         },
         [['image', 'image']],
@@ -120,6 +131,7 @@ export const ProductEditForm: React.FC<IProps> = ({
                 startColor='green'
                 onClick={(e) => {
                     setIsModalActive(false);
+                    dispatch(getAllCategories());
                     if (product) {
                         dispatch(removeFromEditingProducts(product.id));
                     } else {
@@ -156,7 +168,7 @@ export const ProductEditForm: React.FC<IProps> = ({
             onSubmit={onFormSubmit}
             validationSchema={validationSchemaObject}
         >
-            {({ isSubmitting, setFieldValue, values }) => (
+            {({ isSubmitting, setFieldValue, values, isValid }) => (
                 <Form className={styles.formBody}>
                     {isSubmitting && <Preloader className={styles.preloader} />}
                     <div className={styles.imageBlock}>
@@ -172,8 +184,6 @@ export const ProductEditForm: React.FC<IProps> = ({
                         <Field
                             name='image'
                             type='file'
-                            hidden
-                            labelClass={styles.fileInputLabel}
                             allItemClass={styles.fileInputBlock}
                             value={undefined} // for normal working react
                             accept='image/*'
@@ -197,6 +207,7 @@ export const ProductEditForm: React.FC<IProps> = ({
                                 startColor='red'
                                 onClick={() => {
                                     setFieldValue('image', '');
+                                    setFormSendError('');
                                     if (fileInputRef.current)
                                         fileInputRef.current.value = '';
                                 }}
@@ -232,6 +243,9 @@ export const ProductEditForm: React.FC<IProps> = ({
                             name='isActive'
                             label='Is Active'
                             checked={values.isActive}
+                            uniqueId={
+                                product?.id || 'createNewProductCheckboxId'
+                            }
                             component={CustomFormikCheckboxField}
                         />
                         {formSendError && (
@@ -239,7 +253,7 @@ export const ProductEditForm: React.FC<IProps> = ({
                         )}
                         <CustomFormikSendFormButton
                             text={product ? 'Save Changes' : 'Create'}
-                            isSubmitting={isSubmitting}
+                            isSubmitting={isSubmitting || !isValid}
                         />
                     </div>
                     {renderInfoModal()}

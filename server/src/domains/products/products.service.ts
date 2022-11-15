@@ -40,21 +40,6 @@ export class ProductsService {
     });
   }
 
-  private async createProductComponents(
-    componentIds: number[],
-  ): Promise<Component[]> {
-    const productComponents: Component[] = [];
-
-    for (const id of componentIds) {
-      const componentFromBd = await this.componentsService.getById(id);
-      if (componentFromBd) {
-        productComponents.push(componentFromBd);
-      }
-    }
-
-    return productComponents;
-  }
-
   async create(
     dto: CreateProductDto,
     image: Express.Multer.File,
@@ -74,7 +59,7 @@ export class ProductsService {
     const productComponents: Component[] = [];
 
     if (dto.componentIds && dto.componentIds.length > 0) {
-      const productComponentsArray = await this.createProductComponents(
+      const productComponentsArray = await this.componentsService.getByIds(
         dto.componentIds,
       );
       productComponents.push(...productComponentsArray);
@@ -122,7 +107,7 @@ export class ProductsService {
     }
 
     if (dto.componentIds && dto.componentIds.length > 0) {
-      const productComponents = await this.createProductComponents(
+      const productComponents = await this.componentsService.getByIds(
         dto.componentIds,
       );
       product.components = productComponents;
