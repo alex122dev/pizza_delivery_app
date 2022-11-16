@@ -1,0 +1,69 @@
+@import '../../variables/variables.scss';
+
+.checkbox {
+    &:not(:last-child) {
+        margin-bottom: 10px;
+    }
+
+    .checkboxInput {
+        display: none;
+    }
+
+    .checkboxInput:checked~.checkboxLabel {
+        color: $mainColor;
+    }
+
+    .checkboxInput:checked+.checkboxLabel .slider:before {
+        background-color: $lightGreenColor;
+    }
+
+    .checkboxInput:checked+.checkboxLabel .slider:after {
+        background-color: $lightGreenHoverColor;
+        left: 30px;
+    }
+
+}
+
+.checkboxLabel {
+    font-size: 18px;
+    cursor: pointer;
+    display: inline-flex;
+    column-gap: 10px;
+    align-items: center;
+    color: $greyColor;
+}
+
+.slider {
+    display: block;
+    position: relative;
+    height: 30px;
+    width: 60px;
+
+    &:before {
+        content: '';
+        width: 50px;
+        height: 20px;
+        border-radius: 20px;
+        background-color: $bodyColor;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 3px $mainColor;
+        transition: all 0.3s ease 0s;
+    }
+
+    &:after {
+        content: '';
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        left: 0;
+        top: 50%;
+        transform: translate(0px, -50%);
+        background-color: $greyColor;
+        border-radius: 50%;
+        box-shadow: 0 0 3px $mainColor;
+        transition: all 0.3s ease 0s;
+    }
+}

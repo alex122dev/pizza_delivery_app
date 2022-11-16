@@ -7,6 +7,7 @@ export class ProductDto {
   description: string;
   image: string;
   price: number;
+  isActive: boolean;
   category: Omit<CategoryDto, 'products'>;
   components: ComponentDto[];
 }

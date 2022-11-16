@@ -1,5 +1,6 @@
 import cn from 'classnames';
 import { FieldProps } from 'formik';
+import { RefObject } from 'react';
 import styles from './CustomInput.module.scss';
 
 type CustomInpPropsType = {
@@ -9,6 +10,7 @@ type CustomInpPropsType = {
     className: string;
     label: string;
     validationInputError: string;
+    innerRef: RefObject<HTMLInputElement>;
 };
 
 export const CustomInput: React.FC<CustomInpPropsType & FieldProps> = ({
@@ -20,11 +22,13 @@ export const CustomInput: React.FC<CustomInpPropsType & FieldProps> = ({
     label = 'Label text', // text inside label
     className, // input className
     validationInputError = styles.validationInputError, // style for input validation error (red outline etc.)
+    innerRef, // ref
     ...props
 }) => (
     <div className={allItemClass}>
         {label && <label className={labelClass}>{label}</label>}
         <input
+            ref={innerRef}
             className={cn(className, {
                 [styles.InputClass]: true,
                 [validationInputError]:

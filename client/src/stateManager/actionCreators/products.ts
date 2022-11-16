@@ -1,5 +1,11 @@
+import { EditProductFormValuesDto } from '../../dtos/products/editProductFormValues.dto';
 import { ProductsService } from '../../services/ProductsService';
-import { setCurrentProduct, setIsFetching } from '../slices/productsSlice';
+import {
+    replaceUpdatedInAllProducts,
+    setAllProducts,
+    setCurrentProduct,
+    setIsFetching,
+} from '../slices/productsSlice';
 import { AppDispatch } from '../store';
 
 export const getProductById =
@@ -12,5 +18,40 @@ export const getProductById =
             throw e;
         } finally {
             dispatch(setIsFetching(false));
+        }
+    };
+
+export const getAllProducts = () => async (dispatch: AppDispatch) => {
+    try {
+        dispatch(setIsFetching(true));
+        const response = await ProductsService.getAll();
+        dispatch(setAllProducts(response.data));
+    } catch (e: any) {
+        throw e;
+    } finally {
+        dispatch(setIsFetching(false));
+    }
+};
+
+export const createNewProduct =
+    (dto: EditProductFormValuesDto) => async (dispatch: AppDispatch) => {
+        try {
+            const response = await ProductsService.create(dto);
+            //dispatch(setCurrentProduct(response.data));
+        } catch (e: any) {
+            throw e;
+        }
+    };
+
+export const updateProduct =
+    (id: number, dto: EditProductFormValuesDto) =>
+    async (dispatch: AppDispatch) => {
+        try {
+            const response = await ProductsService.update(id, dto);
+            dispatch(
+                replaceUpdatedInAllProducts({ id, product: response.data }),
+            );
+        } catch (e: any) {
+            throw e;
         }
     };

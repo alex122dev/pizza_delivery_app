@@ -1,0 +1,33 @@
+@import '../../variables/variables.scss';
+
+.container {
+    background-color: $whiteColor;
+    border-radius: 20px;
+    border: 1px solid $mainColor;
+}
+
+.body {
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: 50px 1fr 1fr 1fr 1fr 100px 100px;
+    padding: 10px;
+    border-radius: 20px;
+    transition: all 0.3s ease 0s;
+
+    &.active {
+        background-color: $lightYellowColor;
+    }
+
+    @media (any-hover: hover) {
+        &:hover {
+            background-color: $yellowOpacityColor;
+        }
+    }
+}
+
+.productProperty {
+    padding: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}

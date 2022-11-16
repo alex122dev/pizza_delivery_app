@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Component } from './entities/component.entity';
 
 @Injectable()
@@ -20,5 +20,11 @@ export class ComponentsService {
 
   async getAll(): Promise<Component[]> {
     return this.componentsRepository.find();
+  }
+
+  async getByIds(componentIds: number[]): Promise<Component[]> {
+    return this.componentsRepository.find({
+      where: { id: In(componentIds) },
+    });
   }
 }

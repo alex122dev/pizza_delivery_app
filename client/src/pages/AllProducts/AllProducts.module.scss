@@ -1,0 +1,30 @@
+@import '../../variables/variables.scss';
+
+.container {}
+
+.title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.createBlock {
+    background-color: $whiteColor;
+    border: 2px solid $lightGreenColor;
+    border-radius: 20px;
+}
+
+.productsList {
+    position: relative;
+    padding: 20px;
+    border-radius: 20px;
+    background-color: $formBgColor;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.editBtn {
+    position: relative;
+    z-index: 3;
+}

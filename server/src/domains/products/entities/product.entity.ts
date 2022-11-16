@@ -37,4 +37,7 @@ export class Product {
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
   orderItem: OrderItem;
+
+  @Column({ default: true })
+  isActive: boolean;
 }

@@ -1,0 +1,69 @@
+@import '../../variables/variables.scss';
+
+.formBody {
+    position: relative;
+    padding: 20px;
+    display: flex;
+    column-gap: 20px;
+}
+
+.preloader {
+    z-index: 3;
+}
+
+.imageBlock {
+    flex: 0 1 50%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+}
+
+.productImage {
+    position: relative;
+    padding-bottom: 50%;
+
+    img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.uploadBtn {}
+
+.fileInputBlock {
+    display: none;
+}
+
+.textBlock {
+    flex: 0 1 50%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 30px;
+    background-color: $formBgColor;
+    transition: all 0.3s ease 0s;
+}
+
+.modalBody {
+    flex: 1 1 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 600px;
+
+    @media (max-width: 797.98px) {
+        min-width: 100vw;
+    }
+}
+
+.modalTitle {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+}
