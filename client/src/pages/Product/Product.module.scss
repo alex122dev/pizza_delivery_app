@@ -84,29 +84,6 @@
     }
 }
 
-.componentsItem {}
-
-.componentImage {
-    position: relative;
-    padding-bottom: 60%;
-    background-color: $whiteColor;
-    margin-bottom: 5px;
-
-    img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-}
-
-.componentName {
-    &::first-letter {
-        text-transform: uppercase;
-    }
-}
-
 .priceAndButtonBlock {
     display: flex;
     align-items: center;

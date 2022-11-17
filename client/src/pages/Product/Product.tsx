@@ -3,9 +3,9 @@ import { useParams } from 'react-router-dom';
 import { AddProductToCardButton } from '../../components/AddProductToCardButton/AddProductToCardButton';
 import { InfoMessage } from '../../components/common/InfoMessage/InfoMessage';
 import { Preloader } from '../../components/common/Preloader/Preloader';
+import { ComponentCard } from '../../components/ComponentCard/ComponentCard';
 import { PriceBlock } from '../../components/PriceBlock/PriceBlock';
 import { ToCartQuantityBlock } from '../../components/ToCartQuantityBlock/QuantityCartBlock';
-import { ComponentDto } from '../../dtos/components/component.dto';
 import { ProductDto } from '../../dtos/products/product.dto';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { API_URL } from '../../http/http';
@@ -39,22 +39,14 @@ export const Product: React.FC<IProps> = ({}) => {
             <div className={styles.productComponents}>
                 <h4 className={styles.componentsTitle}>Ingredients</h4>
                 <div className={styles.componentsBody}>
-                    {product?.components.map(renderComponent)}
+                    {product?.components.map((c) => (
+                        <ComponentCard
+                            key={c.id}
+                            component={c}
+                            isNeedActiveState={false}
+                        />
+                    ))}
                 </div>
-            </div>
-        );
-    };
-
-    const renderComponent = (component: ComponentDto) => {
-        return (
-            <div key={component.id} className={styles.componentsItem}>
-                <div className={styles.componentImage}>
-                    <img
-                        src={`${API_URL}/${component.image}`}
-                        alt={component.name}
-                    />
-                </div>
-                <p className={styles.componentName}>{component.name}</p>
             </div>
         );
     };
@@ -103,7 +95,7 @@ export const Product: React.FC<IProps> = ({}) => {
         return <Preloader />;
     }
 
-    if (!product && !isFetching) {
+    if ((!product || !product.isActive) && !isFetching) {
         return <InfoMessage>Product not found</InfoMessage>;
     }
 

@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { authReducer } from './slices/authSlice';
 import { cartReducer } from './slices/cartSlice';
 import { categoriesReducer } from './slices/categoriesSlice';
+import { componentsReducer } from './slices/componentsSlice';
 import { ordersReducer } from './slices/ordersSlice';
 import { productsReducer } from './slices/productsSlice';
 import { statusesReducer } from './slices/statusesSlice';
@@ -14,6 +15,7 @@ export const store = configureStore({
         cart: cartReducer,
         orders: ordersReducer,
         statuses: statusesReducer,
+        components: componentsReducer,
     },
 });
 

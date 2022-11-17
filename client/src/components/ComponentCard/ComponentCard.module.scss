@@ -1,0 +1,55 @@
+@import '../../variables/variables.scss';
+
+.container {
+    cursor: pointer;
+    border-radius: 30px;
+    background-color: $lightYellowColor;
+    position: relative;
+    transition: all 0.3s ease 0s;
+
+    &::after {
+        content: '';
+        transition: all 0.3s ease 0s;
+        border-radius: 30px;
+        position: absolute;
+        pointer-events: none;
+        opacity: 0;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        background-color: $yellowOpacityColor;
+    }
+
+    &.active {
+        &::after {
+            opacity: 1;
+        }
+    }
+}
+
+.image {
+    border-radius: 30px;
+    background-color: $whiteColor;
+    position: relative;
+    padding-bottom: 70%;
+
+    img {
+        border-radius: 30px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.title {
+    padding: 5px;
+    text-align: center;
+
+    &::first-letter {
+        text-transform: uppercase;
+    }
+}
