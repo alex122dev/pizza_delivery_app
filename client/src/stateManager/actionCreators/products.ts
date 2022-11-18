@@ -5,6 +5,7 @@ import {
     setAllProducts,
     setCurrentProduct,
     setIsFetching,
+    setIsFetchingAllProducts,
 } from '../slices/productsSlice';
 import { AppDispatch } from '../store';
 
@@ -23,13 +24,13 @@ export const getProductById =
 
 export const getAllProducts = () => async (dispatch: AppDispatch) => {
     try {
-        dispatch(setIsFetching(true));
+        dispatch(setIsFetchingAllProducts(true));
         const response = await ProductsService.getAll();
         dispatch(setAllProducts(response.data));
     } catch (e: any) {
         throw e;
     } finally {
-        dispatch(setIsFetching(false));
+        dispatch(setIsFetchingAllProducts(false));
     }
 };
 
@@ -37,7 +38,6 @@ export const createNewProduct =
     (dto: EditProductFormValuesDto) => async (dispatch: AppDispatch) => {
         try {
             const response = await ProductsService.create(dto);
-            //dispatch(setCurrentProduct(response.data));
         } catch (e: any) {
             throw e;
         }

@@ -19,11 +19,15 @@ export class ProductsService {
     ): Promise<AxiosResponse<ProductDto>> {
         const formData = new FormData();
         Object.entries(dto).forEach(([key, value]) => {
-            key === 'componentIds'
-                ? value.forEach((id: number) =>
-                      formData.append('componentIds[]', JSON.stringify(id)),
-                  )
-                : formData.append(key, value);
+            if (key === 'componentIds') {
+                dto.componentIds?.length !== 0
+                    ? value.forEach((id: number) =>
+                          formData.append('componentIds[]', JSON.stringify(id)),
+                      )
+                    : formData.append('componentIds', JSON.stringify([]));
+            } else {
+                formData.append(key, value);
+            }
         });
         return $api.post<ProductDto>('/products', formData);
     }
@@ -34,11 +38,15 @@ export class ProductsService {
     ): Promise<AxiosResponse<ProductDto>> {
         const formData = new FormData();
         Object.entries(dto).forEach(([key, value]) => {
-            key === 'componentIds'
-                ? value.forEach((id: number) =>
-                      formData.append('componentIds[]', JSON.stringify(id)),
-                  )
-                : formData.append(key, value);
+            if (key === 'componentIds') {
+                dto.componentIds?.length !== 0
+                    ? value.forEach((id: number) =>
+                          formData.append('componentIds[]', JSON.stringify(id)),
+                      )
+                    : formData.append('componentIds', JSON.stringify([]));
+            } else {
+                formData.append(key, value);
+            }
         });
         return $api.put<ProductDto>(`/products/${productId}`, formData);
     }

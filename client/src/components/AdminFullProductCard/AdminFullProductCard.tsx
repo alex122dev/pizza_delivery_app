@@ -1,6 +1,7 @@
 import React from 'react';
 import { ProductDto } from '../../dtos/products/product.dto';
 import { API_URL } from '../../http/http';
+import { ComponentCard } from '../ComponentCard/ComponentCard';
 import styles from './AdminFullProductCard.module.scss';
 
 interface IProps {
@@ -31,6 +32,27 @@ export const AdminFullProductCard: React.FC<IProps> = ({ product }) => {
         );
     };
 
+    const renderComponents = () => {
+        if (!product.components || product.components.length === 0) {
+            return null;
+        }
+
+        return (
+            <div className={styles.productComponents}>
+                <h4 className={styles.componentsTitle}>Ingredients</h4>
+                <div className={styles.componentsBody}>
+                    {product.components.map((c) => (
+                        <ComponentCard
+                            key={c.id}
+                            component={c}
+                            isNeedActiveState={false}
+                        />
+                    ))}
+                </div>
+            </div>
+        );
+    };
+
     return (
         <div className={styles.container}>
             <div className={styles.productImage}>
@@ -38,6 +60,7 @@ export const AdminFullProductCard: React.FC<IProps> = ({ product }) => {
             </div>
             <div className={styles.productContent}>
                 {renderProductProperties()}
+                {renderComponents()}
             </div>
         </div>
     );

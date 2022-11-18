@@ -106,7 +106,7 @@ export class ProductsService {
       product.image = imageLocation;
     }
 
-    if (dto.componentIds && dto.componentIds.length > 0) {
+    if (dto.componentIds) {
       const productComponents = await this.componentsService.getByIds(
         dto.componentIds,
       );

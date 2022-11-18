@@ -6,6 +6,7 @@ interface IInitialState {
     isFetching: boolean;
     allProducts: ProductDto[];
     editingProducts: number[];
+    isFetchingAllProducts: boolean;
 }
 
 const initialState: IInitialState = {
@@ -13,6 +14,7 @@ const initialState: IInitialState = {
     isFetching: false,
     allProducts: [],
     editingProducts: [],
+    isFetchingAllProducts: false,
 };
 
 const productsSlice = createSlice({
@@ -51,6 +53,9 @@ const productsSlice = createSlice({
                 state.allProducts[productIndex] = action.payload.product;
             }
         },
+        setIsFetchingAllProducts: (state, action: PayloadAction<boolean>) => {
+            state.isFetchingAllProducts = action.payload;
+        },
     },
 });
 
@@ -61,6 +66,7 @@ export const {
     addToEditingProducts,
     removeFromEditingProducts,
     replaceUpdatedInAllProducts,
+    setIsFetchingAllProducts,
 } = productsSlice.actions;
 
 export const productsReducer = productsSlice.reducer;

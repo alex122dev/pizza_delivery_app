@@ -28,6 +28,12 @@ export class CreateProductDto {
   @IsNumber()
   categoryId: number;
   @IsOptional()
+  @Transform(({ value }) => {
+    if (!value) {
+      return [];
+    }
+    return value;
+  })
   @IsArray()
   @IsNumber({}, { each: true })
   @Type(() => Number)

@@ -13,10 +13,13 @@ import {
 } from '../../stateManager/actionCreators/products';
 import { removeFromEditingProducts } from '../../stateManager/slices/productsSlice';
 import { isFileTypeCorrect } from '../../utils/validation/functions';
+import { ChooseComponentsModal } from '../ChooseComponentsModal/ChooseComponentsModal';
+import { CloseButton } from '../CloseButton/CloseButton';
 import { CustomButton } from '../common/CustomButton/CustomButton';
 import { CustomInput } from '../common/CustomInput/CustomInput';
 import { ModalWindow } from '../common/ModalWindow/ModalWindow';
 import { Preloader } from '../common/Preloader/Preloader';
+import { ComponentCard } from '../ComponentCard/ComponentCard';
 import { CustomFormikCheckboxField } from '../CustomFormikCheckboxField/CustomFormikCheckboxField';
 import { CustomFormikNumberField } from '../CustomFormikNumberField/CustomFormikNumberField';
 import { CustomFormikSelectField } from '../CustomFormikSelectField/CustomFormikSelectField';
@@ -41,12 +44,17 @@ export const ProductEditForm: React.FC<IProps> = ({
     const [isModalActive, setIsModalActive] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const productComponentIds = product?.components.map((c) => c.id);
+    const [isComponentsModalActive, setIsComponentsModalActive] =
+        useState(false);
+    const allComponents = useAppSelector(
+        (state) => state.components.allComponents,
+    );
 
     const formInitialValues: EditProductFormValuesDto = {
         name: product?.name || '',
         description: product?.description || '',
         price: product ? product.price / 100 : 0,
-        isActive: product?.isActive || true,
+        isActive: product ? product.isActive : true,
         categoryId: product?.category.id || categories[0].id,
         componentIds: product ? productComponentIds : [],
         image: undefined,
@@ -73,11 +81,8 @@ export const ProductEditForm: React.FC<IProps> = ({
                 categoryId: values.categoryId,
                 isActive: values.isActive,
                 price: values.price * 100,
+                componentIds: values.componentIds,
             };
-
-            if (values.componentIds && values.componentIds.length > 0) {
-                sendData.componentIds = values.componentIds;
-            }
 
             if (values.image) {
                 sendData.image = values.image;
@@ -158,6 +163,67 @@ export const ProductEditForm: React.FC<IProps> = ({
                     {renderSuccessButton()}
                 </div>
             </ModalWindow>
+        );
+    };
+
+    const renderComponent = (
+        id: number,
+        componentIds: number[],
+        setFieldValue: (
+            field: string,
+            value: any,
+            shouldValidate?: boolean,
+        ) => void,
+    ) => {
+        const newComponent = allComponents.find((c) => c.id === id);
+        if (!newComponent) return null;
+
+        const renderDeleteComponentBtn = () => {
+            return (
+                <CloseButton
+                    className={styles.deleteComponentBtn}
+                    onClick={(e) =>
+                        setFieldValue(
+                            'componentIds',
+                            componentIds.filter((compId) => compId !== id),
+                        )
+                    }
+                />
+            );
+        };
+
+        return (
+            <ComponentCard
+                key={id}
+                component={newComponent}
+                isChecked={false}
+                button={renderDeleteComponentBtn()}
+                isNeedActiveState={false}
+            />
+        );
+    };
+
+    const renderComponents = (
+        componentIds: number[],
+        setFieldValue: (
+            field: string,
+            value: any,
+            shouldValidate?: boolean,
+        ) => void,
+    ) => {
+        if (!componentIds || componentIds.length === 0) {
+            return null;
+        }
+
+        return (
+            <div className={styles.productComponents}>
+                <h4 className={styles.componentsTitle}>Ingredients</h4>
+                <div className={styles.componentsBody}>
+                    {componentIds.map((id) =>
+                        renderComponent(id, componentIds, setFieldValue),
+                    )}
+                </div>
+            </div>
         );
     };
 
@@ -248,6 +314,27 @@ export const ProductEditForm: React.FC<IProps> = ({
                             }
                             component={CustomFormikCheckboxField}
                         />
+                        {renderComponents(
+                            values.componentIds || [],
+                            setFieldValue,
+                        )}
+                        <CustomButton
+                            startColor='blue'
+                            className={styles.addComponentsBtn}
+                            onClick={(e) => setIsComponentsModalActive(true)}
+                        >
+                            Add components
+                        </CustomButton>
+                        {
+                            <ChooseComponentsModal
+                                isActive={isComponentsModalActive}
+                                setIsActive={setIsComponentsModalActive}
+                                componentIds={values.componentIds || []}
+                                setFieldValue={(v) =>
+                                    setFieldValue('componentIds', v)
+                                }
+                            />
+                        }
                         {formSendError && (
                             <CustomFormikSendError message={formSendError} />
                         )}

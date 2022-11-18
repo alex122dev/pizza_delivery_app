@@ -5,7 +5,7 @@
 }
 
 .productImage {
-    flex: 0 0 50%;
+    flex: 0 1 50%;
     align-self: flex-start;
     position: relative;
     padding-bottom: 25%;
@@ -26,7 +26,7 @@
 }
 
 .productContent {
-    flex: 0 0 50%;
+    flex: 0 1 50%;
 }
 
 .fullProductProperty {
@@ -37,4 +37,23 @@
 
 .fullProductTitle {
     font-weight: 700;
+}
+
+.productComponents {
+    margin-bottom: 20px;
+}
+
+.componentsTitle {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.componentsBody {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+
+    @media (max-width: 479.98px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
