@@ -49,6 +49,9 @@ export const ProductEditForm: React.FC<IProps> = ({
     const allComponents = useAppSelector(
         (state) => state.components.allComponents,
     );
+    const currentPage = useAppSelector((state) => state.products.currentPage);
+    const pageSize = useAppSelector((state) => state.products.pageSize);
+    const filter = useAppSelector((state) => state.products.filter);
 
     const formInitialValues: EditProductFormValuesDto = {
         name: product?.name || '',
@@ -141,7 +144,7 @@ export const ProductEditForm: React.FC<IProps> = ({
                         dispatch(removeFromEditingProducts(product.id));
                     } else {
                         setIsCreating && setIsCreating(false);
-                        dispatch(getAllProducts());
+                        dispatch(getAllProducts(currentPage, pageSize, filter));
                     }
                 }}
             >

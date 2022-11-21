@@ -1,11 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CategoriesService } from '../categories/categories.service';
 import { ComponentsService } from '../components/components.service';
 import { Component } from '../components/entities/component.entity';
 import { ImageService } from '../image/image.service';
 import { CreateProductDto } from './dto/create-product.dto';
+import { ProductsFilterDto } from './dto/productsFilter.dto';
+import { ProductsSearchQueryDto } from './dto/productsSearchQuery.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
 
@@ -34,10 +36,40 @@ export class ProductsService {
     });
   }
 
-  async getAll(): Promise<Product[]> {
-    return this.productsRepository.find({
-      relations: { category: true, components: true },
+  async getAll(
+    query: ProductsSearchQueryDto,
+  ): Promise<{ products: Product[]; totalCount: number }> {
+    const filter: ProductsFilterDto = {};
+    const searchCategory = await this.categoriesService.getByName(
+      query.category,
+    );
+
+    if (query.category && searchCategory) filter.category = searchCategory;
+    if (Number(query.id)) filter.id = Number(query.id);
+    if (query.name) filter.name = query.name;
+    if (query.isActive) filter.isActive = query.isActive === 'true' || false;
+
+    const currentPage = Number(query.currentPage)
+      ? Number(query.currentPage)
+      : 1;
+    const pageSize = Number(query.pageSize) ? Number(query.pageSize) : 5;
+
+    const totalCount = await this.productsRepository.count({
+      where: { ...filter, name: Like(`%${filter.name || ''}%`) },
     });
+
+    const products = await this.productsRepository.find({
+      where: { ...filter, name: Like(`%${filter.name || ''}%`) },
+      relations: { category: true, components: true },
+      take: pageSize,
+      skip: pageSize * (currentPage - 1),
+      order: { name: 'ASC' },
+    });
+
+    return {
+      products,
+      totalCount,
+    };
   }
 
   async create(

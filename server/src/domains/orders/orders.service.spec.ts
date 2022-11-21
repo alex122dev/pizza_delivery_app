@@ -39,6 +39,7 @@ describe('OrdersService', () => {
         image: 'product_1',
         name: 'pizza_1',
         price: 10000,
+        isActive: true,
       },
     },
     {
@@ -49,6 +50,7 @@ describe('OrdersService', () => {
         image: 'product_2',
         name: 'pizza_2',
         price: 20000,
+        isActive: true,
       },
     },
   ];
@@ -105,6 +107,7 @@ describe('OrdersService', () => {
           image: 'product_3',
           name: 'pizza_3',
           price: 30000,
+          isActive: true,
         },
       },
       {
@@ -115,6 +118,7 @@ describe('OrdersService', () => {
           image: 'product_4',
           name: 'pizza_4',
           price: 40000,
+          isActive: true,
         },
       },
     ],
@@ -216,6 +220,12 @@ describe('OrdersService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('should call private method and return totalPrice', () => {
+    expect(service['calculateTotalPrice'](mockOrderItemsWithoutId)).toEqual(
+      50000,
+    );
   });
 
   it('should create new order', async () => {

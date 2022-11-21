@@ -1,6 +1,8 @@
 import { AxiosResponse } from 'axios';
 import { EditProductFormValuesDto } from '../dtos/products/editProductFormValues.dto';
+import { FilteredProductsDto } from '../dtos/products/filteredProducts.dto';
 import { ProductDto } from '../dtos/products/product.dto';
+import { ProductsFilterDto } from '../dtos/products/productsFilter.dto';
 import { $api } from '../http/http';
 
 export class ProductsService {
@@ -10,8 +12,14 @@ export class ProductsService {
         return $api.get<ProductDto>(`/products/${productId}`);
     }
 
-    static async getAll(): Promise<AxiosResponse<ProductDto[]>> {
-        return $api.get<ProductDto[]>('/products');
+    static async getAll(
+        currentPage: number,
+        pageSize: number,
+        filter: ProductsFilterDto,
+    ): Promise<AxiosResponse<FilteredProductsDto>> {
+        return $api.get<FilteredProductsDto>('/products', {
+            params: { currentPage, pageSize, ...filter },
+        });
     }
 
     static async create(
