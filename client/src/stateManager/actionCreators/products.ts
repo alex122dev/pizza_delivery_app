@@ -1,11 +1,15 @@
 import { EditProductFormValuesDto } from '../../dtos/products/editProductFormValues.dto';
+import { ProductsFilterDto } from '../../dtos/products/productsFilter.dto';
 import { ProductsService } from '../../services/ProductsService';
 import {
     replaceUpdatedInAllProducts,
     setAllProducts,
+    setCurrentPage,
     setCurrentProduct,
     setIsFetching,
     setIsFetchingAllProducts,
+    setProductsFilter,
+    setTotalProductsCount,
 } from '../slices/productsSlice';
 import { AppDispatch } from '../store';
 
@@ -22,17 +26,26 @@ export const getProductById =
         }
     };
 
-export const getAllProducts = () => async (dispatch: AppDispatch) => {
-    try {
-        dispatch(setIsFetchingAllProducts(true));
-        const response = await ProductsService.getAll();
-        dispatch(setAllProducts(response.data));
-    } catch (e: any) {
-        throw e;
-    } finally {
-        dispatch(setIsFetchingAllProducts(false));
-    }
-};
+export const getAllProducts =
+    (currentPage: number, pageSize: number, filter: ProductsFilterDto) =>
+    async (dispatch: AppDispatch) => {
+        try {
+            dispatch(setIsFetchingAllProducts(true));
+            dispatch(setCurrentPage(currentPage));
+            const response = await ProductsService.getAll(
+                currentPage,
+                pageSize,
+                filter,
+            );
+            dispatch(setProductsFilter(filter));
+            dispatch(setAllProducts(response.data.products));
+            dispatch(setTotalProductsCount(response.data.totalCount));
+        } catch (e: any) {
+            throw e;
+        } finally {
+            dispatch(setIsFetchingAllProducts(false));
+        }
+    };
 
 export const createNewProduct =
     (dto: EditProductFormValuesDto) => async (dispatch: AppDispatch) => {

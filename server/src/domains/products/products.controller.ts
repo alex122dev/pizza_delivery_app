@@ -7,6 +7,7 @@ import {
   ParseFilePipeBuilder,
   Post,
   Put,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -18,7 +19,9 @@ import { AuthGuard } from '../auth/auth.guard';
 import { Roles } from '../roles/roles.decorator';
 import { RolesGuard } from '../roles/roles.guard';
 import { CreateProductDto } from './dto/create-product.dto';
+import { FilteredProductsDto } from './dto/filteredProducts.dto';
 import { ProductDto } from './dto/product.dto';
+import { ProductsSearchQueryDto } from './dto/productsSearchQuery.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductsService } from './products.service';
 
@@ -27,8 +30,10 @@ export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
   @Get()
-  async getAll(): Promise<ProductDto[]> {
-    return this.productsService.getAll();
+  async getAll(
+    @Query() query: ProductsSearchQueryDto,
+  ): Promise<FilteredProductsDto> {
+    return this.productsService.getAll(query);
   }
 
   @Get(':id')
