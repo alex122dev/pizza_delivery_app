@@ -1,10 +1,10 @@
 import { Field, Form, Formik } from 'formik';
 import React, { useRef, useState } from 'react';
 import * as Yup from 'yup';
+import { EditProductDto } from '../../dtos/products/editProduct.dto';
 import { EditProductFormValuesDto } from '../../dtos/products/editProductFormValues.dto';
 import { ProductDto } from '../../dtos/products/product.dto';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { API_URL } from '../../http/http';
 import { getAllCategories } from '../../stateManager/actionCreators/categories';
 import {
     createNewProduct,
@@ -16,10 +16,10 @@ import { isFileTypeCorrect } from '../../utils/validation/functions';
 import { ChooseComponentsModal } from '../ChooseComponentsModal/ChooseComponentsModal';
 import { CloseButton } from '../CloseButton/CloseButton';
 import { CustomButton } from '../common/CustomButton/CustomButton';
-import { CustomInput } from '../common/CustomInput/CustomInput';
 import { ModalWindow } from '../common/ModalWindow/ModalWindow';
 import { Preloader } from '../common/Preloader/Preloader';
 import { ComponentCard } from '../ComponentCard/ComponentCard';
+import { CropImageModal } from '../CropImageModal/CropImageModal';
 import { CustomFormikCheckboxField } from '../CustomFormikCheckboxField/CustomFormikCheckboxField';
 import { CustomFormikNumberField } from '../CustomFormikNumberField/CustomFormikNumberField';
 import { CustomFormikSelectField } from '../CustomFormikSelectField/CustomFormikSelectField';
@@ -53,6 +53,11 @@ export const ProductEditForm: React.FC<IProps> = ({
     const pageSize = useAppSelector((state) => state.products.pageSize);
     const filter = useAppSelector((state) => state.products.filter);
 
+    const [imageFile, setImageFile] = useState<File>();
+    const [croppedImageFile, setCroppedImageFile] = useState<File>();
+
+    const [isCropModalActive, setIsCropModalActive] = useState(false);
+
     const formInitialValues: EditProductFormValuesDto = {
         name: product?.name || '',
         description: product?.description || '',
@@ -60,7 +65,6 @@ export const ProductEditForm: React.FC<IProps> = ({
         isActive: product ? product.isActive : true,
         categoryId: product?.category.id || categories[0].id,
         componentIds: product ? productComponentIds : [],
-        image: undefined,
     };
 
     const categoriesOptions = categories.map((category) => ({
@@ -71,14 +75,14 @@ export const ProductEditForm: React.FC<IProps> = ({
     const onFormSubmit = async (
         values: EditProductFormValuesDto,
     ): Promise<void> => {
-        if (!product && !values.image) {
+        if (!product && !croppedImageFile) {
             setFormSendError('You must add an image to create a new product');
             return;
         }
 
         try {
             setFormSendError('');
-            const sendData: EditProductFormValuesDto = {
+            const sendData: EditProductDto = {
                 name: values.name,
                 description: values.description,
                 categoryId: values.categoryId,
@@ -87,8 +91,8 @@ export const ProductEditForm: React.FC<IProps> = ({
                 componentIds: values.componentIds,
             };
 
-            if (values.image) {
-                sendData.image = values.image;
+            if (croppedImageFile) {
+                sendData.image = croppedImageFile;
             }
 
             if (product) {
@@ -103,35 +107,26 @@ export const ProductEditForm: React.FC<IProps> = ({
         }
     };
 
-    const imageValidate = (file: File) => {
+    const imageFileValidate = (file: File, setFile: (f: File) => void) => {
         const isValid = isFileTypeCorrect(file);
-        setFormSendError(isValid ? '' : 'Invalid file type');
-        return isValid;
+        if (isValid) {
+            setFormSendError('');
+            setFile(file);
+            setIsCropModalActive(true);
+            return;
+        } else {
+            setFormSendError('Invalid file type');
+        }
     };
 
-    const validationSchemaObject = Yup.object().shape(
-        {
-            name: Yup.string().required(),
-            description: Yup.string().required(),
-            price: Yup.number().min(1).required(),
-            isActive: Yup.boolean().required(),
-            categoryId: Yup.number().required(),
-            componentIds: Yup.array().of(Yup.number()),
-            image: Yup.mixed().when('image', {
-                is: (image: any) => image,
-                then: Yup.mixed().test(
-                    'Invalid file type',
-                    'Invalid file type',
-                    imageValidate,
-                ),
-                otherwise: Yup.mixed().test(() => {
-                    setFormSendError('');
-                    return true;
-                }),
-            }),
-        },
-        [['image', 'image']],
-    );
+    const validationSchemaObject = Yup.object().shape({
+        name: Yup.string().required(),
+        description: Yup.string().required(),
+        price: Yup.number().min(1).required(),
+        isActive: Yup.boolean().required(),
+        categoryId: Yup.number().required(),
+        componentIds: Yup.array().of(Yup.number()),
+    });
 
     const renderSuccessButton = () => {
         return (
@@ -241,25 +236,32 @@ export const ProductEditForm: React.FC<IProps> = ({
                 <Form className={styles.formBody}>
                     {isSubmitting && <Preloader className={styles.preloader} />}
                     <div className={styles.imageBlock}>
-                        {product?.image && !values.image && (
-                            <div className={styles.productImage}>
-                                <img
-                                    src={`${API_URL}/${product.image}`}
-                                    alt='image'
-                                />
+                        {product?.image && !imageFile && (
+                            <div className={styles.previewBlock}>
+                                <h4 className={styles.imageTitle}>
+                                    Current Image
+                                </h4>
+                                <ImagePreview image={product.image} />
                             </div>
                         )}
-                        {values.image && <ImagePreview file={values.image} />}
-                        <Field
-                            name='image'
+                        {croppedImageFile && (
+                            <div className={styles.previewBlock}>
+                                <h4 className={styles.imageTitle}>
+                                    New Image Preview
+                                </h4>
+                                <ImagePreview image={croppedImageFile} />
+                            </div>
+                        )}
+                        <input
                             type='file'
-                            allItemClass={styles.fileInputBlock}
-                            value={undefined} // for normal working react
+                            hidden
                             accept='image/*'
-                            innerRef={fileInputRef}
-                            component={CustomInput}
+                            ref={fileInputRef}
                             onChange={(e: any) => {
-                                setFieldValue('image', e.target.files?.[0]);
+                                imageFileValidate(
+                                    e.target.files?.[0],
+                                    setImageFile,
+                                );
                             }}
                         />
                         <CustomButton
@@ -271,18 +273,27 @@ export const ProductEditForm: React.FC<IProps> = ({
                         >
                             Upload New Image
                         </CustomButton>
-                        {values.image && (
-                            <CustomButton
-                                startColor='red'
-                                onClick={() => {
-                                    setFieldValue('image', '');
-                                    setFormSendError('');
-                                    if (fileInputRef.current)
-                                        fileInputRef.current.value = '';
-                                }}
-                            >
-                                Reset Image
-                            </CustomButton>
+                        {imageFile && (
+                            <>
+                                <CustomButton
+                                    startColor='green'
+                                    onClick={(e) => setIsCropModalActive(true)}
+                                >
+                                    Select another part
+                                </CustomButton>
+                                <CustomButton
+                                    startColor='red'
+                                    onClick={() => {
+                                        setImageFile(undefined);
+                                        setCroppedImageFile(undefined);
+                                        setFormSendError('');
+                                        if (fileInputRef.current)
+                                            fileInputRef.current.value = '';
+                                    }}
+                                >
+                                    Reset Image
+                                </CustomButton>
+                            </>
                         )}
                     </div>
                     <div className={styles.textBlock}>
@@ -347,6 +358,12 @@ export const ProductEditForm: React.FC<IProps> = ({
                         />
                     </div>
                     {renderInfoModal()}
+                    <CropImageModal
+                        isActive={isCropModalActive}
+                        setIsActive={setIsCropModalActive}
+                        imageFile={imageFile}
+                        setResult={setCroppedImageFile}
+                    />
                 </Form>
             )}
         </Formik>
