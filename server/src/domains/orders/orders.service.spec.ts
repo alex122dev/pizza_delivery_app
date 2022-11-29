@@ -10,13 +10,12 @@ import { mockFactory } from '../../test/mockFactory';
 describe('OrdersService', () => {
   let service: OrdersService;
 
-  const mockUser = mockFactory.getUser('user')
-  const mockOrder = mockFactory.getOrder(2)
-  const mockCreateOrderDto = mockFactory.getCreateOrderData(2)
+  const mockUser = mockFactory.getUser('user');
+  const mockOrder = mockFactory.getOrder(2);
+  const mockCreateOrderDto = mockFactory.getCreateOrderData(2);
 
   const userId = mockFactory.generateId();
   const orderId = mockFactory.generateId();
-
 
   const updatePhoneDto = {
     phone: mockFactory.generatePhone(),
@@ -30,18 +29,12 @@ describe('OrdersService', () => {
     orderItems: [
       mockFactory.getCreateOrderItemData(),
       mockFactory.getCreateOrderItemData(),
-    ]
-  }
-
-
+    ],
+  };
 
   const mockOrderRepository = {
     create: jest.fn().mockImplementation((dto) => ({ ...dto, id: Date.now() })),
-    save: jest
-      .fn()
-      .mockImplementation((order) =>
-        Promise.resolve(order),
-      ),
+    save: jest.fn().mockImplementation((order) => Promise.resolve(order)),
     findOne: jest.fn().mockImplementation(
       ({
         where: { id },
@@ -74,9 +67,11 @@ describe('OrdersService', () => {
     ),
   };
   const mockStatusesService = {
-    getByValue: jest.fn().mockImplementation((statusValue) =>
-      Promise.resolve(mockFactory.getStatus(statusValue)),
-    ),
+    getByValue: jest
+      .fn()
+      .mockImplementation((statusValue) =>
+        Promise.resolve(mockFactory.getStatus(statusValue)),
+      ),
   };
   const mockUsersService = {
     getById: jest.fn().mockImplementation((userId) =>
@@ -128,8 +123,13 @@ describe('OrdersService', () => {
   });
 
   it('should call private method and return totalPrice', () => {
-    expect(service['calculateTotalPrice'](updateOrderItemsDto.orderItems)).toEqual(
-      updateOrderItemsDto.orderItems.reduce((acc, val) => acc += val.quantity * val.product.price, 0)
+    expect(
+      service['calculateTotalPrice'](updateOrderItemsDto.orderItems),
+    ).toEqual(
+      updateOrderItemsDto.orderItems.reduce(
+        (acc, val) => (acc += val.quantity * val.product.price),
+        0,
+      ),
     );
   });
 
@@ -138,7 +138,10 @@ describe('OrdersService', () => {
       id: expect.any(Number),
       address: mockCreateOrderDto.address,
       phone: mockCreateOrderDto.phone,
-      totalPrice: mockCreateOrderDto.orderItems.reduce((acc, val) => acc += val.quantity * val.product.price, 0),
+      totalPrice: mockCreateOrderDto.orderItems.reduce(
+        (acc, val) => (acc += val.quantity * val.product.price),
+        0,
+      ),
       comment: mockCreateOrderDto.comment,
       userId,
       user: { ...mockUser, id: userId },
@@ -146,13 +149,12 @@ describe('OrdersService', () => {
         id: expect.any(Number),
         value: 'processing',
         description: 'processing',
-        orders: []
+        orders: [],
       },
       orderItems: [
         {
           ...mockCreateOrderDto.orderItems[0],
           id: expect.any(Number),
-
         },
         {
           ...mockCreateOrderDto.orderItems[1],
@@ -177,7 +179,6 @@ describe('OrdersService', () => {
     });
   });
 
-
   it('should update order status', async () => {
     expect(await service.update(orderId, updateStatusDto)).toEqual({
       ...mockOrder,
@@ -186,7 +187,7 @@ describe('OrdersService', () => {
         id: expect.any(Number),
         value: updateStatusDto.status,
         description: updateStatusDto.status,
-        orders: []
+        orders: [],
       },
     });
   });
@@ -199,7 +200,10 @@ describe('OrdersService', () => {
         { id: expect.any(Number), ...updateOrderItemsDto.orderItems[0] },
         { id: expect.any(Number), ...updateOrderItemsDto.orderItems[1] },
       ],
-      totalPrice: updateOrderItemsDto.orderItems.reduce((acc, val) => acc += val.quantity * val.product.price, 0),
+      totalPrice: updateOrderItemsDto.orderItems.reduce(
+        (acc, val) => (acc += val.quantity * val.product.price),
+        0,
+      ),
     });
   });
 
@@ -211,7 +215,7 @@ describe('OrdersService', () => {
         id: expect.any(Number),
         value: 'canceled',
         description: 'canceled',
-        orders: []
+        orders: [],
       },
     });
   });
@@ -230,5 +234,4 @@ describe('OrdersService', () => {
       },
     ]);
   });
-
 });
