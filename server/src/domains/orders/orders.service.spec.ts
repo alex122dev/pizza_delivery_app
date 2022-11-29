@@ -5,131 +5,42 @@ import { Order } from './entities/order.entity';
 import { StatusesService } from '../statuses/statuses.service';
 import { UsersService } from '../users/users.service';
 import { OrderItemsService } from '../orderItems/order-items.service';
-import { CreateOrderDto } from './dto/create-order.dto';
+import { mockFactory } from '../../test/mockFactory';
 
 describe('OrdersService', () => {
   let service: OrdersService;
 
-  const mockUserWithoutId = {
-    email: 'a@gmail.com',
-    password: '123456',
-    phone: '380991112233',
-    firstName: 'a',
-    lastName: 'a',
-    roles: [
-      {
-        id: 1,
-        value: 'ADMIN',
-        description: 'administrator',
-      },
-      {
-        id: 2,
-        value: 'USER',
-        description: 'user',
-      },
-    ],
-  };
+  const mockUser = mockFactory.getUser('user')
+  const mockOrder = mockFactory.getOrder(2)
+  const mockCreateOrderDto = mockFactory.getCreateOrderData(2)
 
-  const mockOrderItemsWithoutId = [
-    {
-      quantity: 1,
-      product: {
-        id: 1,
-        description: 'product_1',
-        image: 'product_1',
-        name: 'pizza_1',
-        price: 10000,
-        isActive: true,
-      },
-    },
-    {
-      quantity: 2,
-      product: {
-        id: 2,
-        description: 'product_2',
-        image: 'product_2',
-        name: 'pizza_2',
-        price: 20000,
-        isActive: true,
-      },
-    },
-  ];
+  const userId = mockFactory.generateId();
+  const orderId = mockFactory.generateId();
 
-  const mockOrderWithoutId = {
-    address: 'address',
-    phone: '380956446464',
-    totalPrice: 50000,
-    comment: 'comment',
-    userId: 1,
-    user: { id: 1, ...mockUserWithoutId },
-    status: {
-      id: 1,
-      value: 'processing',
-      description: 'processing',
-    },
-    orderItems: [
-      {
-        id: 1,
-        ...mockOrderItemsWithoutId[0],
-      },
-      {
-        id: 1,
-        ...mockOrderItemsWithoutId[1],
-      },
-    ],
-  };
-
-  const userId = 1;
-  const orderId = 5;
-
-  const createDto: CreateOrderDto = {
-    address: 'address',
-    phone: '380956446464',
-    comment: 'comment',
-    orderItems: mockOrderItemsWithoutId,
-  };
 
   const updatePhoneDto = {
-    phone: '380679997788',
+    phone: mockFactory.generatePhone(),
   };
 
   const updateStatusDto = {
-    status: 'cooking',
+    status: mockFactory.generateRandomString(10),
   };
 
   const updateOrderItemsDto = {
     orderItems: [
-      {
-        quantity: 3,
-        product: {
-          id: 3,
-          description: 'product_3',
-          image: 'product_3',
-          name: 'pizza_3',
-          price: 30000,
-          isActive: true,
-        },
-      },
-      {
-        quantity: 4,
-        product: {
-          id: 4,
-          description: 'product_4',
-          image: 'product_4',
-          name: 'pizza_4',
-          price: 40000,
-          isActive: true,
-        },
-      },
-    ],
-  };
+      mockFactory.getCreateOrderItemData(),
+      mockFactory.getCreateOrderItemData(),
+    ]
+  }
+
+
 
   const mockOrderRepository = {
-    create: jest.fn().mockImplementation((dto) => dto),
+    create: jest.fn().mockImplementation((dto) => ({ ...dto, id: Date.now() })),
     save: jest
       .fn()
-      .mockImplementation((createDto) =>
-        Promise.resolve({ id: Date.now(), ...createDto }),
+      .mockImplementation((order) =>
+        Promise.resolve(order),
       ),
     findOne: jest.fn().mockImplementation(
       ({
@@ -138,7 +49,7 @@ describe('OrdersService', () => {
           status,
           orderItems: { product },
         },
-      }) => Promise.resolve({ id, ...mockOrderWithoutId }),
+      }) => Promise.resolve({ ...mockOrder, id }),
     ),
     find: jest.fn().mockImplementation(
       ({
@@ -150,34 +61,28 @@ describe('OrdersService', () => {
       }) =>
         Promise.resolve([
           {
-            id: Date.now(),
-            ...mockOrderWithoutId,
+            ...mockOrder,
             userId,
-            user: { ...mockUserWithoutId, id: userId },
+            user: { ...mockUser, id: userId },
           },
           {
-            id: Date.now(),
-            ...mockOrderWithoutId,
+            ...mockOrder,
             userId,
-            user: { ...mockUserWithoutId, id: userId },
+            user: { ...mockUser, id: userId },
           },
         ]),
     ),
   };
   const mockStatusesService = {
     getByValue: jest.fn().mockImplementation((statusValue) =>
-      Promise.resolve({
-        value: statusValue,
-        id: Date.now(),
-        description: statusValue,
-      }),
+      Promise.resolve(mockFactory.getStatus(statusValue)),
     ),
   };
   const mockUsersService = {
     getById: jest.fn().mockImplementation((userId) =>
       Promise.resolve({
+        ...mockUser,
         id: userId,
-        ...mockUserWithoutId,
       }),
     ),
   };
@@ -185,7 +90,7 @@ describe('OrdersService', () => {
     create: jest
       .fn()
       .mockImplementation((order, createOrderItemDto) =>
-        Promise.resolve({ id: Date.now(), ...createOrderItemDto }),
+        Promise.resolve({ ...createOrderItemDto, id: Date.now() }),
       ),
     removeAllByOrderId: jest
       .fn()
@@ -223,33 +128,35 @@ describe('OrdersService', () => {
   });
 
   it('should call private method and return totalPrice', () => {
-    expect(service['calculateTotalPrice'](mockOrderItemsWithoutId)).toEqual(
-      50000,
+    expect(service['calculateTotalPrice'](updateOrderItemsDto.orderItems)).toEqual(
+      updateOrderItemsDto.orderItems.reduce((acc, val) => acc += val.quantity * val.product.price, 0)
     );
   });
 
   it('should create new order', async () => {
-    expect(await service.create(userId, createDto)).toEqual({
+    expect(await service.create(userId, mockCreateOrderDto)).toEqual({
       id: expect.any(Number),
-      address: 'address',
-      phone: '380956446464',
-      totalPrice: 50000,
-      comment: 'comment',
+      address: mockCreateOrderDto.address,
+      phone: mockCreateOrderDto.phone,
+      totalPrice: mockCreateOrderDto.orderItems.reduce((acc, val) => acc += val.quantity * val.product.price, 0),
+      comment: mockCreateOrderDto.comment,
       userId,
-      user: { id: userId, ...mockUserWithoutId },
+      user: { ...mockUser, id: userId },
       status: {
         id: expect.any(Number),
         value: 'processing',
         description: 'processing',
+        orders: []
       },
       orderItems: [
         {
+          ...mockCreateOrderDto.orderItems[0],
           id: expect.any(Number),
-          ...createDto.orderItems[0],
+
         },
         {
+          ...mockCreateOrderDto.orderItems[1],
           id: expect.any(Number),
-          ...createDto.orderItems[1],
         },
       ],
     });
@@ -257,51 +164,54 @@ describe('OrdersService', () => {
 
   it('should get order by id', async () => {
     expect(await service.getById(orderId)).toEqual({
+      ...mockOrder,
       id: orderId,
-      ...mockOrderWithoutId,
     });
   });
 
   it('should update order phone', async () => {
     expect(await service.update(orderId, updatePhoneDto)).toEqual({
+      ...mockOrder,
       id: orderId,
-      ...mockOrderWithoutId,
       phone: updatePhoneDto.phone,
     });
   });
 
+
   it('should update order status', async () => {
     expect(await service.update(orderId, updateStatusDto)).toEqual({
+      ...mockOrder,
       id: orderId,
-      ...mockOrderWithoutId,
       status: {
         id: expect.any(Number),
         value: updateStatusDto.status,
         description: updateStatusDto.status,
+        orders: []
       },
     });
   });
 
   it('should update orderItems and totalPrice in order', async () => {
     expect(await service.update(orderId, updateOrderItemsDto)).toEqual({
+      ...mockOrder,
       id: orderId,
-      ...mockOrderWithoutId,
       orderItems: [
         { id: expect.any(Number), ...updateOrderItemsDto.orderItems[0] },
         { id: expect.any(Number), ...updateOrderItemsDto.orderItems[1] },
       ],
-      totalPrice: 250000,
+      totalPrice: updateOrderItemsDto.orderItems.reduce((acc, val) => acc += val.quantity * val.product.price, 0),
     });
   });
 
   it('should change order status to canceled', async () => {
     expect(await service.cancelOrder(orderId)).toEqual({
+      ...mockOrder,
       id: orderId,
-      ...mockOrderWithoutId,
       status: {
         id: expect.any(Number),
         value: 'canceled',
         description: 'canceled',
+        orders: []
       },
     });
   });
@@ -309,15 +219,16 @@ describe('OrdersService', () => {
   it('should get all orders by userId(two in our case)', async () => {
     expect(await service.getCurrentUserOrders(userId)).toEqual([
       {
-        id: expect.any(Number),
-        ...mockOrderWithoutId,
+        ...mockOrder,
         userId,
+        user: { ...mockUser, id: userId },
       },
       {
-        id: expect.any(Number),
-        ...mockOrderWithoutId,
+        ...mockOrder,
         userId,
+        user: { ...mockUser, id: userId },
       },
     ]);
   });
+
 });

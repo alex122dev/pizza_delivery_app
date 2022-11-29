@@ -36,7 +36,7 @@ export class Product {
   components: Component[];
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
-  orderItem: OrderItem;
+  orderItems: OrderItem[];
 
   @Column({ default: true })
   isActive: boolean;
