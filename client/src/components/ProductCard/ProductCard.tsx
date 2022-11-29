@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ProductDto } from '../../dtos/products/product.dto';
-import { API_URL } from '../../http/http';
 import { PriceBlock } from '../PriceBlock/PriceBlock';
 import styles from './ProductCard.module.scss';
 
@@ -15,10 +14,7 @@ export const ProductCard: React.FC<IProps> = ({ product, button }) => {
         <div key={product.id} className={styles.productCart}>
             <Link to={`/products/${product.id}`}>
                 <div className={styles.productImage}>
-                    <img
-                        src={`${API_URL}/${product.image}`}
-                        alt={product.name}
-                    />
+                    <img src={product.image} alt={product.name} />
                 </div>
                 <div className={styles.productContent}>
                     <p className={styles.productName}>{product.name}</p>

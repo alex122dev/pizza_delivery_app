@@ -84,7 +84,7 @@ export class ProductsService {
       throw new BadRequestException();
     }
 
-    const imageLocation = this.imageService.saveImage(
+    const imageLocation = await this.imageService.saveImage(
       image,
       productCategory.name,
     );
@@ -122,7 +122,7 @@ export class ProductsService {
 
     if (dto.categoryId && productCategory) {
       product.category = productCategory;
-      const imageLocation = this.imageService.getNewImageLocation(
+      const imageLocation = await this.imageService.getNewImageLocation(
         product.image,
         productCategory.name,
       );
@@ -130,7 +130,7 @@ export class ProductsService {
     }
 
     if (image) {
-      const imageLocation = this.imageService.replaceProductImage(
+      const imageLocation = await this.imageService.replaceProductImage(
         product.image,
         image,
         product.category.name,

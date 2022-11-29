@@ -14,6 +14,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { OrderItemsModule } from './domains/orderItems/order-items.module';
 import { FilesModule } from './domains/files/files.module';
 import { ImageModule } from './domains/image/image.module';
+import { CloudinaryModule } from './domains/cloudinary/cloudinary.module';
 
 @Module({
   controllers: [],
@@ -34,6 +35,7 @@ import { ImageModule } from './domains/image/image.module';
     OrderItemsModule,
     FilesModule,
     ImageModule,
+    CloudinaryModule,
   ],
 })
 export class AppModule {}

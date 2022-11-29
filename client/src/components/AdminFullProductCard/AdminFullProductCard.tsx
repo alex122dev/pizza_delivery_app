@@ -1,6 +1,5 @@
 import React from 'react';
 import { ProductDto } from '../../dtos/products/product.dto';
-import { API_URL } from '../../http/http';
 import { ComponentCard } from '../ComponentCard/ComponentCard';
 import styles from './AdminFullProductCard.module.scss';
 
@@ -56,7 +55,7 @@ export const AdminFullProductCard: React.FC<IProps> = ({ product }) => {
     return (
         <div className={styles.container}>
             <div className={styles.productImage}>
-                <img src={`${API_URL}/${product.image}`} alt={product.name} />
+                <img src={product.image} alt={product.name} />
             </div>
             <div className={styles.productContent}>
                 {renderProductProperties()}

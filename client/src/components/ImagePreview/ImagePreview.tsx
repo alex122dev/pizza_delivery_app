@@ -1,19 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Preloader } from '../common/Preloader/Preloader';
 import styles from './ImagePreview.module.scss';
 
 interface IProps {
-    file: File;
+    image: File | string;
 }
 
-export const ImagePreview: React.FC<IProps> = ({ file }) => {
+export const ImagePreview: React.FC<IProps> = ({ image }) => {
     const [preview, setPreview] = useState<string | null>(null);
 
-    const reader = new FileReader();
-    reader.onload = () => {
-        setPreview(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+    useEffect(() => {
+        if (typeof image !== 'string') {
+            const reader = new FileReader();
+            reader.onload = () => {
+                setPreview(reader.result as string);
+            };
+            reader.readAsDataURL(image);
+        } else {
+            setPreview(image);
+        }
+    }, [image]);
+
     return (
         <>
             {preview ? (

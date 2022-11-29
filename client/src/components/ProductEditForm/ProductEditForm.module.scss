@@ -18,17 +18,14 @@
     row-gap: 15px;
 }
 
-.productImage {
-    position: relative;
-    padding-bottom: 50%;
+.previewBlock {}
 
-    img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
+.imageTitle {
+    font-weight: 700;
+    font-size: 22px;
+    text-align: center;
+    padding: 5px;
+    background-color: $yellowOpacityColor;
 }
 
 .uploadBtn {}

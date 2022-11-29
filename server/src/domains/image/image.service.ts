@@ -1,43 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { FilesService } from '../files/files.service';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class ImageService {
-  constructor(private filesService: FilesService) {}
+  constructor(private cloudinaryService: CloudinaryService) {}
 
-  saveImage(image: Express.Multer.File, folderName: string): string {
-    const fileName = this.filesService.createNewFile(image, folderName);
-    return this.generateLocationString(folderName, fileName);
+  async saveImage(
+    image: Express.Multer.File,
+    folderName: string,
+  ): Promise<string> {
+    const imageObj = await this.cloudinaryService.uploadFile(image, folderName);
+    return imageObj.url;
   }
 
-  generateLocationString(folderName: string, fileName: string): string {
-    return `${folderName}/${fileName}`;
+  async getNewImageLocation(
+    oldLocation: string,
+    newFolderName: string,
+  ): Promise<string> {
+    return this.cloudinaryService.renameFile(oldLocation, newFolderName);
   }
 
-  getNewImageLocation(oldLocation: string, newFolderName: string): string {
-    const oldFolder = oldLocation.split('/')[0];
-    const fileName = oldLocation.split('/')[1];
-    this.filesService.renameFile(oldFolder, newFolderName, fileName);
-    const imageLocation = this.generateLocationString(newFolderName, fileName);
-    return imageLocation;
-  }
-
-  replaceProductImage(
+  async replaceProductImage(
     oldLocation: string,
     newImageFile: Express.Multer.File,
     newFolderName: string,
-  ): string {
-    const oldFolder = oldLocation.split('/')[0];
-    const fileName = oldLocation.split('/')[1];
-    this.filesService.removeFile(fileName, oldFolder);
-    const newFileName = this.filesService.createNewFile(
+  ): Promise<string> {
+    return this.cloudinaryService.replaceFile(
+      oldLocation,
       newImageFile,
       newFolderName,
     );
-    const imageLocation = this.generateLocationString(
-      newFolderName,
-      newFileName,
-    );
-    return imageLocation;
   }
 }

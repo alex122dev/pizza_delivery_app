@@ -8,7 +8,6 @@ import { PriceBlock } from '../../components/PriceBlock/PriceBlock';
 import { ToCartQuantityBlock } from '../../components/ToCartQuantityBlock/QuantityCartBlock';
 import { ProductDto } from '../../dtos/products/product.dto';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { API_URL } from '../../http/http';
 import { getProductById } from '../../stateManager/actionCreators/products';
 import { setCurrentProduct } from '../../stateManager/slices/productsSlice';
 import styles from './Product.module.scss';
@@ -71,10 +70,7 @@ export const Product: React.FC<IProps> = ({}) => {
         return (
             <div className={styles.container}>
                 <div className={styles.productImage}>
-                    <img
-                        src={`${API_URL}/${product.image}`}
-                        alt={product.name}
-                    />
+                    <img src={product.image} alt={product.name} />
                 </div>
                 <div className={styles.productContent}>
                     <h4 className={styles.productName}>{product.name}</h4>
