@@ -4,13 +4,13 @@ import logoImage from '../../assets/image/logo.png';
 import styles from './Logo.module.scss';
 
 interface IProps {
-    className?: string;
+  className?: string;
 }
 
 export const Logo: React.FC<IProps> = ({ className }) => {
-    return (
-        <Link to={'/home'} className={[styles.logo, className].join(' ')}>
-            <img src={logoImage} alt='logo' />
-        </Link>
-    );
+  return (
+    <Link to={'/home'} className={[styles.logo, className].join(' ')}>
+      <img src={logoImage} alt='logo' />
+    </Link>
+  );
 };

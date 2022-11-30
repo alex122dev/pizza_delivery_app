@@ -2,21 +2,21 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { StatusDto } from '../../dtos/orders/Status.dto';
 
 interface IInitialState {
-    statuses: StatusDto[];
+  statuses: StatusDto[];
 }
 
 const initialState: IInitialState = {
-    statuses: [],
+  statuses: [],
 };
 
 const statusesSlice = createSlice({
-    name: 'statuses',
-    initialState,
-    reducers: {
-        setStatuses: (state, action: PayloadAction<StatusDto[]>) => {
-            state.statuses = action.payload;
-        },
+  name: 'statuses',
+  initialState,
+  reducers: {
+    setStatuses: (state, action: PayloadAction<StatusDto[]>) => {
+      state.statuses = action.payload;
     },
+  },
 });
 
 export const { setStatuses } = statusesSlice.actions;

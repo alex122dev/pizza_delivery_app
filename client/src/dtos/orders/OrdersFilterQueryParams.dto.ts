@@ -1,6 +1,6 @@
 export interface OrdersFilterQueryParamsDto {
-    orderId?: string;
-    userId?: string;
-    status?: string;
-    page?: string;
+  orderId?: string;
+  userId?: string;
+  status?: string;
+  page?: string;
 }

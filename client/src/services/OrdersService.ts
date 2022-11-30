@@ -7,38 +7,36 @@ import { $api } from '../http/http';
 import { FilteredOrdersDto } from '../dtos/orders/FilteredOrders.dto';
 
 export class OrdersService {
-    static async create(dto: CreateOrderDto): Promise<AxiosResponse<OrderDto>> {
-        return $api.post<OrderDto>('/orders', dto);
-    }
+  static async create(dto: CreateOrderDto): Promise<AxiosResponse<OrderDto>> {
+    return $api.post<OrderDto>('/orders', dto);
+  }
 
-    static async getCurrentUserOrders(): Promise<AxiosResponse<OrderDto[]>> {
-        return $api.get<OrderDto[]>('/orders');
-    }
+  static async getCurrentUserOrders(): Promise<AxiosResponse<OrderDto[]>> {
+    return $api.get<OrderDto[]>('/orders');
+  }
 
-    static async cancelOrder(id: number): Promise<AxiosResponse<OrderDto>> {
-        return $api.post<OrderDto>(`/orders/${id}/cancel`);
-    }
+  static async cancelOrder(id: number): Promise<AxiosResponse<OrderDto>> {
+    return $api.post<OrderDto>(`/orders/${id}/cancel`);
+  }
 
-    static async getAll(
-        currentPage: number,
-        pageSize: number,
-        filter: OrdersFilterDto,
-    ): Promise<AxiosResponse<FilteredOrdersDto>> {
-        return $api.get<FilteredOrdersDto>(`/orders/all`, {
-            params: { currentPage, pageSize, ...filter },
-        });
-    }
+  static async getAll(
+    currentPage: number,
+    pageSize: number,
+    filter: OrdersFilterDto,
+  ): Promise<AxiosResponse<FilteredOrdersDto>> {
+    return $api.get<FilteredOrdersDto>(`/orders/all`, {
+      params: { currentPage, pageSize, ...filter },
+    });
+  }
 
-    static async updateOrder(
-        orderId: number,
-        dto: UpdateOrderDto,
-    ): Promise<AxiosResponse<OrderDto>> {
-        return $api.put<OrderDto>(`/orders/${orderId}`, dto);
-    }
+  static async updateOrder(
+    orderId: number,
+    dto: UpdateOrderDto,
+  ): Promise<AxiosResponse<OrderDto>> {
+    return $api.put<OrderDto>(`/orders/${orderId}`, dto);
+  }
 
-    static async getOrderById(
-        orderId: number,
-    ): Promise<AxiosResponse<OrderDto>> {
-        return $api.get<OrderDto>(`/orders/${orderId}`);
-    }
+  static async getOrderById(orderId: number): Promise<AxiosResponse<OrderDto>> {
+    return $api.get<OrderDto>(`/orders/${orderId}`);
+  }
 }

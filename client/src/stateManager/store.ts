@@ -8,15 +8,15 @@ import { productsReducer } from './slices/productsSlice';
 import { statusesReducer } from './slices/statusesSlice';
 
 export const store = configureStore({
-    reducer: {
-        auth: authReducer,
-        categories: categoriesReducer,
-        products: productsReducer,
-        cart: cartReducer,
-        orders: ordersReducer,
-        statuses: statusesReducer,
-        components: componentsReducer,
-    },
+  reducer: {
+    auth: authReducer,
+    categories: categoriesReducer,
+    products: productsReducer,
+    cart: cartReducer,
+    orders: ordersReducer,
+    statuses: statusesReducer,
+    components: componentsReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

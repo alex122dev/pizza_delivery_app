@@ -21,130 +21,124 @@ import styles from './EditOrderForm.module.scss';
 import { CustomFormikSelectField } from '../CustomFormikSelectField/CustomFormikSelectField';
 
 interface IProps {
-    order: OrderDto;
-    localOrderItems: CreateOrderItemDto[];
+  order: OrderDto;
+  localOrderItems: CreateOrderItemDto[];
 }
 
 export const EditOrderForm: React.FC<IProps> = ({ order, localOrderItems }) => {
-    const dispatch = useAppDispatch();
-    const statuses = useAppSelector((state) => state.statuses.statuses);
-    const [formSendError, setFormSendError] = useState('');
-    const [isModalActive, setIsModalActive] = useState(false);
+  const dispatch = useAppDispatch();
+  const statuses = useAppSelector((state) => state.statuses.statuses);
+  const [formSendError, setFormSendError] = useState('');
+  const [isModalActive, setIsModalActive] = useState(false);
 
-    const formInitialValues: CheckoutUpdateOrderDto = {
-        phone: phoneMaskFormat(order.phone),
-        address: order.address,
-        status: order.status.value,
-        comment: order.comment || '',
-    };
+  const formInitialValues: CheckoutUpdateOrderDto = {
+    phone: phoneMaskFormat(order.phone),
+    address: order.address,
+    status: order.status.value,
+    comment: order.comment || '',
+  };
 
-    const statusesOptions = statuses.map((status) => ({
-        value: status.value,
-        label: status.value,
-    }));
+  const statusesOptions = statuses.map((status) => ({
+    value: status.value,
+    label: status.value,
+  }));
 
-    const onFormSubmit = async (
-        values: CheckoutUpdateOrderDto,
-    ): Promise<void> => {
-        if (localOrderItems.length === 0) {
-            setFormSendError('to change an order add products');
-            return;
-        }
+  const onFormSubmit = async (
+    values: CheckoutUpdateOrderDto,
+  ): Promise<void> => {
+    if (localOrderItems.length === 0) {
+      setFormSendError('to change an order add products');
+      return;
+    }
 
-        try {
-            setFormSendError('');
-            const formatedPhone = values.phone.replace(/\D/g, '');
-            const sendData: UpdateOrderDto = {
-                phone: formatedPhone,
-                address: values.address,
-                comment: values.comment,
-                status: values.status,
-                orderItems: localOrderItems,
-            };
-            await dispatch(updateOrder(order.id, sendData));
-            setIsModalActive(true);
-        } catch (e: any) {
-            setFormSendError(e.response?.data?.message);
-        }
-    };
+    try {
+      setFormSendError('');
+      const formatedPhone = values.phone.replace(/\D/g, '');
+      const sendData: UpdateOrderDto = {
+        phone: formatedPhone,
+        address: values.address,
+        comment: values.comment,
+        status: values.status,
+        orderItems: localOrderItems,
+      };
+      await dispatch(updateOrder(order.id, sendData));
+      setIsModalActive(true);
+    } catch (e: any) {
+      setFormSendError(e.response?.data?.message);
+    }
+  };
 
-    const validationSchemaObject = Yup.object({
-        phone: Yup.string()
-            .required()
-            .matches(phoneValidateRegExp, 'The phone number is invalid'),
-        address: Yup.string().required(),
-        comment: Yup.string(),
-        status: Yup.string().required(),
-    });
+  const validationSchemaObject = Yup.object({
+    phone: Yup.string()
+      .required()
+      .matches(phoneValidateRegExp, 'The phone number is invalid'),
+    address: Yup.string().required(),
+    comment: Yup.string(),
+    status: Yup.string().required(),
+  });
 
-    const renderSuccessButton = () => {
-        return (
-            <CustomButton
-                startColor='green'
-                onClick={(e) => {
-                    dispatch(removeFromEditingOrders(order.id));
-                    setIsModalActive(false);
-                }}
-            >
-                Ok
-            </CustomButton>
-        );
-    };
-
-    const renderInfoModal = () => {
-        return (
-            <ModalWindow
-                isActive={isModalActive}
-                setIsActive={setIsModalActive}
-            >
-                <div className={styles.modalBody}>
-                    <h2 className={styles.modalTitle}>
-                        Changes saved. The order with ID {order.id} has been
-                        updated
-                    </h2>
-                    {renderSuccessButton()}
-                </div>
-            </ModalWindow>
-        );
-    };
-
+  const renderSuccessButton = () => {
     return (
-        <Formik
-            initialValues={formInitialValues}
-            onSubmit={onFormSubmit}
-            validationSchema={validationSchemaObject}
-        >
-            {({ isSubmitting, setFieldValue, values }) => (
-                <Form className={styles.formBody}>
-                    {isSubmitting && <Preloader className={styles.preloader} />}
-                    <CustomFormikPhoneField setFieldValue={setFieldValue} />
-                    <CustomFormikTextField
-                        name='address'
-                        label='Address'
-                        placeholder='Type your address'
-                    />
-                    <CustomFormikSelectField
-                        fieldName='status'
-                        setFieldValue={setFieldValue}
-                        initialValue={values.status}
-                        label={'Status'}
-                        options={statusesOptions}
-                    />
-                    <CustomFormikTextField
-                        name='comment'
-                        label='Comment'
-                        placeholder='Type your comment (optional)'
-                    />
-                    {formSendError && (
-                        <CustomFormikSendError message={formSendError} />
-                    )}
-                    <CustomFormikSendFormButton
-                        text='Save Changes'
-                        isSubmitting={isSubmitting}
-                    />
-                    {renderInfoModal()}
-                </Form>
-            )}
-        </Formik>
+      <CustomButton
+        startColor='green'
+        onClick={(e) => {
+          dispatch(removeFromEditingOrders(order.id));
+          setIsModalActive(false);
+        }}
+      >
+        Ok
+      </CustomButton>
     );
+  };
+
+  const renderInfoModal = () => {
+    return (
+      <ModalWindow isActive={isModalActive} setIsActive={setIsModalActive}>
+        <div className={styles.modalBody}>
+          <h2 className={styles.modalTitle}>
+            Changes saved. The order with ID {order.id} has been updated
+          </h2>
+          {renderSuccessButton()}
+        </div>
+      </ModalWindow>
+    );
+  };
+
+  return (
+    <Formik
+      initialValues={formInitialValues}
+      onSubmit={onFormSubmit}
+      validationSchema={validationSchemaObject}
+    >
+      {({ isSubmitting, setFieldValue, values }) => (
+        <Form className={styles.formBody}>
+          {isSubmitting && <Preloader className={styles.preloader} />}
+          <CustomFormikPhoneField setFieldValue={setFieldValue} />
+          <CustomFormikTextField
+            name='address'
+            label='Address'
+            placeholder='Type your address'
+          />
+          <CustomFormikSelectField
+            fieldName='status'
+            setFieldValue={setFieldValue}
+            initialValue={values.status}
+            label={'Status'}
+            options={statusesOptions}
+          />
+          <CustomFormikTextField
+            name='comment'
+            label='Comment'
+            placeholder='Type your comment (optional)'
+          />
+          {formSendError && <CustomFormikSendError message={formSendError} />}
+          <CustomFormikSendFormButton
+            text='Save Changes'
+            isSubmitting={isSubmitting}
+          />
+          {renderInfoModal()}
+        </Form>
+      )}
+    </Formik>
+  );
 };

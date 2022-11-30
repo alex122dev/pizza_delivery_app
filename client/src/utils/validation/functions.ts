@@ -1,14 +1,9 @@
 export const isFileTypeCorrect = (file: File): boolean => {
-    const supportedTypes = [
-        'image/jpg',
-        'image/jpeg',
-        'image/gif',
-        'image/png',
-    ];
+  const supportedTypes = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
 
-    if (file && supportedTypes.includes(file.type)) {
-        return true;
-    }
+  if (file && supportedTypes.includes(file.type)) {
+    return true;
+  }
 
-    return false;
+  return false;
 };
