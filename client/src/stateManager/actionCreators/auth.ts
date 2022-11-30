@@ -39,7 +39,5 @@ export const checkIfUserAuthorized = () => async (dispatch: AppDispatch) => {
     const response = await AuthService.checkIfUserAuthorized();
     dispatch(setUser(response.data.user));
     localStorage.setItem('accessToken', response.data.accessToken);
-  } catch (e: any) {
-    throw e;
-  }
+  } catch (e: any) {}
 };

@@ -46,8 +46,11 @@
 }
 
 .modalBody {
+    max-width: 1304px;
     position: relative;
     padding: 20px;
+    background-color: $bodyColor;
+    border-radius: 30px;
 }
 
 .modalTitle {
@@ -55,7 +58,7 @@
     text-align: center;
     font-size: 28px;
     font-weight: 700;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 .closeModalBtn {
