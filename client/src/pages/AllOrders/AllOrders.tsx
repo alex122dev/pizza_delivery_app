@@ -15,141 +15,139 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { getAllOrders } from '../../stateManager/actionCreators/orders';
 import { getAllStatuses } from '../../stateManager/actionCreators/statuses';
 import {
-    addToEditingOrders,
-    removeFromEditingOrders,
+  addToEditingOrders,
+  removeFromEditingOrders,
 } from '../../stateManager/slices/ordersSlice';
 import styles from './AllOrders.module.scss';
 
 interface IProps {}
 
 export const AllOrders: React.FC<IProps> = ({}) => {
-    const dispatch = useAppDispatch();
-    const allOrders = useAppSelector((state) => state.orders.allOrders);
-    const editingOrders = useAppSelector((state) => state.orders.editingOrders);
-    const currentPage = useAppSelector((state) => state.orders.currentPage);
-    const pageSize = useAppSelector((state) => state.orders.pageSize);
-    const totalOrdersCount = useAppSelector(
-        (state) => state.orders.totalOrdersCount,
+  const dispatch = useAppDispatch();
+  const allOrders = useAppSelector((state) => state.orders.allOrders);
+  const editingOrders = useAppSelector((state) => state.orders.editingOrders);
+  const currentPage = useAppSelector((state) => state.orders.currentPage);
+  const pageSize = useAppSelector((state) => state.orders.pageSize);
+  const totalOrdersCount = useAppSelector(
+    (state) => state.orders.totalOrdersCount,
+  );
+  const filter = useAppSelector((state) => state.orders.filter);
+  const isFetchingAllOrders = useAppSelector(
+    (state) => state.orders.isFetchingAllOrders,
+  );
+  const [searchParams, setSearchParams] = useSearchParams();
+  const propertiesArray = [
+    'id',
+    'order items',
+    'address',
+    'phone',
+    'status',
+    'total price',
+  ];
+
+  useEffect(() => {
+    dispatch(getAllStatuses());
+  }, []);
+
+  useEffect(() => {
+    const queryParams: OrdersFilterQueryParamsDto = Object.fromEntries([
+      ...Array.from(searchParams),
+    ]);
+
+    const actualFilter: OrdersFilterDto = {};
+
+    actualFilter.orderId = queryParams.orderId;
+    actualFilter.userId = queryParams.userId;
+    actualFilter.status = queryParams.status;
+
+    const actualPage: number = Number(queryParams.page)
+      ? Number(queryParams.page)
+      : currentPage;
+    dispatch(getAllOrders(actualPage, pageSize, actualFilter));
+  }, []);
+
+  useEffect(() => {
+    const queryParamsObj: OrdersFilterQueryParamsDto = {};
+
+    if (filter.orderId) queryParamsObj.orderId = filter.orderId;
+    if (filter.userId) queryParamsObj.userId = filter.userId;
+    if (filter.status) queryParamsObj.status = filter.status;
+    queryParamsObj.page = String(currentPage);
+
+    setSearchParams({ ...queryParamsObj });
+  }, [filter, currentPage]);
+
+  const renderEditButton = (order: OrderDto) => {
+    return editingOrders.some((id) => id === order.id) ? (
+      <CustomButton
+        startColor='red'
+        className={styles.editBtn}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dispatch(removeFromEditingOrders(order.id));
+        }}
+      >
+        Cancel
+      </CustomButton>
+    ) : (
+      <CustomButton
+        startColor='blue'
+        onClick={(e) => dispatch(addToEditingOrders(order.id))}
+      >
+        Edit
+      </CustomButton>
     );
-    const filter = useAppSelector((state) => state.orders.filter);
-    const isFetchingAllOrders = useAppSelector(
-        (state) => state.orders.isFetchingAllOrders,
-    );
-    const [searchParams, setSearchParams] = useSearchParams();
-    const propertiesArray = [
-        'id',
-        'order items',
-        'address',
-        'phone',
-        'status',
-        'total price',
-    ];
+  };
 
-    useEffect(() => {
-        dispatch(getAllStatuses());
-    }, []);
+  const renderEditForm = (order: OrderDto) => {
+    if (!editingOrders.some((id) => id === order.id)) {
+      return null;
+    }
 
-    useEffect(() => {
-        const queryParams: OrdersFilterQueryParamsDto = Object.fromEntries([
-            ...Array.from(searchParams),
-        ]);
+    return <AdminOrderEditWindow order={order} />;
+  };
 
-        const actualFilter: OrdersFilterDto = {};
-
-        actualFilter.orderId = queryParams.orderId;
-        actualFilter.userId = queryParams.userId;
-        actualFilter.status = queryParams.status;
-
-        const actualPage: number = Number(queryParams.page)
-            ? Number(queryParams.page)
-            : currentPage;
-        dispatch(getAllOrders(actualPage, pageSize, actualFilter));
-    }, []);
-
-    useEffect(() => {
-        const queryParamsObj: OrdersFilterQueryParamsDto = {};
-
-        if (filter.orderId) queryParamsObj.orderId = filter.orderId;
-        if (filter.userId) queryParamsObj.userId = filter.userId;
-        if (filter.status) queryParamsObj.status = filter.status;
-        queryParamsObj.page = String(currentPage);
-
-        setSearchParams({ ...queryParamsObj });
-    }, [filter, currentPage]);
-
-    const renderEditButton = (order: OrderDto) => {
-        return editingOrders.some((id) => id === order.id) ? (
-            <CustomButton
-                startColor='red'
-                className={styles.editBtn}
-                onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    dispatch(removeFromEditingOrders(order.id));
-                }}
-            >
-                Cancel
-            </CustomButton>
-        ) : (
-            <CustomButton
-                startColor='blue'
-                onClick={(e) => dispatch(addToEditingOrders(order.id))}
-            >
-                Edit
-            </CustomButton>
-        );
-    };
-
-    const renderEditForm = (order: OrderDto) => {
-        if (!editingOrders.some((id) => id === order.id)) {
-            return null;
-        }
-
-        return <AdminOrderEditWindow order={order} />;
-    };
-
-    const renderOrdersList = () => {
-        if (allOrders.length === 0) {
-            return (
-                <InfoMessage>
-                    No orders with these parameters were found
-                </InfoMessage>
-            );
-        }
-
-        return (
-            <>
-                {allOrders.map((order) => (
-                    <OrderCard
-                        key={order.id}
-                        order={order}
-                        button={renderEditButton(order)}
-                        editingOrderElement={renderEditForm(order)}
-                    />
-                ))}
-            </>
-        );
-    };
-
-    const onPageChanged = (pageNumber: number) => {
-        dispatch(getAllOrders(pageNumber, pageSize, filter));
-    };
+  const renderOrdersList = () => {
+    if (allOrders.length === 0) {
+      return (
+        <InfoMessage>No orders with these parameters were found</InfoMessage>
+      );
+    }
 
     return (
-        <div className={styles.container}>
-            <h2 className={styles.title}>All customer orders</h2>
-            <div className={styles.ordersList}>
-                {<PropertyNamesRow names={propertiesArray} />}
-                {<SearchAllOrdersForm />}
-                {isFetchingAllOrders && <Preloader />}
-                {renderOrdersList()}
-                <Paginator
-                    currentPage={currentPage}
-                    onPageChanged={onPageChanged}
-                    pageSize={pageSize}
-                    totalItemsCount={totalOrdersCount}
-                />
-            </div>
-        </div>
+      <>
+        {allOrders.map((order) => (
+          <OrderCard
+            key={order.id}
+            order={order}
+            button={renderEditButton(order)}
+            editingOrderElement={renderEditForm(order)}
+          />
+        ))}
+      </>
     );
+  };
+
+  const onPageChanged = (pageNumber: number) => {
+    dispatch(getAllOrders(pageNumber, pageSize, filter));
+  };
+
+  return (
+    <div className={styles.container}>
+      <h2 className={styles.title}>All customer orders</h2>
+      <div className={styles.ordersList}>
+        {<PropertyNamesRow names={propertiesArray} />}
+        {<SearchAllOrdersForm />}
+        {isFetchingAllOrders && <Preloader />}
+        {renderOrdersList()}
+        <Paginator
+          currentPage={currentPage}
+          onPageChanged={onPageChanged}
+          pageSize={pageSize}
+          totalItemsCount={totalOrdersCount}
+        />
+      </div>
+    </div>
+  );
 };

@@ -2,21 +2,21 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CategoryDto } from '../../dtos/categories/category.dto';
 
 interface IInitialState {
-    categories: CategoryDto[];
+  categories: CategoryDto[];
 }
 
 const initialState: IInitialState = {
-    categories: [],
+  categories: [],
 };
 
 const categoriesSlice = createSlice({
-    name: 'categories',
-    initialState,
-    reducers: {
-        setCategories: (state, action: PayloadAction<CategoryDto[]>) => {
-            state.categories = action.payload;
-        },
+  name: 'categories',
+  initialState,
+  reducers: {
+    setCategories: (state, action: PayloadAction<CategoryDto[]>) => {
+      state.categories = action.payload;
     },
+  },
 });
 
 export const { setCategories } = categoriesSlice.actions;

@@ -1,5 +1,5 @@
 export interface OrdersFilterDto {
-    orderId?: string;
-    userId?: string;
-    status?: string;
+  orderId?: string;
+  userId?: string;
+  status?: string;
 }

@@ -13,64 +13,62 @@ import { CustomFormikSendFormButton } from '../CustomFormikSendFormButton/Custom
 interface IProps {}
 
 export const SignInForm: React.FC<IProps> = ({}) => {
-    const dispatch = useAppDispatch();
-    const [formSendError, setFormSendError] = useState('');
+  const dispatch = useAppDispatch();
+  const [formSendError, setFormSendError] = useState('');
 
-    const formInitialValues: SignInDto = {
-        email: '',
-        password: '',
-    };
+  const formInitialValues: SignInDto = {
+    email: '',
+    password: '',
+  };
 
-    const onFormSubmit = async (
-        values: SignInDto,
-        {
-            resetForm,
-        }: { resetForm: (nextState?: Partial<FormikState<SignInDto>>) => void },
-    ): Promise<void> => {
-        try {
-            setFormSendError('');
-            await dispatch(signIn(values));
-            resetForm();
-        } catch (e: any) {
-            setFormSendError(e.response?.data?.message);
-        }
-    };
+  const onFormSubmit = async (
+    values: SignInDto,
+    {
+      resetForm,
+    }: { resetForm: (nextState?: Partial<FormikState<SignInDto>>) => void },
+  ): Promise<void> => {
+    try {
+      setFormSendError('');
+      await dispatch(signIn(values));
+      resetForm();
+    } catch (e: any) {
+      setFormSendError(e.response?.data?.message);
+    }
+  };
 
-    const validationSchemaObject = Yup.object({
-        email: Yup.string().required().email(),
-        password: Yup.string().required().min(6).max(100),
-    });
+  const validationSchemaObject = Yup.object({
+    email: Yup.string().required().email(),
+    password: Yup.string().required().min(6).max(100),
+  });
 
-    return (
-        <Formik
-            enableReinitialize={true}
-            initialValues={formInitialValues}
-            onSubmit={onFormSubmit}
-            validationSchema={validationSchemaObject}
-        >
-            {({ isSubmitting }) => (
-                <Form className={styles.formBody}>
-                    {isSubmitting && <Preloader className={styles.preloader} />}
-                    <CustomFormikTextField
-                        name='email'
-                        label='Email'
-                        placeholder='Type your email'
-                    />
-                    <CustomFormikTextField
-                        name='password'
-                        label='Password'
-                        placeholder='Type your password'
-                    />
-                    {formSendError && (
-                        <CustomFormikSendError message={formSendError} />
-                    )}
-                    <CustomFormikSendFormButton
-                        text='Sign In'
-                        isSubmitting={isSubmitting}
-                        className={styles.sendBtn}
-                    />
-                </Form>
-            )}
-        </Formik>
-    );
+  return (
+    <Formik
+      enableReinitialize={true}
+      initialValues={formInitialValues}
+      onSubmit={onFormSubmit}
+      validationSchema={validationSchemaObject}
+    >
+      {({ isSubmitting }) => (
+        <Form className={styles.formBody}>
+          {isSubmitting && <Preloader className={styles.preloader} />}
+          <CustomFormikTextField
+            name='email'
+            label='Email'
+            placeholder='Type your email'
+          />
+          <CustomFormikTextField
+            name='password'
+            label='Password'
+            placeholder='Type your password'
+          />
+          {formSendError && <CustomFormikSendError message={formSendError} />}
+          <CustomFormikSendFormButton
+            text='Sign In'
+            isSubmitting={isSubmitting}
+            className={styles.sendBtn}
+          />
+        </Form>
+      )}
+    </Formik>
+  );
 };

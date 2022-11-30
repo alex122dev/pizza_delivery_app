@@ -10,25 +10,25 @@ import styles from './Home.module.scss';
 interface IProps {}
 
 export const Home: FC<IProps> = ({}) => {
-    const orderItems = useAppSelector((state) => state.cart.orderItems);
+  const orderItems = useAppSelector((state) => state.cart.orderItems);
 
-    const renderQuantityBlock = (orderItem: CreateOrderItemDto) => {
-        return <ToCartQuantityBlock orderItem={orderItem} />;
-    };
+  const renderQuantityBlock = (orderItem: CreateOrderItemDto) => {
+    return <ToCartQuantityBlock orderItem={orderItem} />;
+  };
 
-    const renderAddToCartButton = (
-        product: Omit<ProductDto, 'category' | 'components'>,
-    ) => {
-        return <AddProductToCardButton product={product} />;
-    };
+  const renderAddToCartButton = (
+    product: Omit<ProductDto, 'category' | 'components'>,
+  ) => {
+    return <AddProductToCardButton product={product} />;
+  };
 
-    return (
-        <div className={styles.container}>
-            <Products
-                orderItems={orderItems}
-                quantityBlock={renderQuantityBlock}
-                addToOrderItemsButton={renderAddToCartButton}
-            />
-        </div>
-    );
+  return (
+    <div className={styles.container}>
+      <Products
+        orderItems={orderItems}
+        quantityBlock={renderQuantityBlock}
+        addToOrderItemsButton={renderAddToCartButton}
+      />
+    </div>
+  );
 };

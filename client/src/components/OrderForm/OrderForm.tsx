@@ -19,107 +19,101 @@ import { CustomFormikSendFormButton } from '../CustomFormikSendFormButton/Custom
 interface IProps {}
 
 export const OrderForm: React.FC<IProps> = ({}) => {
-    const dispatch = useAppDispatch();
-    const user = useAppSelector((state) => state.auth.user);
-    const orderItems = useAppSelector((state) => state.cart.orderItems);
-    const [formSendError, setFormSendError] = useState('');
-    const [isModalActive, setIsModalActive] = useState(false);
-    const [isOrderConfirmed, setIsOrderConfirmed] = useState(false);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
+  const orderItems = useAppSelector((state) => state.cart.orderItems);
+  const [formSendError, setFormSendError] = useState('');
+  const [isModalActive, setIsModalActive] = useState(false);
+  const [isOrderConfirmed, setIsOrderConfirmed] = useState(false);
 
-    const formInitialValues: CheckoutOrderDto = {
-        phone: user ? phoneMaskFormat(user.phone) : '',
-        address: '',
-        comment: '',
-    };
+  const formInitialValues: CheckoutOrderDto = {
+    phone: user ? phoneMaskFormat(user.phone) : '',
+    address: '',
+    comment: '',
+  };
 
-    const onFormSubmit = async (
-        values: CheckoutOrderDto,
-        {
-            resetForm,
-        }: {
-            resetForm: (
-                nextState?: Partial<FormikState<CheckoutOrderDto>>,
-            ) => void;
-        },
-    ): Promise<void> => {
-        if (orderItems.length === 0) {
-            setFormSendError('to place an order, add products to the cart');
-            return;
-        }
+  const onFormSubmit = async (
+    values: CheckoutOrderDto,
+    {
+      resetForm,
+    }: {
+      resetForm: (nextState?: Partial<FormikState<CheckoutOrderDto>>) => void;
+    },
+  ): Promise<void> => {
+    if (orderItems.length === 0) {
+      setFormSendError('to place an order, add products to the cart');
+      return;
+    }
 
-        if (!user) {
-            setFormSendError('');
-            setIsModalActive(true);
-            return;
-        }
+    if (!user) {
+      setFormSendError('');
+      setIsModalActive(true);
+      return;
+    }
 
-        try {
-            setFormSendError('');
-            const formatedPhone = values.phone.replace(/\D/g, '');
-            const sendData: CreateOrderDto = {
-                phone: formatedPhone,
-                address: values.address,
-                comment: values.comment,
-                orderItems,
-            };
-            await dispatch(createOrder(sendData));
-            dispatch(clearCart());
-            resetForm();
-            setIsModalActive(true);
-            setIsOrderConfirmed(true);
-        } catch (e: any) {
-            setFormSendError(e.response?.data?.message);
-        }
-    };
+    try {
+      setFormSendError('');
+      const formatedPhone = values.phone.replace(/\D/g, '');
+      const sendData: CreateOrderDto = {
+        phone: formatedPhone,
+        address: values.address,
+        comment: values.comment,
+        orderItems,
+      };
+      await dispatch(createOrder(sendData));
+      dispatch(clearCart());
+      resetForm();
+      setIsModalActive(true);
+      setIsOrderConfirmed(true);
+    } catch (e: any) {
+      setFormSendError(e.response?.data?.message);
+    }
+  };
 
-    const validationSchemaObject = Yup.object({
-        phone: Yup.string()
-            .required()
-            .matches(phoneValidateRegExp, 'The phone number is invalid'),
-        address: Yup.string().required(),
-        comment: Yup.string(),
-    });
+  const validationSchemaObject = Yup.object({
+    phone: Yup.string()
+      .required()
+      .matches(phoneValidateRegExp, 'The phone number is invalid'),
+    address: Yup.string().required(),
+    comment: Yup.string(),
+  });
 
-    return (
-        <>
-            <Formik
-                initialValues={formInitialValues}
-                onSubmit={onFormSubmit}
-                validationSchema={validationSchemaObject}
-            >
-                {({ isSubmitting, setFieldValue }) => (
-                    <Form className={styles.formBody}>
-                        {isSubmitting && (
-                            <Preloader className={styles.preloader} />
-                        )}
-                        <CustomFormikPhoneField setFieldValue={setFieldValue} />
-                        <CustomFormikTextField
-                            name='address'
-                            label='Address'
-                            placeholder='Type your address'
-                        />
-                        <CustomFormikTextField
-                            name='comment'
-                            label='Comment'
-                            placeholder='Type your comment (optional)'
-                        />
-                        {formSendError && (
-                            <CustomFormikSendError message={formSendError} />
-                        )}
-                        <CustomFormikSendFormButton
-                            text='Checkout'
-                            isSubmitting={isSubmitting}
-                            className={styles.sendBtn}
-                        />
-                    </Form>
-                )}
-            </Formik>
-            <OrderAuthModal
-                isActive={isModalActive}
-                setIsActive={setIsModalActive}
-                isOrderConfirmed={isOrderConfirmed}
-                setIsOrderConfirmed={setIsOrderConfirmed}
+  return (
+    <>
+      <Formik
+        initialValues={formInitialValues}
+        onSubmit={onFormSubmit}
+        validationSchema={validationSchemaObject}
+      >
+        {({ isSubmitting, setFieldValue }) => (
+          <Form className={styles.formBody}>
+            {isSubmitting && <Preloader className={styles.preloader} />}
+            <CustomFormikPhoneField setFieldValue={setFieldValue} />
+            <CustomFormikTextField
+              name='address'
+              label='Address'
+              placeholder='Type your address'
             />
-        </>
-    );
+            <CustomFormikTextField
+              name='comment'
+              label='Comment'
+              placeholder='Type your comment (optional)'
+            />
+            {formSendError && <CustomFormikSendError message={formSendError} />}
+            <CustomFormikSendFormButton
+              text='Checkout'
+              isSubmitting={isSubmitting}
+              className={styles.sendBtn}
+            />
+          </Form>
+        )}
+      </Formik>
+      <OrderAuthModal
+        isActive={isModalActive}
+        setIsActive={setIsModalActive}
+        isOrderConfirmed={isOrderConfirmed}
+        setIsOrderConfirmed={setIsOrderConfirmed}
+      />
+    </>
+  );
 };

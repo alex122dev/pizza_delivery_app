@@ -6,23 +6,23 @@ import { CustomButton } from '../common/CustomButton/CustomButton';
 import styles from './AddProductToCardButton.module.scss';
 
 interface IProps {
-    product: Omit<ProductDto, 'category' | 'components'>;
+  product: Omit<ProductDto, 'category' | 'components'>;
 }
 
 export const AddProductToCardButton: React.FC<IProps> = ({ product }) => {
-    const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
-    return (
-        <CustomButton
-            startColor='green'
-            className={styles.toCardButton}
-            onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                dispatch(addProduct(product));
-            }}
-        >
-            To cart
-        </CustomButton>
-    );
+  return (
+    <CustomButton
+      startColor='green'
+      className={styles.toCardButton}
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        dispatch(addProduct(product));
+      }}
+    >
+      To cart
+    </CustomButton>
+  );
 };
