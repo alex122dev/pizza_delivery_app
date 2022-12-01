@@ -5,27 +5,23 @@
     display: flex;
     flex-direction: column;
     cursor: pointer;
-    transition: all 0.3s ease 0s;
-
-    &::after {
-        content: '';
-        transition: all 0.3s ease 0s;
-    }
+    transition: all 0.2s ease 0s;
 
     @media (any-hover: hover) {
         &:hover {
-            &::after {
-                position: absolute;
-                pointer-events: none;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                z-index: 2;
-                background-color: $yellowOpacityColor;
-            }
+            box-shadow: 0 0 15px $mainColor;
+            transform: scale(1.01);
         }
     }
+}
+
+.link {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 2;
 }
 
 .productImage {
@@ -54,6 +50,7 @@
 .productName {
     font-size: 20px;
     font-weight: 700;
+    padding: 0 10px;
 
     &::first-letter {
         text-transform: uppercase;
@@ -63,6 +60,8 @@
 }
 
 .productDescription {
+    padding: 0 10px;
+    color: $currencyOpacityColor;
     flex: 1 1 auto;
     margin-bottom: 10px;
 }

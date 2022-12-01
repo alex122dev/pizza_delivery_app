@@ -7,6 +7,14 @@
     display: flex;
     background-color: $whiteColor;
     border-radius: 20px;
+    transition: all 0.3s ease 0s;
+
+    @media (any-hover: hover) {
+        &:hover {
+            box-shadow: 0 0 15px $mainColor;
+            transform: scale(1.01);
+        }
+    }
 }
 
 .productLink {
@@ -17,13 +25,6 @@
     width: 100%;
     height: 100%;
     border-radius: 20px;
-    transition: all 0.3s ease 0s;
-
-    @media (any-hover: hover) {
-        &:hover {
-            background-color: $yellowOpacityColor;
-        }
-    }
 }
 
 .image {
@@ -52,7 +53,7 @@
 .name {
     font-size: 20px;
     font-weight: 700;
-    padding-right: 40px;
+    padding: 0 40px 0 10px;
 
     &::first-letter {
         text-transform: uppercase;
@@ -64,6 +65,7 @@
 .description {
     flex: 1 1 auto;
     margin-bottom: 10px;
+    padding: 0 10px;
 }
 
 .priceAndButtonBlock {

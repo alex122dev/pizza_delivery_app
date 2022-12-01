@@ -49,7 +49,9 @@ export const Header: FC<IProps> = ({}) => {
       <>
         {renderAdminLinks(user)}
         {renderNavLink('/orders', 'My Orders')}
-        <button onClick={() => dispatch(signOut())}>Sign Out</button>
+        <button className={styles.link} onClick={() => dispatch(signOut())}>
+          Sign Out
+        </button>
       </>
     ) : (
       <>

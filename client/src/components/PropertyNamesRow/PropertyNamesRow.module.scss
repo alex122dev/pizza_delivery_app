@@ -1,11 +1,15 @@
 @import '../../variables/variables.scss';
 
 .namesBlock {
+    position: sticky;
+    top: 100px;
+    z-index: 5;
     display: grid;
     grid-template-columns: 40px 1fr 1fr 1fr 1fr 100px 100px;
     align-items: center;
     padding: 10px;
     background-color: $lightGreenColor;
+    color: $whiteColor;
     border-radius: 20px;
 }
 

@@ -12,19 +12,18 @@ interface IProps {
 export const ProductCard: React.FC<IProps> = ({ product, button }) => {
   return (
     <div key={product.id} className={styles.productCart}>
-      <Link to={`/products/${product.id}`}>
-        <div className={styles.productImage}>
-          <img src={product.image} alt={product.name} />
+      <Link to={`/products/${product.id}`} className={styles.link} />
+      <div className={styles.productImage}>
+        <img src={product.image} alt={product.name} />
+      </div>
+      <div className={styles.productContent}>
+        <p className={styles.productName}>{product.name}</p>
+        <p className={styles.productDescription}>{product.description}</p>
+        <div className={styles.priceAndButtonBlock}>
+          <PriceBlock price={product.price} />
+          {button}
         </div>
-        <div className={styles.productContent}>
-          <p className={styles.productName}>{product.name}</p>
-          <p className={styles.productDescription}>{product.description}</p>
-          <div className={styles.priceAndButtonBlock}>
-            <PriceBlock price={product.price} />
-            {button}
-          </div>
-        </div>
-      </Link>
+      </div>
     </div>
   );
 };
