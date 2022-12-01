@@ -149,7 +149,7 @@
     border-radius: 20px;
     padding: 20px;
     display: flex;
-    column-gap: 15px;
+    column-gap: 20px;
     transition: all 0.3s ease 0s;
     pointer-events: none;
 
@@ -163,4 +163,13 @@
     cursor: pointer;
     text-transform: uppercase;
     font-weight: 700;
+    color: $whiteColor;
+    transition: all 0.3s ease 0s;
+
+    @media (any-hover: hover) {
+        &:hover {
+            transform: scale(1.1);
+            color: $lightBlueHoverColor;
+        }
+    }
 }
