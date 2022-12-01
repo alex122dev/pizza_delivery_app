@@ -28,6 +28,7 @@ export class CategoriesService {
     return this.categoriesRepository.find({
       where: { products: { isActive: true } },
       relations: { products: true },
+      order: { sequenceNumber: 'ASC' },
     });
   }
 }
