@@ -11,4 +11,7 @@ export class Category {
 
   @OneToMany(() => Product, (product) => product.category)
   products: Product[];
+
+  @Column({ default: 1 })
+  sequenceNumber: number;
 }
