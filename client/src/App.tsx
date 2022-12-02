@@ -5,7 +5,7 @@ import { Footer } from './components/Footer/Footer';
 import { Header } from './components/Header/Header';
 import { RequireAuth } from './components/RequireAuth/RequireAuth';
 import { ScrollToTop } from './components/ScrollToTop/ScrollToTop';
-import { useAppDispatch } from './hooks/redux';
+import { useAppDispatch, useAppSelector } from './hooks/redux';
 import {
   AllOrders,
   AllProducts,
@@ -19,14 +19,25 @@ import {
 } from './pages';
 import { checkIfUserAuthorized } from './stateManager/actionCreators/auth';
 import { getAllCategories } from './stateManager/actionCreators/categories';
+import { setAllCartItems } from './stateManager/slices/cartSlice';
 
 function App() {
   const dispatch = useAppDispatch();
+  const cartItems = useAppSelector((state) => state.cart.orderItems);
 
   useEffect(() => {
     dispatch(checkIfUserAuthorized());
     dispatch(getAllCategories());
+
+    const cartItemsFromLocalStorage = localStorage.getItem('pizzaDeliveryCart');
+    if (cartItemsFromLocalStorage) {
+      dispatch(setAllCartItems(JSON.parse(cartItemsFromLocalStorage)));
+    }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('pizzaDeliveryCart', JSON.stringify(cartItems));
+  }, [cartItems]);
 
   return (
     <div className='app'>

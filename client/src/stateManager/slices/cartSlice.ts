@@ -53,6 +53,9 @@ const cartSlice = createSlice({
         product.quantity++;
       }
     },
+    setAllCartItems: (state, action: PayloadAction<CreateOrderItemDto[]>) => {
+      state.orderItems = action.payload;
+    },
   },
 });
 
@@ -62,6 +65,7 @@ export const {
   clearCart,
   incrementQuantity,
   decrementQuantity,
+  setAllCartItems,
 } = cartSlice.actions;
 
 export const cartReducer = cartSlice.reducer;
