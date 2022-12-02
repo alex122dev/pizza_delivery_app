@@ -122,8 +122,12 @@ export class AuthService {
 
   async signIn(signInDto: SignInDto): Promise<AuthReturnDto> {
     const user = await this.usersService.getByEmail(signInDto.email);
+
     if (!user) {
-      throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Email or password is wrong',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const isPasswordValid = await bcrypt.compare(
@@ -132,7 +136,10 @@ export class AuthService {
     );
 
     if (!isPasswordValid) {
-      throw new HttpException('Password is wrong', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Email or password is wrong',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const tokens = await this.assignTokenToUser(user);

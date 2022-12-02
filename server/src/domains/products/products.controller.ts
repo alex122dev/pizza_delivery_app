@@ -29,6 +29,8 @@ import { ProductsService } from './products.service';
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
+  @Roles('ADMIN')
+  @UseGuards(AuthGuard, RolesGuard)
   @Get()
   async getAll(
     @Query() query: ProductsSearchQueryDto,
