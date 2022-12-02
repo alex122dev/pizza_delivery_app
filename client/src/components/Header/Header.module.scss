@@ -37,6 +37,7 @@
 }
 
 .link {
+    position: relative;
     padding: 10px;
     display: inline-block;
     transition: all 0.3s ease 0s;
@@ -172,4 +173,23 @@
             color: $lightBlueHoverColor;
         }
     }
+}
+
+.cartInfo {
+    position: absolute;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+
+    font-weight: 700;
+    color: $whiteColor;
+    background-color: $lightGreenColor;
 }

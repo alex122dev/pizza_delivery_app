@@ -17,8 +17,9 @@ export const Header: FC<IProps> = ({}) => {
   const categories = useAppSelector((state) => state.categories.categories);
   const { pathname } = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const cartItems = useAppSelector((state) => state.cart.orderItems);
 
-  const renderNavLink = (to: string, text: string) => {
+  const renderNavLink = (to: string, text: string, infoBlock?: JSX.Element) => {
     return (
       <NavLink
         to={to}
@@ -27,6 +28,7 @@ export const Header: FC<IProps> = ({}) => {
         }
       >
         {text}
+        {infoBlock}
       </NavLink>
     );
   };
@@ -58,6 +60,22 @@ export const Header: FC<IProps> = ({}) => {
         {renderNavLink('/signin', 'Sign In')}
         {renderNavLink('/signup', 'Sign Up')}
       </>
+    );
+  };
+
+  const renderCartLink = () => {
+    if (cartItems.length === 0) {
+      return renderNavLink('/cart', 'Cart');
+    }
+
+    const totalAmount = cartItems.reduce(
+      (acc, val) => (acc += val.quantity),
+      0,
+    );
+    return renderNavLink(
+      '/cart',
+      'Cart',
+      <span className={styles.cartInfo}>{totalAmount}</span>,
     );
   };
 
@@ -109,7 +127,7 @@ export const Header: FC<IProps> = ({}) => {
               {renderMenu()}
             </div>
             <div className={styles.userLinks}>
-              {renderNavLink('/cart', 'Cart')}
+              {renderCartLink()}
               {renderUserSign()}
             </div>
           </nav>
